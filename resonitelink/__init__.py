@@ -1,6 +1,6 @@
 """
-ResoniteLink
-~~~~~~~~~~~~
+ResoniteLink.py
+~~~~~~~~~~~~~~~
 
 A python wrapper for the ResoniteLink API.
 Resonite and ResoniteLink are Copyright (c) Yellow Dog Man Studios S.R.O
@@ -9,7 +9,7 @@ Resonite and ResoniteLink are Copyright (c) Yellow Dog Man Studios S.R.O
 :license: MIT, see LICENSE for more details.
 
 """
-__title__ = "ResoniteLink"
+__title__ = "ResoniteLink.py"
 __author__ = "JackTheFoxOtter"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present JackTheFoxOtter"
