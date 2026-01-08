@@ -1,0 +1,1 @@
+# TODO: Custom JSONSerializer and JSONDeserializer for ResoniteLink models
