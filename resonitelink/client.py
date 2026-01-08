@@ -20,7 +20,8 @@ import logging
 class ResoniteLinkClientEvent(Enum):
     STARTING=0
     STARTED=1
-    STOPPED=2
+    STOPPING=2
+    STOPPED=3
 
 
 class ResoniteLinkClient():
@@ -31,6 +32,7 @@ class ResoniteLinkClient():
     _logger : logging.Logger
     _on_starting : Event
     _on_started : Event
+    _on_stopping : Event
     _on_stopped : Event
     _event_handlers : Dict[ResoniteLinkClientEvent, List[Callable[[ResoniteLinkClient], Coroutine]]]
     _ws_uri : str
@@ -55,6 +57,7 @@ class ResoniteLinkClient():
             self._logger.setLevel(log_level)
         self._on_starting = Event()
         self._on_started = Event()
+        self._on_stopping = Event()
         self._on_stopped = Event()
         self._event_handlers = { }
 
@@ -63,7 +66,7 @@ class ResoniteLinkClient():
         Registers a new event handler to be invoked when the specified client event occurs.
 
         """
-        handlers = self._event_handlers.setdefault(event, [])
+        handlers = self._event_handlers.setdefault(event, [ ])
         handlers.append(handler)
         
         self._logger.debug(f"Updated event handlers: {self._event_handlers}")
@@ -73,11 +76,11 @@ class ResoniteLinkClient():
         Invokes all registered event handlers for the given event. 
 
         """
-        handlers = self._event_handlers.setdefault(event, [])
+        handlers = self._event_handlers.setdefault(event, [ ])
 
         self._logger.debug(f"Invoking {len(handlers)} event handlers for event {event}")
 
-        await gather(*[handler(self) for handler in handlers])
+        await gather(*[ handler(self) for handler in handlers ])
     
     async def start(self, port : int):
         """
@@ -117,7 +120,13 @@ class ResoniteLinkClient():
         Disconnects this ResoniteLinkClient and stops processing messages. This cannot be undone!
         
         """
+        self._logger.debug(f"Stopping client...")
+        self._on_stopping.set()
+        await self._invoke_event_handlers(ResoniteLinkClientEvent.STOPPING)
+
         await self._ws.close()
+
+        self._logger.debug(f"Client stopped!")
         self._on_stopped.set()
         await self._invoke_event_handlers(ResoniteLinkClientEvent.STOPPED)
     
