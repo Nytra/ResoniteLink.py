@@ -8,12 +8,12 @@ class GetComponent(MessageBase):
 
 @model("addComponent")
 class AddComponent(MessageBase):
-    data : Annotated[Any, JSONProperty("data")] # TODO: This should be of type component
+    data : Annotated[Any, JSONProperty("data")] # TODO: This should be of type Component
     container_slot_id : Annotated[str, JSONProperty("containerSlotId")]
 
 @model("updateComponent")
 class UpdateComponent(MessageBase):
-    data : Annotated[Any, JSONProperty("data")] # TODO: This should be of type component
+    data : Annotated[Any, JSONProperty("data")] # TODO: This should be of type Component
 
 @model("removeComponent")
 class RemoveComponent(MessageBase):

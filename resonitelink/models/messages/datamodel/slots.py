@@ -2,6 +2,9 @@ from resonitelink.models.messages import MessageBase
 from resonitelink.json.models import model, JSONProperty
 from typing import Annotated, Any
 
+import logging
+logging.debug("Test")
+
 @model("getSlot")
 class GetSlot(MessageBase):
     slot_id : Annotated[str, JSONProperty("slotId")]

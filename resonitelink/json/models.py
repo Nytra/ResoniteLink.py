@@ -1,4 +1,8 @@
 from typing import TypeVar, Generic, Type
+import logging
+
+logger = logging.getLogger("ResoniteLinkModels")
+logger.setLevel(logging.DEBUG)
 
 class JSONProperty():
     """
@@ -16,6 +20,9 @@ class JSONProperty():
     def __init__(self, name : str):
         self._name = name
 
+_models = []
+
+
 D = TypeVar("D")
 class Model(Generic[D]):
     """
@@ -26,17 +33,23 @@ class Model(Generic[D]):
     Don't instantiate this directly. Use the `model` decorator on the data class instead.
     
     """
-    _data : D
+    _type_id : str
+    _data_type : Type
+
+    def __init__(self, type_id : str, data_type : Type):
+        logger.debug(f"Instantiating model class for '{type_id}' with data type '{data_type}'")
+        self._type_id = type_id
+        self._data_type = data_type
 
 
-_model_mapping : dict[str, Model] = {}
-
-def model(type : str):
+def model(type_id : str):
     """
     Class decorator to define model classes.
 
     """
+    logger.debug(f"Decorator for model type '{type_id}'")
     def _model_decorator(data_class : Type):
+        _models.append(Model(type_id=type_id, data_type=data_class))
         return data_class
 
     return _model_decorator
