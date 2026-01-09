@@ -1,20 +1,20 @@
 from resonitelink.models.messages import MessageBase
-from resonitelink.json.models import model, JSONProperty
+from resonitelink.json.models import json_model, JSONProperty
 from typing import Annotated, Any
 
-@model("getComponent")
+@json_model("getComponent")
 class GetComponent(MessageBase):
     component_id : Annotated[str, JSONProperty("componentId")]
 
-@model("addComponent")
+@json_model("addComponent")
 class AddComponent(MessageBase):
     data : Annotated[Any, JSONProperty("data")] # TODO: This should be of type Component
     container_slot_id : Annotated[str, JSONProperty("containerSlotId")]
 
-@model("updateComponent")
+@json_model("updateComponent")
 class UpdateComponent(MessageBase):
     data : Annotated[Any, JSONProperty("data")] # TODO: This should be of type Component
 
-@model("removeComponent")
+@json_model("removeComponent")
 class RemoveComponent(MessageBase):
     component_id : Annotated[str, JSONProperty("componentId")]
