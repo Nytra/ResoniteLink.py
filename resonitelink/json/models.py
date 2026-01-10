@@ -21,6 +21,7 @@ class JSONModel(Generic[D]):
     _type_name : str
     _data_class : D
     _properties : Dict[str, JSONProperty]
+    _property_name_mapping : Dict[str, str]
     
     @property
     def type_name(self) -> str:
@@ -33,17 +34,22 @@ class JSONModel(Generic[D]):
     @property
     def properties(self) -> Dict[str, JSONProperty]:
         return self._properties
+    
+    @property
+    def property_name_mapping(self) -> Dict[str, str]:
+        return self._property_name_mapping
 
     def __init__(self, type_name : str, data_class : D):
         self._type_name = type_name
         self._data_class = data_class
         self._properties = dict(self._find_properties_in_data_class(self.data_class)) # type: ignore
+        self._property_name_mapping = dict(self._get_property_name_mapping(self._properties))
         self._register()
     
     def _find_properties_in_data_class(self, data_class : Type) -> Generator[Tuple[str, JSONProperty], Any, Any]:
         """
-        Inspects the specified data class and returns a list of all defined JSONProperties.
-        Also recursively processes potential base classes.
+        Inspects the specified data class and produces key-value pairs for all defined JSONProperties.
+        Also recursively processes all base classes (if any).
 
         Returns
         -------
@@ -51,6 +57,7 @@ class JSONModel(Generic[D]):
         and tpl[1] is the first JSONProperty found in its annotation metadata.
 
         """
+        # TODO: Error for duplicate property names, they have to be unique!
         for base_class in data_class.__bases__:
             # If there are base classes, they will be processed recursively first
             for tpl in self._find_properties_in_data_class(base_class): yield tpl
@@ -69,6 +76,20 @@ class JSONModel(Generic[D]):
             if json_property:
                 # Success! We've found a JSON property of the model class
                 yield (key, json_property)
+    
+    def _get_property_name_mapping(self, properties : Dict[str, JSONProperty]) -> Generator[Tuple[str, str], Any, Any]:
+        """
+        Produces key-value pair mappings for each property to associate every JSONProperty's (unique) name with the
+        name of the corresponding annotated field in the model's data class.
+
+        Returns
+        -------
+        Generator object that produces tuples for each item in the provided properties dict, where tpl[0] is the JSONProperty's (unique) name,
+        and tpl[1] is the name of the corresponding annotated field in the model's data class.
+
+        """
+        for key, json_property in properties.items():
+            yield json_property.name, key
 
     def _register(self):
         """
@@ -158,6 +179,8 @@ def json_model(type_name : str):
     def _model_decorator(data_class : D) -> D:
         # Creating a model instance automatically registers it
         JSONModel(type_name=type_name, data_class=data_class)
+
+        # TODO: Inject custom __repr__ that lists properties?
 
         return data_class # Return the unmodified decorated class
 

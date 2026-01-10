@@ -2,7 +2,7 @@ import logging
 logging.basicConfig(format='%(asctime)s [%(levelname)-8s] %(name)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 from resonitelink import ResoniteLinkClient, ResoniteLinkClientEvent
-from resonitelink.json import ResoniteLinkJSONEncoder, get_model_for_data_class
+from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, get_model_for_data_class
 from resonitelink.models import RemoveSlot, GetSlot
 import asyncio
 import json
@@ -18,7 +18,10 @@ get_slot.depth = 0
 get_slot.include_component_data = False
 
 json_str = json.dumps(get_slot, cls=ResoniteLinkJSONEncoder)
-logger.debug(f"JSON dumped {get_slot} -> '{json_str}'")
+logger.debug(f"JSON encoded {get_slot} -> '{json_str}'")
+json_obj : GetSlot = json.loads(json_str, cls=ResoniteLinkJSONDecoder)
+logger.debug(f"JSON decoded '{json_str}' -> {json_obj}")
+logger.debug(f"Message ID: '{json_obj.message_id}', Slot ID: '{json_obj.slot_id}', Depth: {json_obj.depth}, Include Component Data: {json_obj.include_component_data}")
 
 
 # port = int(input("ResoniteLink Port: "))
