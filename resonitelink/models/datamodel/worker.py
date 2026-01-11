@@ -6,5 +6,5 @@ from abc import ABC
 
 @dataclass(slots=False)
 class Worker(ABC):
-    worker_id : Annotated[str, JSONProperty("id")] = MISSING
+    id : Annotated[str, JSONProperty("id")] = MISSING
     is_reference_only : Annotated[bool, JSONProperty("isReferenceOnly")] = MISSING

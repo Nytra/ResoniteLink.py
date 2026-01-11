@@ -1,6 +1,6 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from resonitelink.models.messages import BaseMessage
+from resonitelink.models.messages import Message
 from resonitelink.json import ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder
 from typing import Union, Dict, List, Callable, Coroutine
 from enum import Enum
@@ -179,7 +179,7 @@ class ResoniteLinkClient():
         self._logger.debug(f"Sending message: {message}")
         await self._ws.send(message, text=True)
     
-    async def send_message(self, message : BaseMessage):
+    async def send_message(self, message : Message):
         """
         Sends a message to the server.
 

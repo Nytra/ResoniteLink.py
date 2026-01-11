@@ -1,2 +1,2 @@
-from .base_message import *
+from .message import *
 from .datamodel import *
