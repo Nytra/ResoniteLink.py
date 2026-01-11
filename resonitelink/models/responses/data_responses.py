@@ -9,7 +9,7 @@ from typing import Annotated, Any
 @dataclass(slots=True)
 class SlotData(Response):
     depth : Annotated[int, JSONProperty("depth")] = MISSING
-    data : Annotated[Slot, JSONProperty("data")] = MISSING
+    data : Annotated[Slot, JSONProperty("data", model_type_name="slot")] = MISSING
 
 
 @json_model("componentData")

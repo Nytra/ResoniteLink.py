@@ -53,6 +53,6 @@ class ResoniteLinkJSONEncoder(JSONEncoder):
                         # (This is also needed because the _MissingSentinel class can't be JSON encoded!)
                         continue
 
-                    obj[json_property.name] = value
+                    obj[json_property.json_name] = value
             
             return obj

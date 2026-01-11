@@ -15,6 +15,7 @@ class Slot(Worker):
     is_persistent : Annotated[Any, JSONProperty("isPersistent")] = MISSING # TODO: Should be Field_Bool
     name : Annotated[Any, JSONProperty("name")] = MISSING # TODO: Should be Field_String
     tag : Annotated[Any, JSONProperty("tag")] = MISSING # TODO: Should be Field_String
+    order_offset : Annotated[Any, JSONProperty("orderOffset")] = MISSING # TODO: Should be Field_Long
 
     components : Annotated[Any, JSONProperty("components")] = MISSING # TODO: Should be List[Component]
     children : Annotated[Any, JSONProperty("children")] = MISSING # TODO: Should be List[Slot]

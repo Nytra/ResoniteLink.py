@@ -13,7 +13,7 @@ logger.setLevel(logging.DEBUG)
 
 
 # port = int(input("ResoniteLink Port: "))
-port = 42301
+port = 36708
 
 async def on_client_started(client : ResoniteLinkClient):
     msg = AddSlot(data=Slot(id="RLPY_01", parent=Slot.Root))

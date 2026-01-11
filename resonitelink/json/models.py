@@ -1,6 +1,6 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from typing import Union, Any, Type, Tuple, List, Dict, Generator, TypeVar, Generic, ClassVar
+from typing import Union, Optional, Any, Type, Tuple, List, Dict, Generator, TypeVar, Generic, ClassVar
 from annotationlib import get_annotations
 import logging
 
@@ -91,7 +91,7 @@ class JSONModel(Generic[D]):
 
         """
         for key, json_property in properties.items():
-            yield json_property.name, key
+            yield json_property.json_name, key
 
     def _register(self):
         """
@@ -215,14 +215,33 @@ class JSONProperty():
             example_int : typing.Annotated[int, JsonProperty("exampleInt")]
     
     """
-    _name : str
+    _json_name : str
+    _model_type_name : Optional[str]
 
     @property
-    def name(self) -> str:
-        return self._name
+    def json_name(self) -> str:
+        return self._json_name
 
-    def __init__(self, name : str):
-        self._name = name
+    @property
+    def model_type_name(self) -> Optional[str]:
+        return self._model_type_name
+
+    def __init__(self, json_name : str, model_type_name : Optional[str] = None):
+        """
+        Defines a new JSONProperty.
+
+        Parameters
+        ----------
+        name : str
+            The name of this property in JSON objects.
+        model_type_name : str (optional)
+            The child model's `type_name` if this property can hold a different JSON model's data. This is used to 
+            identify 'anonymous' model objects during decoding of JSON data, those models don't specify an explit `$type` 
+            parameter, since their type is implicitly defined through the type of their field in the parent object.
+
+        """
+        self._json_name = json_name
+        self._model_type_name = model_type_name
     
     def __repr__(self) -> str:
-        return f"<JSONProperty name='{self.name}'>"
+        return f"<JSONProperty name='{self.json_name}'>"
