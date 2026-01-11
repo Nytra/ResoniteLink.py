@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from typing import Annotated, Any
 
 
-@dataclass
 @json_model("slot")
+@dataclass(slots=False)
 class Slot(Worker):
     parent : Annotated[Reference, JSONProperty("parent")] = MISSING
     position : Annotated[Any, JSONProperty("position")] = MISSING # TODO: Should be Field_Float3
@@ -18,3 +18,6 @@ class Slot(Worker):
 
     components : Annotated[Any, JSONProperty("components")] = MISSING # TODO: Should be List[Component]
     children : Annotated[Any, JSONProperty("children")] = MISSING # TODO: Should be List[Slot]
+
+    # Special Slot references
+    Root = Reference(target_id="Root", target_type="slot")

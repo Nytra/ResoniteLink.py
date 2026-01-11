@@ -4,8 +4,8 @@ from dataclasses import dataclass
 from typing import Annotated
 
 
-@dataclass
 @json_model("reference")
+@dataclass(slots=True)
 class Reference(Member):
     target_id : Annotated[str, JSONProperty("targetId")] = MISSING
     target_type : Annotated[str, JSONProperty("targetType")] = MISSING

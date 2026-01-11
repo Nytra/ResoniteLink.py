@@ -18,10 +18,7 @@ port = 42301
 async def on_client_started(client : ResoniteLinkClient):
     logger.info("Start event invoked!")
 
-    msg = AddSlot(data=Slot(
-        parent=Reference(target_id="Root", target_type="Slot")
-    ))
-    logger.info(f"Sending message: {msg}")
+    msg = AddSlot(data=Slot(parent=Slot.Root))
     await client.send_message(msg)
 
 client = ResoniteLinkClient(log_level=logging.DEBUG)

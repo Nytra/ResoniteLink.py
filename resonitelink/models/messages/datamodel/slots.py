@@ -5,27 +5,27 @@ from dataclasses import dataclass
 from typing import Annotated
 
 
-@dataclass
 @json_model("getSlot")
+@dataclass(slots=True)
 class GetSlot(BaseMessage):
     slot_id : Annotated[str, JSONProperty("slotId")] = MISSING
     depth : Annotated[int, JSONProperty("depth")] = MISSING
     include_component_data : Annotated[bool, JSONProperty("includeComponentData")] = MISSING
 
 
-@dataclass
 @json_model("addSlot")
+@dataclass(slots=True)
 class AddSlot(BaseMessage):
     data : Annotated[Slot, JSONProperty("data")] = MISSING
 
 
-@dataclass
 @json_model("updateSlot")
+@dataclass(slots=True)
 class UpdateSlot(BaseMessage):
     data : Annotated[Slot, JSONProperty("data")] = MISSING
 
 
-@dataclass
 @json_model("removeSlot")
+@dataclass(slots=True)
 class RemoveSlot(BaseMessage):
     slot_id : Annotated[str, JSONProperty("slotId")] = MISSING

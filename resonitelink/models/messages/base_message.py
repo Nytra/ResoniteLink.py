@@ -4,6 +4,6 @@ from typing import Annotated
 from abc import ABC
 
 
-@dataclass
+@dataclass(slots=True)
 class BaseMessage(ABC):
     message_id : Annotated[str, JSONProperty("messageId")] = MISSING
