@@ -46,4 +46,9 @@ def derive_version() -> str:
     return version
 
 
-setup(version=derive_version())
+setup(
+    version=derive_version(),
+    include_package_data=True, # Only include package data
+    packages=[ "resonitelink" ] # This specifies which of the packages in dir to include
+)
+

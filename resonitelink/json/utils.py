@@ -46,7 +46,7 @@ def is_missing(value : Any) -> bool:
     return type(value) is _MissingSentinel
 
 
-def get_object_structure_str(obj : Any, print_missing : bool = False, prefix : str = "| ") -> str:
+def get_object_structure_str(obj : Any, print_missing : bool = False, prefix : str = "") -> str:
     """
     Produces a string for the given object that represents that object's structure.
     If that object is an instance of a registered model's data class, it will be resolved recursively.
@@ -81,7 +81,7 @@ def get_object_structure_str(obj : Any, print_missing : bool = False, prefix : s
         for key, json_property in model.properties.items():
             if hasattr(obj, key):
                 # Value for key present
-                property_lines.append(f"- {key}: {get_object_structure_str(getattr(obj, key), prefix=f"{prefix}  ")}")
+                property_lines.append(f" - {key}: {get_object_structure_str(getattr(obj, key), prefix=f"{prefix}   ")}")
             
             elif print_missing:
                 # Value for key missing & missing values should be printed

@@ -93,9 +93,12 @@ class ResoniteLinkClient():
             The port number to connect to.
 
         """
-        if type(port) is not int: raise AttributeError(f"Port expected to be of type int, not {type(port)}!")
-        if self._on_stopped.is_set(): raise Exception("Cannot re-start a client that was already stopped!")
-        if self._on_starting.is_set(): raise Exception("Client is already starting!")
+        if type(port) is not int: 
+            raise AttributeError(f"Port expected to be of type int, not {type(port)}!")
+        if self._on_stopped.is_set(): 
+            raise Exception("Cannot re-start a client that was already stopped!")
+        if self._on_starting.is_set(): 
+            raise Exception("Client is already starting!")
 
         self._logger.debug(f"Starting client on port {port}...")
         self._on_starting.set()
@@ -109,7 +112,7 @@ class ResoniteLinkClient():
         self._ws_uri : str = f"ws://localhost:{port}/"
         self._ws = await websocket_connect(self._ws_uri)
 
-        self._logger.info(f"Client started!")
+        self._logger.info(f"Connection established! Connected to ResoniteLink on {self._ws_uri}")
         self._on_started.set()
         await self._invoke_event_handlers(ResoniteLinkClientEvent.STARTED)
 
@@ -167,8 +170,8 @@ class ResoniteLinkClient():
 
         """
         message = json.loads(message_bytes, cls=ResoniteLinkJSONDecoder)
-        message_structure_str = get_object_structure_str(message)
-        self._logger.debug(f"Received message: {message_bytes.decode('utf-8')}\n{message_structure_str}")
+        message_structure_str = get_object_structure_str(message, print_missing=True)
+        self._logger.debug(f"Received message:\n   {'\n   '.join(message_structure_str.split('\n'))}")
 
     async def _send_raw_message(self, message : Union[bytes, str]):
         """
