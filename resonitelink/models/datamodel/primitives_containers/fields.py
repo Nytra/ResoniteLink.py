@@ -1,6 +1,6 @@
 #       >=============================================================================<
 # NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!
-#      >==============================================================================<
+#       >=============================================================================<
 from resonitelink.models.datamodel.primitives import *
 from resonitelink.models.datamodel import Field
 from decimal import Decimal

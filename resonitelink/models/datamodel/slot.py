@@ -1,7 +1,8 @@
-from resonitelink.models.datamodel import Worker, Reference, Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
-from resonitelink.json import MISSING, JSONProperty, json_model
-from dataclasses import dataclass
-from typing import Annotated, Any
+# from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
+from resonitelink.models.datamodel import Worker, Component, Reference, Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
+from resonitelink.json import MISSING, JSONProperty, JSONPropertyType, json_model
+from dataclasses import dataclass, fields
+from typing import Annotated, List
 
 
 @json_model("slot")
@@ -17,8 +18,8 @@ class Slot(Worker):
     tag : Annotated[Field_String, JSONProperty("tag", model_type_name="field_string")] = MISSING
     order_offset : Annotated[Field_Long, JSONProperty("orderOffset", model_type_name="field_long")] = MISSING
 
-    components : Annotated[Any, JSONProperty("components")] = MISSING # TODO: Should be List[Component]
-    children : Annotated[Any, JSONProperty("children")] = MISSING # TODO: Should be List[Slot]
+    components : Annotated[List[Component], JSONProperty("components", model_type_name="component", property_type=JSONPropertyType.LIST)] = MISSING
+    # children : Annotated[List[Slot], JSONProperty("children", model_type_name="slot", property_type=JSONPropertyType.LIST)] = MISSING
 
     # Special Slot references
     Root = Reference(target_id="Root", target_type="slot")

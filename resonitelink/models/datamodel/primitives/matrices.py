@@ -1,6 +1,6 @@
 #       >=============================================================================<
 # NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!
-#      >==============================================================================<
+#       >=============================================================================<
 from resonitelink.json import MISSING, JSONProperty, json_model
 from dataclasses import dataclass
 from typing import Annotated

@@ -1,17 +1,84 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
-
 from typing import Union, Optional, Any, Type, Tuple, Dict, Generator, TypeVar, Generic
 from annotationlib import get_annotations
+from enum import Enum
 import logging
 
 __all__ = (
-    'JSONModel',
+    'JSONPropertyType',
     'JSONProperty',
+    'JSONModel',
     'json_model',
 )
 
 logger = logging.getLogger("ResoniteLinkModels")
 logger.setLevel(logging.DEBUG)
+
+
+class JSONPropertyType(Enum):
+    ELEMENT = 0,
+    LIST = 1,
+    DICT = 2
+
+
+class JSONProperty():
+    """
+    Denotes a JSON property of a model data class that will be picked up by the serializer / deserializer.
+    This should be added as an annotation to the members that should be JSON serialized / deserialized:
+        
+        @json_model("example")
+        def ExampleModel():
+            example_str : typing.Annotated[str, JsonProperty("exampleStr")]
+            example_int : typing.Annotated[int, JsonProperty("exampleInt")]
+    
+    """
+    _json_name : str
+    _model_type_name : Optional[str]
+    _abstract : bool
+    _property_type : JSONPropertyType
+
+    @property
+    def json_name(self) -> str:
+        return self._json_name
+
+    @property
+    def model_type_name(self) -> Optional[str]:
+        return self._model_type_name
+
+    @property
+    def abstract(self) -> bool:
+        return self._abstract
+    
+    @property
+    def property_type(self) -> JSONPropertyType:
+        return self._property_type
+
+    def __init__(self, json_name : str, model_type_name : Optional[str] = None, abstract = False, property_type : JSONPropertyType = JSONPropertyType.ELEMENT):
+        """
+        Defines a new JSONProperty.
+
+        Parameters
+        ----------
+        name : str
+            The name of this property in JSON objects.
+        model_type_name : str (optional)
+            The child model's `type_name` if this property can hold a different JSON model's data. This is used to 
+            identify 'anonymous' model objects during decoding of JSON data, those models don't specify an explit `$type` 
+            parameter, since their type is implicitly defined through the type of their field in the parent object.
+        abstract : bool (default=False)
+            Whether this property is "abstract" and needs to be overridden by a implementing class. If a `JSONModel` with
+            an abstract `JSONProperty` is created, a `TypeError` will be raised.
+        property_type : JSONPropertyType
+            The type of this property (Element, List, or Dict)
+
+        """
+        self._json_name = json_name
+        self._model_type_name = model_type_name
+        self._abstract = abstract
+        self._property_type = property_type
+    
+    def __repr__(self) -> str:
+        return f"<JSONProperty name='{self.json_name}{f', model_type_name:{self._model_type_name}' if self._model_type_name else ''}{' (abstract)' if self._abstract else ''}'>"
 
 
 D = TypeVar('D', bound=Type)
@@ -186,58 +253,6 @@ class JSONModel(Generic[D]):
     
     def __repr__(self) -> str:
         return f"<JSONModel type_name='{self.type_name}', data_class='{self.data_class}', property_count={len(self.properties)}>"
-
-
-class JSONProperty():
-    """
-    Denotes a JSON property of a model data class that will be picked up by the serializer / deserializer.
-    This should be added as an annotation to the members that should be JSON serialized / deserialized:
-        
-        @model("example")
-        def ExampleModel():
-            example_str : typing.Annotated[str, JsonProperty("exampleStr")]
-            example_int : typing.Annotated[int, JsonProperty("exampleInt")]
-    
-    """
-    _json_name : str
-    _model_type_name : Optional[str]
-    _abstract : bool
-
-    @property
-    def json_name(self) -> str:
-        return self._json_name
-
-    @property
-    def model_type_name(self) -> Optional[str]:
-        return self._model_type_name
-
-    @property
-    def abstract(self) -> bool:
-        return self._abstract
-
-    def __init__(self, json_name : str, model_type_name : Optional[str] = None, abstract = False):
-        """
-        Defines a new JSONProperty.
-
-        Parameters
-        ----------
-        name : str
-            The name of this property in JSON objects.
-        model_type_name : str (optional)
-            The child model's `type_name` if this property can hold a different JSON model's data. This is used to 
-            identify 'anonymous' model objects during decoding of JSON data, those models don't specify an explit `$type` 
-            parameter, since their type is implicitly defined through the type of their field in the parent object.
-        abstract : bool (default=False)
-            Whether this property is "abstract" and needs to be overridden by a implementing class. If a `JSONModel` with
-            an abstract `JSONProperty` is created, a `TypeError` will be raised.
-
-        """
-        self._json_name = json_name
-        self._model_type_name = model_type_name
-        self._abstract = abstract
-    
-    def __repr__(self) -> str:
-        return f"<JSONProperty name='{self.json_name}{f', model_type_name:{self._model_type_name}' if self._model_type_name else ''}{' (abstract)' if self._abstract else ''}'>"
 
 
 def json_model(type_name : str):

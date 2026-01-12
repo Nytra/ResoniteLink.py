@@ -170,6 +170,7 @@ class ResoniteLinkClient():
 
         """
         message = json.loads(message_bytes, cls=ResoniteLinkJSONDecoder)
+        self._logger.debug(f"Received raw message: {message_bytes.decode('utf-8')}")
         message_structure_str = format_object_structure(message, print_missing=True)
         self._logger.debug(f"Received message:\n   {'\n   '.join(message_structure_str.split('\n'))}")
 
