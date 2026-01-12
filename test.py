@@ -2,7 +2,7 @@ import logging
 logging.basicConfig(format='%(asctime)s [%(levelname)-8s] %(name)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 from resonitelink import ResoniteLinkClient, ResoniteLinkClientEvent
-from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, get_model_for_data_class
+from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder
 from resonitelink.models.datamodel import Slot, Reference, Field
 from resonitelink.models.messages import RemoveSlot, GetSlot, AddSlot
 import asyncio

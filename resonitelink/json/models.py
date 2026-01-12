@@ -1,15 +1,17 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from typing import Union, Optional, Any, Type, Tuple, List, Dict, Generator, TypeVar, Generic, ClassVar
+from typing import Union, Optional, Any, Type, Tuple, Dict, Generator, TypeVar, Generic
 from annotationlib import get_annotations
 import logging
 
+__all__ = (
+    'JSONModel',
+    'JSONProperty',
+    'json_model',
+)
 
 logger = logging.getLogger("ResoniteLinkModels")
 logger.setLevel(logging.DEBUG)
-
-_model_type_name_mapping : Dict[str, JSONModel] = {}
-_model_data_class_mapping : Dict[Type, JSONModel] = {}
 
 
 D = TypeVar('D', bound=Type)
@@ -20,6 +22,9 @@ class JSONModel(Generic[D]):
     A model is also backed by a data class, which is the class that holds the actual data of the model in the program.
     
     """
+    _model_type_name_mapping : Dict[str, JSONModel] = {}
+    _model_data_class_mapping : Dict[Type, JSONModel] = {}
+
     _type_name : str
     _data_class : D
     _properties : Dict[str, JSONProperty]
@@ -117,14 +122,11 @@ class JSONModel(Generic[D]):
             If a model with the same type name is already registered, or if this model instance is already registered under a different name.
 
         """
-        global _model_type_name_mapping
-        global _model_data_class_mapping
-
-        if self.type_name in _model_type_name_mapping.keys():
+        if self.type_name in JSONModel._model_type_name_mapping.keys():
             raise KeyError(f"A different model with type name '{self.type_name}' is already registered!")
-        if self.data_class in _model_data_class_mapping.keys():
+        if self.data_class in JSONModel._model_data_class_mapping.keys():
             raise KeyError(f"A different model with data class '{self.data_class}' is already registered!")
-        if self in _model_type_name_mapping.values():
+        if self in JSONModel._model_type_name_mapping.values():
             raise KeyError(f"This model instance is already registered under a different type name!")
         
         logger.debug(f"Registering JSONModel '{self.type_name}' with data class '{self.data_class}':")
@@ -135,87 +137,55 @@ class JSONModel(Generic[D]):
             for key, json_property in self.properties.items():
                 logger.debug(f"  -> '{key}': {json_property}")
         
-        _model_type_name_mapping[self.type_name] = self
-        _model_data_class_mapping[self.data_class] = self # type: ignore
+        JSONModel._model_type_name_mapping[self.type_name] = self
+        JSONModel._model_data_class_mapping[self.data_class] = self # type: ignore
+    
+    @staticmethod
+    def get_for_data_class(data_class : Type) -> JSONModel:
+        """
+        Returns the model instance registered for the provided data class.
+
+        Parameters
+        ----------
+        data_class : Type
+            The type of the requested model's data class.
+        
+        Returns
+        -------
+        The JSONModel associated with this data class.
+
+        Raises
+        ------
+        KeyError
+            If there is no registered model with the specified data class.
+
+        """
+        return JSONModel._model_data_class_mapping[data_class]
+
+    @staticmethod
+    def get_for_type_name(type_name : str) -> JSONModel:
+        """
+        Returns the model instance registered for the provided type name.
+
+        Parameters
+        ----------
+        type_name : str
+            The type name of the requested model.
+
+        Returns
+        -------
+        The JSONModel associated with this type name.
+
+        Raises
+        ------
+        KeyError
+            If there is no registered model with the specified type name.
+
+        """
+        return JSONModel._model_type_name_mapping[type_name]
     
     def __repr__(self) -> str:
         return f"<JSONModel type_name='{self.type_name}', data_class='{self.data_class}', property_count={len(self.properties)}>"
-
-
-def get_model_for_data_class(data_class : Type) -> JSONModel:
-    """
-    Returns the model instance registered for the provided data class.
-
-    Parameters
-    ----------
-    data_class : Type
-        The type of the requested model's data class.
-    
-    Returns
-    -------
-    The JSONModel associated with this data class.
-
-    Raises
-    ------
-    KeyError
-        If there is no registered model with the specified data class.
-
-    """
-    global _model_data_class_mapping
-
-    return _model_data_class_mapping[data_class]
-
-
-def get_model_for_type_name(type_name : str) -> JSONModel:
-    """
-    Returns the model instance registered for the provided type name.
-
-    Parameters
-    ----------
-    type_name : str
-        The type name of the requested model.
-
-    Returns
-    -------
-    The JSONModel associated with this type name.
-
-    Raises
-    ------
-    KeyError
-        If there is no registered model with the specified type name.
-
-    """
-    global _model_type_name_mapping
-
-    return _model_type_name_mapping[type_name]
-
-
-def json_model(type_name : str):
-    """
-    Class decorator to easily declare models from their data classes.
-    This decorator does **not** modify the decorated class, but globally registers a model for it.
-
-    Parameters
-    ----------
-    type_name : str
-        The model type name to associate the decorated data class with.
-        (This will be used by JSON serializer / deserializer as the '$type' value.)
-
-    """
-    def _model_decorator(data_class : D) -> D:
-        # Creating a model instance automatically registers it
-        model = JSONModel(type_name=type_name, data_class=data_class)
-
-        # Inject custom __repr__
-        def _repr(self) -> str:
-            return f"<{data_class.__name__} (data class for JSONModel '{model.type_name}')>"
-
-        setattr(data_class, '__repr__', _repr)
-
-        # Return decorated class again
-        return data_class
-
-    return _model_decorator
 
 
 class JSONProperty():
@@ -268,3 +238,31 @@ class JSONProperty():
     
     def __repr__(self) -> str:
         return f"<JSONProperty name='{self.json_name}{f', model_type_name:{self._model_type_name}' if self._model_type_name else ''}{' (abstract)' if self._abstract else ''}'>"
+
+
+def json_model(type_name : str):
+    """
+    Class decorator to easily declare models from their data classes.
+    This decorator does **not** modify the decorated class, but globally registers a model for it.
+
+    Parameters
+    ----------
+    type_name : str
+        The model type name to associate the decorated data class with.
+        (This will be used by JSON serializer / deserializer as the '$type' value.)
+
+    """
+    def _model_decorator(data_class : D) -> D:
+        # Creating a model instance automatically registers it
+        model = JSONModel(type_name=type_name, data_class=data_class)
+
+        # Inject custom __repr__
+        def _repr(self) -> str:
+            return f"<{data_class.__name__} (data class for JSONModel '{model.type_name}')>"
+
+        setattr(data_class, '__repr__', _repr)
+
+        # Return decorated class again
+        return data_class
+
+    return _model_decorator

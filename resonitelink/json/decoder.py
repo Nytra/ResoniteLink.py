@@ -1,8 +1,11 @@
-from .models import JSONModel, JSONProperty, get_model_for_type_name
+from .models import JSONModel, JSONProperty
 from typing import Any, Dict
 from json import JSONDecoder
 import logging
 
+__all__ = (
+    'ResoniteLinkJSONDecoder',
+)
 
 logger = logging.getLogger("ResoniteLinkJSONDecoder")
 logger.setLevel(logging.DEBUG)
@@ -45,7 +48,7 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
             # corresponding model's data class.
             try:
                 # Attempt to find the model for the given model_type_name
-                child_model = get_model_for_type_name(model_type_name)
+                child_model = JSONModel.get_for_type_name(model_type_name)
             
             except KeyError:
                 # Not found! This code is only invoked for explicit type names, so this indicates something is wrong.
@@ -134,7 +137,7 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
         if type_name is not None:
             try:
                 # Try retrieving a model to check if the JSON object's $type corresponds to a registered model
-                model = get_model_for_type_name(type_name)
+                model = JSONModel.get_for_type_name(type_name)
             
             except KeyError:
                 # Object has $type, but no model for that type name is registered, log warning

@@ -1,5 +1,11 @@
-from .models import get_model_for_data_class
+from .models import JSONModel
 from typing import Any, List
+
+__all__ = (
+    'MISSING',
+    'is_missing',
+    'format_object_structure',
+)
 
 
 class _MissingSentinel:
@@ -46,7 +52,7 @@ def is_missing(value : Any) -> bool:
     return type(value) is _MissingSentinel
 
 
-def get_object_structure_str(obj : Any, print_missing : bool = False, prefix : str = "") -> str:
+def format_object_structure(obj : Any, print_missing : bool = False, prefix : str = "") -> str:
     """
     Produces a string for the given object that represents that object's structure.
     If that object is an instance of a registered model's data class, it will be resolved recursively.
@@ -69,7 +75,7 @@ def get_object_structure_str(obj : Any, print_missing : bool = False, prefix : s
     structure_str : str
     try:
         # Attempt to 
-        model = get_model_for_data_class(type(obj))
+        model = JSONModel.get_for_data_class(type(obj))
     
     except KeyError:
         # Not a model
@@ -81,7 +87,7 @@ def get_object_structure_str(obj : Any, print_missing : bool = False, prefix : s
         for key, json_property in model.properties.items():
             if hasattr(obj, key):
                 # Value for key present
-                property_lines.append(f" - {key}: {get_object_structure_str(getattr(obj, key), prefix=f"{prefix}   ")}")
+                property_lines.append(f" - {key}: {format_object_structure(getattr(obj, key), prefix=f"{prefix}   ")}")
             
             elif print_missing:
                 # Value for key missing & missing values should be printed

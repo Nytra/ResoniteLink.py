@@ -1,5 +1,5 @@
 from resonitelink.utils import make_first_char_uppercase
-from resonitelink.json import get_model_for_type_name
+from resonitelink.json import JSONModel
 from dataclasses import dataclass
 from decimal import Decimal
 from typing import Type, List, Dict
@@ -137,7 +137,7 @@ for primitive_type in primitive_types:
 
     try:
         # Try get the model for this primitive type
-        model = get_model_for_type_name(primitive_type)
+        model = JSONModel.get_for_type_name(primitive_type)
 
     except KeyError:
         # Model not found!

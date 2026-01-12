@@ -1,7 +1,11 @@
-from .models import JSONProperty, get_model_for_data_class
-from .utils import MISSING, is_missing
+from .models import JSONModel, JSONProperty
+from .utils import is_missing
 from typing import Any
 from json import JSONEncoder
+
+__all__ = ( 
+    'ResoniteLinkJSONEncoder',
+)
 
 
 class ResoniteLinkJSONEncoder(JSONEncoder):
@@ -33,7 +37,7 @@ class ResoniteLinkJSONEncoder(JSONEncoder):
         """
         try:
             # Try retrieving a model to quickly check if the object to encode is a model's data class
-            model = get_model_for_data_class(type(o))
+            model = JSONModel.get_for_data_class(type(o))
         
         except KeyError:
             # Not a registered model class, forward to default encoder

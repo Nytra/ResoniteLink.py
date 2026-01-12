@@ -1,7 +1,7 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
 from resonitelink.models.messages import Message
-from resonitelink.json import ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, get_object_structure_str
+from resonitelink.json import ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
 from typing import Type, Union,  List, Dict, Callable, Coroutine
 from enum import Enum
 import json
@@ -170,7 +170,7 @@ class ResoniteLinkClient():
 
         """
         message = json.loads(message_bytes, cls=ResoniteLinkJSONDecoder)
-        message_structure_str = get_object_structure_str(message, print_missing=True)
+        message_structure_str = format_object_structure(message, print_missing=True)
         self._logger.debug(f"Received message:\n   {'\n   '.join(message_structure_str.split('\n'))}")
 
     async def _send_raw_message(self, message : Union[bytes, str]):
