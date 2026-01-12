@@ -40,7 +40,7 @@ class CodeGenerator():
         with open(self._filepath, mode='w') as file:
             file.write("#       >=============================================================================<\n")
             file.write("# NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!\n")
-            file.write("#      >==============================================================================<\n")
+            file.write("#       >=============================================================================<\n")
             file.writelines(self.generate())
 
     def generate(self) -> Generator[str]:
