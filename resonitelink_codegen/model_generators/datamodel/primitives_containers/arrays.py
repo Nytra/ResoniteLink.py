@@ -8,7 +8,7 @@ from typing import Type, Generator
 # from resonitelink.models.datamodel.primitives_containers import *
 # from resonitelink.models.datamodel.sync_array import SyncArray
 # from decimal import Decimal
-# from resonitelink.json import JSONProperty, json_model
+# from resonitelink.json import MISSING, JSONProperty, json_model
 # from dataclasses import dataclass
 # from typing import Annotated, List
 
@@ -39,7 +39,7 @@ class ArraysGenerator(CodeGenerator):
         yield f"from resonitelink.models.datamodel.primitives_containers import *\n"
         yield f"from resonitelink.models.datamodel.sync_array import SyncArray\n"
         yield f"from decimal import Decimal\n"
-        yield f"from resonitelink.json import JSONProperty, json_model\n"
+        yield f"from resonitelink.json import MISSING, JSONProperty, json_model\n"
         yield f"from dataclasses import dataclass\n"
         yield f"from typing import Annotated, List\n"
         yield f"\n\n"
@@ -48,7 +48,7 @@ class ArraysGenerator(CodeGenerator):
             yield f"@json_model(\"{model_name}\")\n"
             yield f"@dataclass(slots=True)\n"
             yield f"class {class_name}(SyncArray):\n"
-            yield f"    values : Annotated[List[{value_type.__name__}], JSONProperty(\"values\")]\n"
+            yield f"    values : Annotated[List[{value_type.__name__}], JSONProperty(\"values\")] = MISSING\n"
             yield f"    \n"
             yield f"    @property\n"
             yield f"    def value_type_name(self) -> str:\n"

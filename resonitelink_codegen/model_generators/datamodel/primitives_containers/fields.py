@@ -37,7 +37,7 @@ class FieldsGenerator(CodeGenerator):
         yield f"from resonitelink.models.datamodel.primitives import *\n"
         yield f"from resonitelink.models.datamodel import Field\n"
         yield f"from decimal import Decimal\n"
-        yield f"from resonitelink.json import JSONProperty, json_model\n"
+        yield f"from resonitelink.json import MISSING, JSONProperty, json_model\n"
         yield f"from dataclasses import dataclass\n"
         yield f"from typing import Annotated, Optional\n"
         yield f"\n\n"
@@ -47,9 +47,9 @@ class FieldsGenerator(CodeGenerator):
             yield f"@dataclass(slots=True)\n"
             yield f"class {class_name}(Field):\n"
             if nullable:
-                yield f"    value : Annotated[Optional[{value_type.__name__}], JSONProperty(\"value\")]\n"
+                yield f"    value : Annotated[Optional[{value_type.__name__}], JSONProperty(\"value\")] = MISSING\n"
             else:
-                yield f"    value : Annotated[{value_type.__name__}, JSONProperty(\"value\")]\n"
+                yield f"    value : Annotated[{value_type.__name__}, JSONProperty(\"value\")] = MISSING\n"
             yield f"    \n"
             yield f"    @property\n"
             yield f"    def value_type_name(self) -> str:\n"
