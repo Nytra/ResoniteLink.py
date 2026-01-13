@@ -1,6 +1,6 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from resonitelink.models.messages import Message
+from resonitelink.models.messages import Message, BinaryPayloadMessage
 from resonitelink.json import ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
 from typing import Type, Union,  List, Dict, Callable, Coroutine
 from enum import Enum
@@ -174,7 +174,7 @@ class ResoniteLinkClient():
         message_structure_str = format_object_structure(message, print_missing=True)
         self._logger.debug(f"Received message:\n   {'\n   '.join(message_structure_str.split('\n'))}")
 
-    async def _send_raw_message(self, message : Union[bytes, str]):
+    async def _send_raw_message(self, message : Union[bytes, str], text : bool = True):
         """
         Send a raw message (bytes or str) to the server.
 
@@ -182,7 +182,7 @@ class ResoniteLinkClient():
         await self._on_started.wait() # Wait for client to fully start before sending messages
 
         self._logger.debug(f"Sending message: {message}")
-        await self._ws.send(message, text=True)
+        await self._ws.send(message, text=text)
     
     async def send_message(self, message : Message):
         """
@@ -190,4 +190,8 @@ class ResoniteLinkClient():
 
         """
         raw_message = json.dumps(message, cls=ResoniteLinkJSONEncoder)
-        await self._send_raw_message(raw_message)
+        await self._send_raw_message(raw_message, text=True)
+
+        if isinstance(message, BinaryPayloadMessage):
+            # We need to also send the binary data
+            await self._send_raw_message(message.raw_binary_payload, text=False)

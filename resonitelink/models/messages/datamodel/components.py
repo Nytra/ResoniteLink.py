@@ -1,3 +1,4 @@
+from resonitelink.models.datamodel import Component
 from resonitelink.models.messages import Message
 from resonitelink.json import MISSING, json_model, JSONProperty
 from dataclasses import dataclass
@@ -13,14 +14,14 @@ class GetComponent(Message):
 @json_model("addComponent")
 @dataclass(slots=True)
 class AddComponent(Message):
-    data : Annotated[Any, JSONProperty("data")] = MISSING # TODO: This should be of type Component
+    data : Annotated[Component, JSONProperty("data")] = MISSING
     container_slot_id : Annotated[str, JSONProperty("containerSlotId")] = MISSING
 
 
 @json_model("updateComponent")
 @dataclass(slots=True)
 class UpdateComponent(Message):
-    data : Annotated[Any, JSONProperty("data")] = MISSING # TODO: This should be of type Component
+    data : Annotated[Component, JSONProperty("data")] = MISSING
 
 
 @json_model("removeComponent")
