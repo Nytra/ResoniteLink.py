@@ -2,8 +2,7 @@
 # NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!
 #       >=============================================================================<
 from resonitelink.models.datamodel.primitives import *
-from resonitelink.models.datamodel.primitives_containers import *
-from resonitelink.models.datamodel.sync_array import SyncArray
+from resonitelink.models.datamodel import SyncArray
 from decimal import Decimal
 from resonitelink.json import MISSING, JSONProperty, json_model
 from dataclasses import dataclass

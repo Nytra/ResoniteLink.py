@@ -36,8 +36,7 @@ class ArraysGenerator(CodeGenerator):
 
         """
         yield f"from resonitelink.models.datamodel.primitives import *\n"
-        yield f"from resonitelink.models.datamodel.primitives_containers import *\n"
-        yield f"from resonitelink.models.datamodel.sync_array import SyncArray\n"
+        yield f"from resonitelink.models.datamodel import SyncArray\n"
         yield f"from decimal import Decimal\n"
         yield f"from resonitelink.json import MISSING, JSONProperty, json_model\n"
         yield f"from dataclasses import dataclass\n"

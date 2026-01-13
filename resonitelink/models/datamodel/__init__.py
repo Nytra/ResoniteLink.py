@@ -1,11 +1,11 @@
 from .primitives import *
-from .member import Member
-from .worker import Worker
 
-from .field import Field
-from .sync_array import SyncArray
+from .member import *
+from .members import *
+
+from .field import *
+from .sync_array import *
 from .primitives_containers import *
 
-from .reference import Reference
-from .component import Component
-from .slot import Slot
+from .worker import *
+from .workers import *

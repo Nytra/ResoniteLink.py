@@ -1,7 +1,8 @@
 # from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
-from resonitelink.models.datamodel import Worker, Component, Reference, Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
+from resonitelink.models.datamodel import Worker, Reference, Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
 from resonitelink.json import MISSING, JSONProperty, JSONPropertyType, json_model
-from dataclasses import dataclass, fields
+from .component import Component
+from dataclasses import dataclass
 from typing import Annotated, List
 
 
