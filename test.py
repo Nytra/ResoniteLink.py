@@ -1,7 +1,7 @@
 import logging
 logging.basicConfig(format='%(asctime)s [%(levelname)-8s] %(name)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
-from resonitelink import ResoniteLinkClient, ResoniteLinkClientEvent
+from resonitelink import ResoniteLinkWebsocketClient, ResoniteLinkClientEvent
 from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, format_object_structure
 from resonitelink.models.datamodel import Slot, Component, Reference, Field, Field_String
 from resonitelink.models.messages import RemoveSlot, GetSlot, AddSlot, AddComponent, ImportTexture2DRawData
@@ -15,7 +15,7 @@ logger.setLevel(logging.DEBUG)
 
 
 # port = int(input("ResoniteLink Port: "))
-port = 33296
+port = 22794
 
 
 def test_generate_image_bytes() -> bytes:
@@ -31,13 +31,18 @@ def test_generate_image_bytes() -> bytes:
     return bytes(data)
 
 
-async def on_client_started(client : ResoniteLinkClient):
+async def on_client_started(client : ResoniteLinkWebsocketClient):
     new_slot_id = f"RLPY_{randint(10000000, 99999999)}"
 
-    msg = AddSlot(data=Slot(id=new_slot_id, parent=Slot.Root, name=Field_String(value="My awesome slot!!!")))
-    response = await client.send_message(msg)
+    slot = await client.add_slot()
+    await slot.set_name("Renamed!")
 
-    logger.info(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
+    logger.info(f"Received proxy: {slot}")
+
+    # msg = AddSlot(data=Slot(id=new_slot_id, parent=Slot.Root, name=Field_String(value="My awesome slot!!!")))
+    # response = await client.send_message(msg)
+
+    # logger.info(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
 
     # for component_type in [ 
     #     "[FrooxEngine]FrooxEngine.ValueField<bool>", 
@@ -57,7 +62,7 @@ async def on_client_started(client : ResoniteLinkClient):
     # msg.raw_binary_payload = test_generate_image_bytes()
     # await client.send_message(msg)
 
-client = ResoniteLinkClient(log_level=logging.DEBUG)
+client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
 client.register_event_handler(ResoniteLinkClientEvent.STARTED, on_client_started) # TODO: Decorator syntax
 
 asyncio.run(client.start(port))

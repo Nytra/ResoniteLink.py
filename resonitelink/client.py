@@ -1,7 +1,9 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from resonitelink.models.responses import Response
-from resonitelink.models.messages import Message, BinaryPayloadMessage
+from resonitelink.models.responses import Response, SlotData
+from resonitelink.models.datamodel import Slot
+from resonitelink.models.messages import Message, BinaryPayloadMessage, AddSlot, GetSlot
+from resonitelink.proxies import SlotProxy
 from websockets.exceptions import ConnectionClosed as WebSocketConnectionClosed
 from resonitelink.utils import IDRegistry
 from resonitelink.json import ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
@@ -9,6 +11,7 @@ from websockets import connect as websocket_connect, ClientConnection as WebSock
 from asyncio import AbstractEventLoop, Event, Future, get_running_loop, wait_for, gather
 from typing import Optional, Union, List, Dict, Callable, Coroutine, Any
 from enum import Enum
+from abc import ABC, abstractmethod
 import logging
 import json
 
@@ -22,7 +25,52 @@ class ResoniteLinkClientEvent(Enum):
     MESSAGE_RECEIVED=5
 
 
-class ResoniteLinkClient():
+class AbstractResoniteLinkClient(ABC):
+    """
+    Abstract base class for all ResoniteLink-Clients.
+
+    """
+    _datamodel_ids : IDRegistry
+
+    def __init__(self):
+        """
+        Base constructur of ResoniteLinkClient instance.
+
+        """
+        self._datamodel_ids = IDRegistry()
+
+    @abstractmethod
+    async def send_message(self, message : Message) -> Response:
+        raise NotImplementedError()
+    
+    async def fetch_slot(self, slot_id : str, depth : int = -1, include_component_data : bool = False) -> Slot:
+        """
+        Fetches a slot from ResoniteLink.
+
+        """
+        msg = GetSlot(slot_id=slot_id, depth=depth, include_component_data=include_component_data)
+        response = await self.send_message(msg)
+        if not isinstance(response, SlotData):
+            raise RuntimeError(f"Unexpected response type for message `GetSlot`: `{type(response)}` (Expected: `SlotData`)")
+        
+        return response.data
+    
+    async def add_slot(self, *args, parent=Slot.Root, **kwargs) -> SlotProxy:
+        """
+        Creates a new slot with the provided arguments.
+
+        Returns
+        -------
+        Proxy object for the newly created slot.
+
+        """
+        slot_id = self._datamodel_ids.generate_id()
+        msg = AddSlot(data=Slot(slot_id, *args, parent=parent, **kwargs))
+        await self.send_message(msg)
+        return SlotProxy(self, slot_id)
+
+
+class ResoniteLinkWebsocketClient(AbstractResoniteLinkClient):
     """
     Client to connect to the ResoniteLink API via WebSocket.
 
@@ -32,7 +80,7 @@ class ResoniteLinkClient():
     _on_started : Event
     _on_stopping : Event
     _on_stopped : Event
-    _event_handlers : Dict[ResoniteLinkClientEvent, List[Callable[[ResoniteLinkClient], Coroutine]]]
+    _event_handlers : Dict[ResoniteLinkClientEvent, List[Callable[[ResoniteLinkWebsocketClient], Coroutine]]]
     _message_ids : IDRegistry[Future[Response]]
     _loop : AbstractEventLoop
     _ws_uri : str
@@ -50,6 +98,7 @@ class ResoniteLinkClient():
             The log level to use for the default 'ResoniteLinkClient'. Only has an effect if no override logger is provided.
 
         """
+        super().__init__()
         if logger:
             self._logger = logger
         else:
@@ -62,7 +111,7 @@ class ResoniteLinkClient():
         self._message_ids = IDRegistry()
         self._event_handlers = { }
 
-    def register_event_handler(self, event : ResoniteLinkClientEvent, handler : Callable[[ResoniteLinkClient], Coroutine]):
+    def register_event_handler(self, event : ResoniteLinkClientEvent, handler : Callable[[ResoniteLinkWebsocketClient], Coroutine]):
         """
         Registers a new event handler to be invoked when the specified client event occurs.
 
