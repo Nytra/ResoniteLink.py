@@ -1,12 +1,18 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from resonitelink.models.responses import Response, SessionData, SlotData 
-from resonitelink.models.datamodel import Reference, Slot, Float3, FloatQ, Field_Bool, Field_Long, Field_Float3, Field_FloatQ, Field_String
-from resonitelink.models.messages import Message, BinaryPayloadMessage, RequestSessionData, GetSlot, AddSlot, UpdateSlot, RemoveSlot
+from resonitelink.models.responses import Response, SessionData, SlotData, ComponentData
+from resonitelink.models.datamodel import \
+    Member, Reference, Slot, Component, \
+    Float3, FloatQ, \
+    Field_Bool, Field_Long, Field_Float3, Field_FloatQ, Field_String
+from resonitelink.models.messages import \
+    Message, BinaryPayloadMessage, RequestSessionData, \
+    GetSlot, AddSlot, UpdateSlot, RemoveSlot, \
+    GetComponent, AddComponent, UpdateComponent, RemoveComponent
 from resonitelink.exceptions import ResoniteLinkException
-from resonitelink.proxies import SlotProxy
+from resonitelink.proxies import SlotProxy, ComponentProxy
 from websockets.exceptions import ConnectionClosed as WebSocketConnectionClosed
-from resonitelink.utils import IDRegistry, get_slot_id, optional_slot_reference, optional_field
+from resonitelink.utils import IDRegistry, get_slot_id, get_component_id, optional_slot_reference, optional_field
 from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
 from websockets import connect as websocket_connect, ClientConnection as WebSocketClientConnection
 from asyncio import AbstractEventLoop, Event, Future, get_running_loop, wait_for, gather
@@ -269,6 +275,69 @@ class ResoniteLinkClient(ABC):
         slot_id = get_slot_id(slot)
         msg = RemoveSlot(slot_id=slot_id)
         await self.send_message(msg)
+
+    async def get_component(self, component : Union[str, Component, ComponentProxy, Reference]) -> Component:
+        """
+        Request for full data of a particular component.
+        
+        Parameters
+        ----------
+        component : Union[str, Component, ComponentProxy, Reference]
+            Unique ID or reference of the component that's being fetched.
+
+        """
+        component_id = get_component_id(component)
+        msg = GetComponent(component_id=component_id)
+        response = await self.send_message(msg)
+        if not isinstance(response, ComponentData):
+            raise RuntimeError(f"Unexpected response type for message `GetComponent`: `{type(response)}` (Expected: `ComponentData`)")
+        
+        return response.data
+
+    async def add_component(
+        self, 
+        container_slot : Union[str, Slot, SlotProxy, Reference],
+        component_type : str,
+        members : Dict[str, Member] = MISSING
+    ) -> ComponentProxy:
+        """
+        Creates a new component on a slot.
+
+        Parameters
+        ----------
+        container_slot : Union[str, Slot, SlotProxy, Reference]
+            Unique ID or reference of slot to attach the new component to.
+        component_type : str
+            Type of the component to create.
+        members : Dict[str, Member], optional
+            Members of the component to create.
+
+        Returns
+        -------
+        Returns a `ComponentProxy` instance for the newly created component.
+        
+        """
+
+        container_slot_id = get_slot_id(container_slot)
+        component_id = self._datamodel_ids.generate_id()
+        msg = AddComponent(
+            container_slot_id=container_slot_id,
+            data=Component(
+                id=component_id,
+                component_type=component_type,
+                members=members
+            )
+        )
+        await self.send_message(msg)
+
+        return ComponentProxy(self, component_id)
+        
+
+    async def update_component(self, component : Any) -> Any:
+        raise NotImplementedError()
+
+    async def remove_component(self, component : Any) -> Any:
+        raise NotImplementedError()
     
     async def send_message(self, message : Message) -> Response:
         """

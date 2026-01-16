@@ -1,7 +1,7 @@
-from resonitelink.models.datamodel import Slot, Reference, Field
+from resonitelink.models.datamodel import Slot, Component, Reference, Field
 from resonitelink.json.models import JSONModel
 from resonitelink.json.utils import optional
-from resonitelink.proxies import SlotProxy
+from resonitelink.proxies import SlotProxy, ComponentProxy
 from typing import Union, Type, Any
 
 
@@ -27,7 +27,7 @@ def make_first_char_uppercase(value : str) -> str:
 
 def get_slot_id(slot : Union[str, Slot, SlotProxy, Reference]) -> str:
     """
-    Returns the ID for anything Slot-like.
+    Returns the target ID for anything that references a slot.
 
     """
     if isinstance(slot, str):
@@ -37,6 +37,26 @@ def get_slot_id(slot : Union[str, Slot, SlotProxy, Reference]) -> str:
         return slot.id
     
     if isinstance(slot, SlotProxy):
+        return slot.id
+    
+    if isinstance(slot, Reference):
+        return slot.target_id
+    
+    raise TypeError(f"Unsupported type: {type(slot)}")
+
+
+def get_component_id(slot : Union[str, Component, ComponentProxy, Reference]) -> str:
+    """
+    Returns the target ID for anything that references a component.
+
+    """
+    if isinstance(slot, str):
+        return slot
+    
+    if isinstance(slot, Component):
+        return slot.id
+    
+    if isinstance(slot, ComponentProxy):
         return slot.id
     
     if isinstance(slot, Reference):
