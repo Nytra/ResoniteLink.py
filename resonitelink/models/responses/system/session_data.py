@@ -9,4 +9,4 @@ from typing import Annotated
 class SessionData(Response):
     resonite_version : Annotated[str, JSONProperty("resoniteVersion")] = MISSING
     resonite_link_version : Annotated[str, JSONProperty("resoniteLinkVersion")] = MISSING
-    unique_session_id : Annotated[str, JSONProperty("UniqueSessionId")] = MISSING
+    unique_session_id : Annotated[str, JSONProperty("uniqueSessionId")] = MISSING

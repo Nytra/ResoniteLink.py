@@ -40,7 +40,7 @@ def get_slot_id(slot : Union[str, Slot, SlotProxy, Reference]) -> str:
         return slot.id
     
     if isinstance(slot, Reference):
-        return slot.id
+        return slot.target_id
     
     raise TypeError(f"Unsupported type: {type(slot)}")
 

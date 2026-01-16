@@ -4,7 +4,7 @@ logging.basicConfig(format='%(asctime)s [%(levelname)-8s] %(name)s: %(message)s'
 from resonitelink import ResoniteLinkWebsocketClient, ResoniteLinkClientEvent
 from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, format_object_structure
 from resonitelink.models.datamodel import Slot, Component, Reference, Field, Field_String
-from resonitelink.models.messages import RemoveSlot, GetSlot, AddSlot, AddComponent, ImportTexture2DRawData
+from resonitelink.models.messages import RemoveSlot, GetSlot, AddSlot, AddComponent, ImportTexture2DRawData, RequestSessionData
 from random import randint
 from typing import List
 import asyncio
@@ -33,6 +33,9 @@ def test_generate_image_bytes() -> bytes:
 
 async def on_client_started(client : ResoniteLinkWebsocketClient):
     new_slot_id = f"RLPY_{randint(10000000, 99999999)}"
+
+    # msg = RequestSessionData()
+    # await client.send_message(msg)
 
     slot = await client.add_slot()
     await slot.set_name("Renamed!")

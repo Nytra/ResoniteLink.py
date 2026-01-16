@@ -33,11 +33,16 @@ class AbstractResoniteLinkClient(ABC):
     """
     _datamodel_ids : IDRegistry
 
-    def __init__(self):
+    def __init__(self, logger : Optional[logging.Logger] = None, log_level : int = logging.INFO):
         """
         Base constructur of ResoniteLinkClient instance.
 
         """
+        if logger:
+            self._logger = logger
+        else:
+            self._logger = logging.getLogger("ResoniteLinkClient")
+            self._logger.setLevel(log_level)
         self._datamodel_ids = IDRegistry()
 
     @abstractmethod
@@ -84,8 +89,7 @@ class AbstractResoniteLinkClient(ABC):
         return response.data
     
     async def add_slot(
-        self, 
-        return_proxy : bool = True,
+        self,
         parent : Union[str, Slot, SlotProxy, Reference] = Slot.Root, 
         position : Float3 = MISSING,
         rotation : FloatQ = MISSING,
@@ -95,15 +99,12 @@ class AbstractResoniteLinkClient(ABC):
         name : str = MISSING,
         tag : str = MISSING,
         order_offset : int = MISSING
-    ) -> Union[SlotProxy, str]:
+    ) -> SlotProxy:
         """
         Creates a new slot with the provided arguments.
 
         Parameters
         ----------
-        return_proxy : bool, default = True
-            Wether to return a proxy instance.
-            If set to `False`, the slot's ID will be returned as a string.
         parent : Union[str, Slot, SlotProxy, Reference]
             Unique ID or reference to the parent slot this slot should be added under.
         position : Float3, optional
@@ -125,14 +126,15 @@ class AbstractResoniteLinkClient(ABC):
 
         Returns
         -------
-        If `return_proxy` is `True`, a `SlotProxy` instance for the newly created slot will be returned.
-        Otherwise the slot's ID is returned as a `str`.
+        Returns a `SlotProxy` instance for the newly created slot.
 
         """
         slot_id = self._datamodel_ids.generate_id()
+        parent_slot_id = get_slot_id(parent)
+        self._logger.debug(f"Parent slot: {parent}, parent slot id: {parent_slot_id}")
         msg = AddSlot(data=Slot(
             id = slot_id, 
-            parent = Reference(get_slot_id(parent), target_type="[FrooxEngine]FrooxEngine.Slot"),
+            parent = Reference(target_id=parent_slot_id, target_type="[FrooxEngine]FrooxEngine.Slot"),
             position = optional_field(position, Field_Float3),
             rotation = optional_field(rotation, Field_FloatQ),
             scale = optional_field(scale, Field_Float3),
@@ -144,10 +146,7 @@ class AbstractResoniteLinkClient(ABC):
         ))
         await self.send_message(msg)
         
-        if return_proxy:
-            return SlotProxy(self, slot_id)
-        else:
-            return slot_id
+        return SlotProxy(self, slot_id)
     
     async def update_slot(
         self, 
@@ -248,12 +247,7 @@ class ResoniteLinkWebsocketClient(AbstractResoniteLinkClient):
             The log level to use for the default 'ResoniteLinkClient'. Only has an effect if no override logger is provided.
 
         """
-        super().__init__()
-        if logger:
-            self._logger = logger
-        else:
-            self._logger = logging.getLogger("ResoniteLinkClient")
-            self._logger.setLevel(log_level)
+        super().__init__(logger=logger, log_level=log_level)
         self._on_starting = Event()
         self._on_started = Event()
         self._on_stopping = Event()
