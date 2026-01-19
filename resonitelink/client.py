@@ -17,7 +17,7 @@ from resonitelink.utils import get_slot_id, get_component_id, optional_slot_refe
 from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
 from websockets import connect as websocket_connect, ClientConnection as WebSocketClientConnection
 from asyncio import Event, Future, get_running_loop, wait_for, gather
-from typing import Optional, Union, List, Dict, Callable, Coroutine, Any
+from typing import Optional, Union, List, Dict, Callable, Coroutine
 from enum import Enum
 from abc import ABC, abstractmethod
 import logging

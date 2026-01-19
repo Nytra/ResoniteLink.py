@@ -72,6 +72,7 @@
 
 from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String, UpdateComponent
 import asyncio
+import logging
 
 # Creates a new client that connects to ResoniteLink via websocket.
 client = ResoniteLinkWebsocketClient()
@@ -87,16 +88,29 @@ async def on_client_started(client : ResoniteLinkClient):
     slot = await client.add_slot(name="Hello World Slot", position=Float3(0, 1.5, 0))
     
     # Adds a TextRenderer component to the newly created slot.
-    await client.add_component(slot, "[FrooxEngine]FrooxEngine.TextRenderer", {
+    text_renderer = await client.add_component(slot, "[FrooxEngine]FrooxEngine.TextRenderer", {
         # Sets the initial value of the string field 'Text' on the component.
-        'Text': Field_String(value="Hello, world!")
+        'Text': Field_String(value="Hello, world! ")
     })
-    
-    # Stops the client manually. Without this, the client will run forever, which might be desired for some use-cases.
-    await client.stop()
+
+    while True:
+        await asyncio.sleep(0.1)
+        
+        # First get the current component state
+        text_renderer_data = await client.get_component(text_renderer)
+        text_field : Field_String = text_renderer_data.members["Text"] # type: ignore
+        text_field.value = text_field.value[1:] + text_field.value[0]
+
+        logging.info(f"Updating text: {text_field.value}")
+
+        # Then update the component state
+        await client.update_component(text_renderer, {
+            'Text': text_field
+        })
 
 # Asks for the current port ResoniteLink is running on.
-port = int(input("ResoniteLink Port: "))
+# port = int(input("ResoniteLink Port: "))
+port = 49155
 
 # Start the client on the specified port.
 asyncio.run(client.start(port))

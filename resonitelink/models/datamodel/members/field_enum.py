@@ -1,9 +1,10 @@
-from resonitelink.models.datamodel import Field
+from resonitelink.models.datamodel import Member, Field
 from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
+from typing import Optional
 
 
-@json_model("enum", Field)
+@json_model("enum", Member)
 @dataclass(slots=True)
 class Field_Enum(Field):
     value : str = json_property("value", str)
@@ -14,10 +15,10 @@ class Field_Enum(Field):
         return "enum"
 
 
-@json_model("enum?", Field)
+@json_model("enum?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Enum(Field):
-    value : str = json_property("value", str) # TODO: This is optional. Is that a problem?
+    value : Optional[str] = json_property("value", str)
     enum_type : str = json_property("enumType", str)
 
     @property
