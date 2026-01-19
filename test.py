@@ -1,68 +1,103 @@
-from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ResoniteLinkClientEvent
-from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, format_object_structure
-from resonitelink.models.datamodel import Slot, Component, Reference, Field, Field_String
-from resonitelink.models.messages import RemoveSlot, GetSlot, AddSlot, AddComponent, ImportTexture2DRawData, RequestSessionData
-from typing import List
+# from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient
+# from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, format_object_structure
+# from resonitelink.models.datamodel import Slot, Component, Reference, Field, Field_String
+# from resonitelink.models.messages import RemoveSlot, GetSlot, AddSlot, AddComponent, ImportTexture2DRawData, RequestSessionData
+# from typing import List
+# import asyncio
+# import logging
+
+
+# port = 49155
+
+# logger = logging.getLogger("App")
+# logger.setLevel(logging.DEBUG)
+
+
+# def test_generate_image_bytes() -> bytes:
+#     data : List[int] = []
+
+#     for x in range(16):
+#         for y in range(16):
+#             data.append(x * 16)
+#             data.append(y * 16)
+#             data.append(255)
+#             data.append(255)
+    
+#     return bytes(data)
+
+
+# client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
+
+# @client.on_started
+# async def on_client_started(client : ResoniteLinkClient):
+#     # msg = RequestSessionData()
+#     # await client.send_message(msg)
+
+#     # slot = await client.add_slot()
+#     # await slot.set_name("Renamed!")
+
+#     # logger.info(f"Received proxy: {slot}")
+
+    
+#     slot1 = await client.add_slot(name="Test Slot")
+#     slot2 = await client.add_slot(name="Test Child Slot", parent=slot1)
+#     slot_data = await client.get_slot(slot1)
+
+#     # component = await client.add_component(slot, "[FrooxEngine]FrooxEngine.ValueField<bool>")
+#     # component
+
+#     # logger.info(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
+
+#     # for component_type in [ 
+#     #     "[FrooxEngine]FrooxEngine.ValueField<bool>", 
+#     #     # "[FrooxEngine]FrooxEngine.ValueField<int>", 
+#     #     # "[FrooxEngine]FrooxEngine.ValueField<string>" 
+#     # ]:
+#     #     msg = AddComponent(container_slot_id=new_slot_id, data=Component(component_type=component_type))
+#     #     await client.send_message(msg)
+    
+#     # msg = AddSlot(data=Slot(parent=Reference(target_type="[FrooxEngine]FrooxEngine.Slot", target_id=new_slot_id), name=Field_String(value="Child")))
+#     # await client.send_message(msg)
+
+#     # msg = GetSlot(slot_id=new_slot_id, include_component_data=True)
+#     # await client.send_message(msg)
+
+#     # msg = ImportTexture2DRawData(width=16, height=16)
+#     # msg.raw_binary_payload = test_generate_image_bytes()
+#     # await client.send_message(msg)
+
+# asyncio.run(client.start(port))
+
+
+
+from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String, UpdateComponent
 import asyncio
-import logging
 
-port = 49155
+# Creates a new client that connects to ResoniteLink via websocket.
+client = ResoniteLinkWebsocketClient()
 
-logger = logging.getLogger("App")
-logger.setLevel(logging.DEBUG)
-
-
-def test_generate_image_bytes() -> bytes:
-    data : List[int] = []
-
-    for x in range(16):
-        for y in range(16):
-            data.append(x * 16)
-            data.append(y * 16)
-            data.append(255)
-            data.append(255)
-    
-    return bytes(data)
-
-
+@client.on_started
 async def on_client_started(client : ResoniteLinkClient):
-    # msg = RequestSessionData()
-    # await client.send_message(msg)
+    """
+    This async function is called by the client at the end of its startup sequence.
+    You can use it to execute code once the client is up and running!
 
-    # slot = await client.add_slot()
-    # await slot.set_name("Renamed!")
-
-    # logger.info(f"Received proxy: {slot}")
-
+    """
+    # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
+    slot = await client.add_slot(name="Hello World Slot", position=Float3(0, 1.5, 0))
     
-    slot1 = await client.add_slot(name="Test Slot")
-    slot2 = await client.add_slot(name="Test Child Slot", parent=slot1)
-    slot_data = await client.get_slot(slot1)
-
-    # component = await client.add_component(slot, "[FrooxEngine]FrooxEngine.ValueField<bool>")
-    # component
-
-    # logger.info(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
-
-    # for component_type in [ 
-    #     "[FrooxEngine]FrooxEngine.ValueField<bool>", 
-    #     # "[FrooxEngine]FrooxEngine.ValueField<int>", 
-    #     # "[FrooxEngine]FrooxEngine.ValueField<string>" 
-    # ]:
-    #     msg = AddComponent(container_slot_id=new_slot_id, data=Component(component_type=component_type))
-    #     await client.send_message(msg)
+    # Adds a TextRenderer component to the newly created slot.
+    await client.add_component(slot, "[FrooxEngine]FrooxEngine.TextRenderer", {
+        # Sets the initial value of the string field 'Text' on the component.
+        'Text': Field_String(value="Hello, world!")
+    })
     
-    # msg = AddSlot(data=Slot(parent=Reference(target_type="[FrooxEngine]FrooxEngine.Slot", target_id=new_slot_id), name=Field_String(value="Child")))
-    # await client.send_message(msg)
+    # Stops the client manually. Without this, the client will run forever, which might be desired for some use-cases.
+    await client.stop()
 
-    # msg = GetSlot(slot_id=new_slot_id, include_component_data=True)
-    # await client.send_message(msg)
+# Asks for the current port ResoniteLink is running on.
+port = int(input("ResoniteLink Port: "))
 
-    # msg = ImportTexture2DRawData(width=16, height=16)
-    # msg.raw_binary_payload = test_generate_image_bytes()
-    # await client.send_message(msg)
-
-client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
-client.register_event_handler(ResoniteLinkClientEvent.STARTED, on_client_started) # TODO: Decorator syntax
-
+# Start the client on the specified port.
 asyncio.run(client.start(port))
+

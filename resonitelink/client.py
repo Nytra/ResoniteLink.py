@@ -23,8 +23,17 @@ from abc import ABC, abstractmethod
 import logging
 import json
 
+__all__ = (
+    'ResoniteLinkClient',
+    'ResoniteLinkWebsocketClient'
+)
 
-class ResoniteLinkClientEvent(Enum):
+
+class _ResoniteLinkClientEvent(Enum):
+    """
+    All event types that can be subscribed to in a `ResoniteLinkClient`.
+
+    """
     STARTING=0
     STARTED=1
     STOPPING=2
@@ -42,7 +51,7 @@ class ResoniteLinkClient(ABC):
     _on_started : Event
     _on_stopping : Event
     _on_stopped : Event
-    _event_handlers : Dict[ResoniteLinkClientEvent, List[Callable[[ResoniteLinkClient], Coroutine]]]
+    _event_handlers : Dict[_ResoniteLinkClientEvent, List[Callable[[ResoniteLinkClient], Coroutine]]]
     _message_ids : IDRegistry[Future[Response]]
     _datamodel_ids : IDRegistry
 
@@ -70,26 +79,79 @@ class ResoniteLinkClient(ABC):
         self._event_handlers = { }
         self._message_ids = IDRegistry()
         self._datamodel_ids = IDRegistry()
+    
+    async def stop(self):
+        """
+        Disconnects this ResoniteLinkClient and stops processing messages. This cannot be undone!
+        
+        """
+        await self._stop()
+    
+    def on_starting(self, func : Callable[[ResoniteLinkClient], Coroutine]):
+        """
+        Decorator syntax to register an event handler to the `STARTING` event.
 
-    def register_event_handler(self, event : ResoniteLinkClientEvent, handler : Callable[[ResoniteLinkClient], Coroutine]):
+        """
+        self._register_event_handler(_ResoniteLinkClientEvent.STARTING, func)
+        return func
+    
+    def on_started(self, func : Callable[[ResoniteLinkClient], Coroutine]):
+        """
+        Decorator syntax to register an event handler to the `STARTED` event.
+
+        """
+        self._register_event_handler(_ResoniteLinkClientEvent.STARTED, func)
+        return func
+    
+    def on_stopping(self, func : Callable[[ResoniteLinkClient], Coroutine]):
+        """
+        Decorator syntax to register an event handler to the `STOPPING` event.
+
+        """
+        self._register_event_handler(_ResoniteLinkClientEvent.STOPPING, func)
+        return func
+    
+    def on_stopped(self, func : Callable[[ResoniteLinkClient], Coroutine]):
+        """
+        Decorator syntax to register an event handler to the `STOPPED` event.
+
+        """
+        self._register_event_handler(_ResoniteLinkClientEvent.STOPPED, func)
+        return func
+
+    def on_message_sent(self, func : Callable[[ResoniteLinkClient, Message], Coroutine]):
+        """
+        Decorator syntax to register an event handler to the `MESSAGE_SENT` event.
+
+        """
+        self._register_event_handler(_ResoniteLinkClientEvent.MESSAGE_SENT, func)
+        return func
+
+    def on_response_received(self, func : Callable[[ResoniteLinkClient, Response], Coroutine]):
+        """
+        Decorator syntax to register an event handler to the `RESPONSE_RECEIVED` event.
+
+        """
+        self._register_event_handler(_ResoniteLinkClientEvent.RESPONSE_RECEIVED, func)
+        return func
+
+    def _register_event_handler(self, event : _ResoniteLinkClientEvent, handler : Callable[..., Coroutine]):
         """
         Registers a new event handler to be invoked when the specified client event occurs.
+        This shouldn't be called directly from the outside, as it doesn't use strict typing for the `handler` parameter.
 
         """
         handlers = self._event_handlers.setdefault(event, [ ])
         handlers.append(handler)
-        
         self._logger.debug(f"Updated event handlers: {self._event_handlers}")
     
-    async def _invoke_event_handlers(self, event : ResoniteLinkClientEvent, *args, **kwargs):
+    async def _invoke_event_handlers(self, event : _ResoniteLinkClientEvent, *args, **kwargs):
         """
         Invokes all registered event handlers for the given event. 
 
         """
         handlers = self._event_handlers.setdefault(event, [ ])
-
         self._logger.debug(f"Invoking {len(handlers)} event handlers for event {event}")
-
         await gather(*[ handler(self, *args, **kwargs) for handler in handlers ])
     
     async def request_session_data(self) -> SessionData:
@@ -204,7 +266,6 @@ class ResoniteLinkClient(ABC):
             order_offset = optional_field(order_offset, Field_Long)
         ))
         await self.send_message(msg)
-        
         return SlotProxy(self, slot_id)
     
     async def update_slot(
@@ -318,7 +379,6 @@ class ResoniteLinkClient(ABC):
         Returns a `ComponentProxy` instance for the newly created component.
         
         """
-
         container_slot_id = get_slot_id(container_slot)
         component_id = self._datamodel_ids.generate_id()
         msg = AddComponent(
@@ -330,9 +390,7 @@ class ResoniteLinkClient(ABC):
             )
         )
         await self.send_message(msg)
-
         return ComponentProxy(self, component_id)
-        
 
     async def update_component(self, component : Any) -> Any:
         raise NotImplementedError()
@@ -359,7 +417,7 @@ class ResoniteLinkClient(ABC):
             await self._send_raw_message(message.raw_binary_payload, text=False)
         
         # Invoke message sent event BEFORE waiting for message's future
-        await self._invoke_event_handlers(ResoniteLinkClientEvent.MESSAGE_SENT, message)
+        await self._invoke_event_handlers(_ResoniteLinkClientEvent.MESSAGE_SENT, message)
         
         # Waits for the message's future. Will complete when the response is received, of abort after timeout.
         return await wait_for(message_future, timeout=60)
@@ -391,13 +449,22 @@ class ResoniteLinkClient(ABC):
             raise RuntimeError(f"Received response's `source_message_id` could not get resolved to source message's future!")
 
         # Invoke message sent event BEFORE responding to message's future
-        await self._invoke_event_handlers(ResoniteLinkClientEvent.RESPONSE_RECEIVED, response)
+        await self._invoke_event_handlers(_ResoniteLinkClientEvent.RESPONSE_RECEIVED, response)
 
         # Responds to the future, this will continue the original message sent
         if response.success:
             source_message_future.set_result(response)
         else:
             source_message_future.set_exception(ResoniteLinkException(response))
+
+    @abstractmethod
+    async def _stop(self):
+        """
+        Disconnects this ResoniteLinkClient and stops processing messages.
+        Needs to be implemented by implementation.
+        
+        """
+        raise NotImplementedError()
 
     @abstractmethod
     async def _send_raw_message(self, message : Union[bytes, str], text : bool = True):
@@ -450,7 +517,7 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
         
         self._logger.debug(f"Starting client on port {port}...")
         self._on_starting.set()
-        await self._invoke_event_handlers(ResoniteLinkClientEvent.STARTING)
+        await self._invoke_event_handlers(_ResoniteLinkClientEvent.STARTING)
 
         # Create the task that starts fetching for websocket messages once the websocket client connects
         get_running_loop().create_task(self._fetch_loop())
@@ -461,25 +528,25 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
 
         self._logger.info(f"Connection established! Connected to ResoniteLink on {self._ws_uri}")
         self._on_started.set()
-        await self._invoke_event_handlers(ResoniteLinkClientEvent.STARTED)
+        await self._invoke_event_handlers(_ResoniteLinkClientEvent.STARTED)
 
         # Run forever until client is stopped
         await self._on_stopped.wait()
 
-    async def stop(self):
+    async def _stop(self):
         """
         Disconnects this ResoniteLinkClient and stops processing messages. This cannot be undone!
         
         """
         self._logger.debug(f"Stopping client...")
         self._on_stopping.set()
-        await self._invoke_event_handlers(ResoniteLinkClientEvent.STOPPING)
+        await self._invoke_event_handlers(_ResoniteLinkClientEvent.STOPPING)
 
         await self._ws.close()
 
         self._logger.debug(f"Client stopped!")
         self._on_stopped.set()
-        await self._invoke_event_handlers(ResoniteLinkClientEvent.STOPPED)
+        await self._invoke_event_handlers(_ResoniteLinkClientEvent.STOPPED)
     
     async def _fetch_loop(self):
         """
