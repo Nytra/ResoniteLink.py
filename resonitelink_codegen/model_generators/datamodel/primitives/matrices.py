@@ -4,17 +4,16 @@ from typing import Type, List, Generator
 
 
 # NOTE: Reference output:
-# from resonitelink.json import JSONProperty, json_model
+# from resonitelink.json import json_model, json_property
 # from dataclasses import dataclass
-# from typing import Annotated
 
 # @json_model("float2x2")
 # @dataclass(slots=True)
 # class Float2x2():
-#     m00 : Annotated[float, JSONProperty("m00")]
-#     m01 : Annotated[float, JSONProperty("m01")]
-#     m10 : Annotated[float, JSONProperty("m10")]
-#     m11 : Annotated[float, JSONProperty("m11")]
+#     m00 : float = json_property("m00", float)
+#     m01 : float = json_property("m01", float)
+#     m10 : float = json_property("m10", float)
+#     m11 : float = json_property("m11", flaot)
 
 
 class MatricesGenerator(CodeGenerator):
@@ -30,9 +29,8 @@ class MatricesGenerator(CodeGenerator):
         Generates the content of matrices.py
 
         """
-        yield f"from resonitelink.json import MISSING, JSONProperty, json_model\n"
+        yield f"from resonitelink.json import json_model, json_property\n"
         yield f"from dataclasses import dataclass\n"
-        yield f"from typing import Annotated\n"
         yield f"\n\n"
 
         def _generate_matrix_class(model_name : str, class_name : str, element_type : Type, element_names : List[str]):
@@ -40,7 +38,7 @@ class MatricesGenerator(CodeGenerator):
             yield f"@dataclass(slots=True)\n"
             yield f"class {class_name}():\n"
             for element_name in element_names:
-                yield f"    {element_name} : Annotated[{element_type.__name__}, JSONProperty(\"{element_name}\")] = MISSING\n"
+                yield f"    {element_name} : {element_type.__name__} = json_property(\"{element_name}\", {element_type.__name__})\n"
 
         for matrix_type in matrix_types:
             type_info = type_mappings[matrix_type]

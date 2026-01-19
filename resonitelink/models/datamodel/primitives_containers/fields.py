@@ -2,277 +2,277 @@
 # NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!
 #       >=============================================================================<
 from resonitelink.models.datamodel.primitives import *
-from resonitelink.models.datamodel import Field
-from decimal import Decimal
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.models.datamodel import Member, Field
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated, Optional
+from decimal import Decimal
+from typing import Optional
 
 
-@json_model("bool")
+@json_model("bool", Member)
 @dataclass(slots=True)
 class Field_Bool(Field):
-    value : Annotated[bool, JSONProperty("value")] = MISSING
+    value : bool = json_property("value", bool)
     
     @property
     def value_type_name(self) -> str:
         return "bool"
 
 
-@json_model("bool?")
+@json_model("bool?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Bool(Field):
-    value : Annotated[Optional[bool], JSONProperty("value")] = MISSING
+    value : Optional[bool] = json_property("value", bool)
     
     @property
     def value_type_name(self) -> str:
         return "bool?"
 
 
-@json_model("byte")
+@json_model("byte", Member)
 @dataclass(slots=True)
 class Field_Byte(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "byte"
 
 
-@json_model("byte?")
+@json_model("byte?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Byte(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "byte?"
 
 
-@json_model("sbyte")
+@json_model("sbyte", Member)
 @dataclass(slots=True)
 class Field_SByte(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte"
 
 
-@json_model("sbyte?")
+@json_model("sbyte?", Member)
 @dataclass(slots=True)
 class Field_Nullable_SByte(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte?"
 
 
-@json_model("ushort")
+@json_model("ushort", Member)
 @dataclass(slots=True)
 class Field_UShort(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "ushort"
 
 
-@json_model("ushort?")
+@json_model("ushort?", Member)
 @dataclass(slots=True)
 class Field_Nullable_UShort(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "ushort?"
 
 
-@json_model("short")
+@json_model("short", Member)
 @dataclass(slots=True)
 class Field_Short(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "short"
 
 
-@json_model("short?")
+@json_model("short?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Short(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "short?"
 
 
-@json_model("uint")
+@json_model("uint", Member)
 @dataclass(slots=True)
 class Field_UInt(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "uint"
 
 
-@json_model("uint?")
+@json_model("uint?", Member)
 @dataclass(slots=True)
 class Field_Nullable_UInt(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "uint?"
 
 
-@json_model("int")
+@json_model("int", Member)
 @dataclass(slots=True)
 class Field_Int(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "int"
 
 
-@json_model("int?")
+@json_model("int?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Int(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "int?"
 
 
-@json_model("ulong")
+@json_model("ulong", Member)
 @dataclass(slots=True)
 class Field_ULong(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "ulong"
 
 
-@json_model("ulong?")
+@json_model("ulong?", Member)
 @dataclass(slots=True)
 class Field_Nullable_ULong(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "ulong?"
 
 
-@json_model("long")
+@json_model("long", Member)
 @dataclass(slots=True)
 class Field_Long(Field):
-    value : Annotated[int, JSONProperty("value")] = MISSING
+    value : int = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "long"
 
 
-@json_model("long?")
+@json_model("long?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Long(Field):
-    value : Annotated[Optional[int], JSONProperty("value")] = MISSING
+    value : Optional[int] = json_property("value", int)
     
     @property
     def value_type_name(self) -> str:
         return "long?"
 
 
-@json_model("float")
+@json_model("float", Member)
 @dataclass(slots=True)
 class Field_Float(Field):
-    value : Annotated[float, JSONProperty("value")] = MISSING
+    value : float = json_property("value", float)
     
     @property
     def value_type_name(self) -> str:
         return "float"
 
 
-@json_model("float?")
+@json_model("float?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Float(Field):
-    value : Annotated[Optional[float], JSONProperty("value")] = MISSING
+    value : Optional[float] = json_property("value", float)
     
     @property
     def value_type_name(self) -> str:
         return "float?"
 
 
-@json_model("double")
+@json_model("double", Member)
 @dataclass(slots=True)
 class Field_Double(Field):
-    value : Annotated[float, JSONProperty("value")] = MISSING
+    value : float = json_property("value", float)
     
     @property
     def value_type_name(self) -> str:
         return "double"
 
 
-@json_model("double?")
+@json_model("double?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Double(Field):
-    value : Annotated[Optional[float], JSONProperty("value")] = MISSING
+    value : Optional[float] = json_property("value", float)
     
     @property
     def value_type_name(self) -> str:
         return "double?"
 
 
-@json_model("decimal")
+@json_model("decimal", Member)
 @dataclass(slots=True)
 class Field_Decimal(Field):
-    value : Annotated[Decimal, JSONProperty("value")] = MISSING
+    value : Decimal = json_property("value", Decimal)
     
     @property
     def value_type_name(self) -> str:
         return "decimal"
 
 
-@json_model("decimal?")
+@json_model("decimal?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Decimal(Field):
-    value : Annotated[Optional[Decimal], JSONProperty("value")] = MISSING
+    value : Optional[Decimal] = json_property("value", Decimal)
     
     @property
     def value_type_name(self) -> str:
         return "decimal?"
 
 
-@json_model("char")
+@json_model("char", Member)
 @dataclass(slots=True)
 class Field_Char(Field):
-    value : Annotated[str, JSONProperty("value")] = MISSING
+    value : str = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
         return "char"
 
 
-@json_model("char?")
+@json_model("char?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Char(Field):
-    value : Annotated[Optional[str], JSONProperty("value")] = MISSING
+    value : Optional[str] = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
         return "char?"
 
 
-@json_model("string")
+@json_model("string", Member)
 @dataclass(slots=True)
 class Field_String(Field):
-    value : Annotated[str, JSONProperty("value")] = MISSING
+    value : str = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -281,10 +281,10 @@ class Field_String(Field):
 
 
 
-@json_model("Uri")
+@json_model("Uri", Member)
 @dataclass(slots=True)
 class Field_Uri(Field):
-    value : Annotated[str, JSONProperty("value")] = MISSING
+    value : str = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -293,920 +293,920 @@ class Field_Uri(Field):
 
 
 
-@json_model("DateTime")
+@json_model("DateTime", Member)
 @dataclass(slots=True)
 class Field_DateTime(Field):
-    value : Annotated[str, JSONProperty("value")] = MISSING
+    value : str = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
         return "DateTime"
 
 
-@json_model("DateTime?")
+@json_model("DateTime?", Member)
 @dataclass(slots=True)
 class Field_Nullable_DateTime(Field):
-    value : Annotated[Optional[str], JSONProperty("value")] = MISSING
+    value : Optional[str] = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
         return "DateTime?"
 
 
-@json_model("TimeSpan")
+@json_model("TimeSpan", Member)
 @dataclass(slots=True)
 class Field_TimeSpan(Field):
-    value : Annotated[str, JSONProperty("value")] = MISSING
+    value : str = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
         return "TimeSpan"
 
 
-@json_model("TimeSpan?")
+@json_model("TimeSpan?", Member)
 @dataclass(slots=True)
 class Field_Nullable_TimeSpan(Field):
-    value : Annotated[Optional[str], JSONProperty("value")] = MISSING
+    value : Optional[str] = json_property("value", str)
     
     @property
     def value_type_name(self) -> str:
         return "TimeSpan?"
 
 
-@json_model("color")
+@json_model("color", Member)
 @dataclass(slots=True)
 class Field_Color(Field):
-    value : Annotated[Color, JSONProperty("value", element_type="t_color")] = MISSING
+    value : Color = json_property("value", Color)
     
     @property
     def value_type_name(self) -> str:
         return "color"
 
 
-@json_model("color?")
+@json_model("color?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Color(Field):
-    value : Annotated[Optional[Color], JSONProperty("value", element_type="t_color")] = MISSING
+    value : Optional[Color] = json_property("value", Color)
     
     @property
     def value_type_name(self) -> str:
         return "color?"
 
 
-@json_model("colorX")
+@json_model("colorX", Member)
 @dataclass(slots=True)
 class Field_ColorX(Field):
-    value : Annotated[ColorX, JSONProperty("value", element_type="t_colorX")] = MISSING
+    value : ColorX = json_property("value", ColorX)
     
     @property
     def value_type_name(self) -> str:
         return "colorX"
 
 
-@json_model("colorX?")
+@json_model("colorX?", Member)
 @dataclass(slots=True)
 class Field_Nullable_ColorX(Field):
-    value : Annotated[Optional[ColorX], JSONProperty("value", element_type="t_colorX")] = MISSING
+    value : Optional[ColorX] = json_property("value", ColorX)
     
     @property
     def value_type_name(self) -> str:
         return "colorX?"
 
 
-@json_model("color32")
+@json_model("color32", Member)
 @dataclass(slots=True)
 class Field_Color32(Field):
-    value : Annotated[Color32, JSONProperty("value", element_type="t_color32")] = MISSING
+    value : Color32 = json_property("value", Color32)
     
     @property
     def value_type_name(self) -> str:
         return "color32"
 
 
-@json_model("color32?")
+@json_model("color32?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Color32(Field):
-    value : Annotated[Optional[Color32], JSONProperty("value", element_type="t_color32")] = MISSING
+    value : Optional[Color32] = json_property("value", Color32)
     
     @property
     def value_type_name(self) -> str:
         return "color32?"
 
 
-@json_model("floatQ")
+@json_model("floatQ", Member)
 @dataclass(slots=True)
 class Field_FloatQ(Field):
-    value : Annotated[FloatQ, JSONProperty("value", element_type="t_floatQ")] = MISSING
+    value : FloatQ = json_property("value", FloatQ)
     
     @property
     def value_type_name(self) -> str:
         return "floatQ"
 
 
-@json_model("floatQ?")
+@json_model("floatQ?", Member)
 @dataclass(slots=True)
 class Field_Nullable_FloatQ(Field):
-    value : Annotated[Optional[FloatQ], JSONProperty("value", element_type="t_floatQ")] = MISSING
+    value : Optional[FloatQ] = json_property("value", FloatQ)
     
     @property
     def value_type_name(self) -> str:
         return "floatQ?"
 
 
-@json_model("doubleQ")
+@json_model("doubleQ", Member)
 @dataclass(slots=True)
 class Field_DoubleQ(Field):
-    value : Annotated[DoubleQ, JSONProperty("value", element_type="t_doubleQ")] = MISSING
+    value : DoubleQ = json_property("value", DoubleQ)
     
     @property
     def value_type_name(self) -> str:
         return "doubleQ"
 
 
-@json_model("doubleQ?")
+@json_model("doubleQ?", Member)
 @dataclass(slots=True)
 class Field_Nullable_DoubleQ(Field):
-    value : Annotated[Optional[DoubleQ], JSONProperty("value", element_type="t_doubleQ")] = MISSING
+    value : Optional[DoubleQ] = json_property("value", DoubleQ)
     
     @property
     def value_type_name(self) -> str:
         return "doubleQ?"
 
 
-@json_model("bool2")
+@json_model("bool2", Member)
 @dataclass(slots=True)
 class Field_Bool2(Field):
-    value : Annotated[Bool2, JSONProperty("value", element_type="t_bool2")] = MISSING
+    value : Bool2 = json_property("value", Bool2)
     
     @property
     def value_type_name(self) -> str:
         return "bool2"
 
 
-@json_model("bool2?")
+@json_model("bool2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Bool2(Field):
-    value : Annotated[Optional[Bool2], JSONProperty("value", element_type="t_bool2")] = MISSING
+    value : Optional[Bool2] = json_property("value", Bool2)
     
     @property
     def value_type_name(self) -> str:
         return "bool2?"
 
 
-@json_model("bool3")
+@json_model("bool3", Member)
 @dataclass(slots=True)
 class Field_Bool3(Field):
-    value : Annotated[Bool3, JSONProperty("value", element_type="t_bool3")] = MISSING
+    value : Bool3 = json_property("value", Bool3)
     
     @property
     def value_type_name(self) -> str:
         return "bool3"
 
 
-@json_model("bool3?")
+@json_model("bool3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Bool3(Field):
-    value : Annotated[Optional[Bool3], JSONProperty("value", element_type="t_bool3")] = MISSING
+    value : Optional[Bool3] = json_property("value", Bool3)
     
     @property
     def value_type_name(self) -> str:
         return "bool3?"
 
 
-@json_model("bool4")
+@json_model("bool4", Member)
 @dataclass(slots=True)
 class Field_Bool4(Field):
-    value : Annotated[Bool4, JSONProperty("value", element_type="t_bool4")] = MISSING
+    value : Bool4 = json_property("value", Bool4)
     
     @property
     def value_type_name(self) -> str:
         return "bool4"
 
 
-@json_model("bool4?")
+@json_model("bool4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Bool4(Field):
-    value : Annotated[Optional[Bool4], JSONProperty("value", element_type="t_bool4")] = MISSING
+    value : Optional[Bool4] = json_property("value", Bool4)
     
     @property
     def value_type_name(self) -> str:
         return "bool4?"
 
 
-@json_model("byte2")
+@json_model("byte2", Member)
 @dataclass(slots=True)
 class Field_Byte2(Field):
-    value : Annotated[Byte2, JSONProperty("value", element_type="t_byte2")] = MISSING
+    value : Byte2 = json_property("value", Byte2)
     
     @property
     def value_type_name(self) -> str:
         return "byte2"
 
 
-@json_model("byte2?")
+@json_model("byte2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Byte2(Field):
-    value : Annotated[Optional[Byte2], JSONProperty("value", element_type="t_byte2")] = MISSING
+    value : Optional[Byte2] = json_property("value", Byte2)
     
     @property
     def value_type_name(self) -> str:
         return "byte2?"
 
 
-@json_model("byte3")
+@json_model("byte3", Member)
 @dataclass(slots=True)
 class Field_Byte3(Field):
-    value : Annotated[Byte3, JSONProperty("value", element_type="t_byte3")] = MISSING
+    value : Byte3 = json_property("value", Byte3)
     
     @property
     def value_type_name(self) -> str:
         return "byte3"
 
 
-@json_model("byte3?")
+@json_model("byte3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Byte3(Field):
-    value : Annotated[Optional[Byte3], JSONProperty("value", element_type="t_byte3")] = MISSING
+    value : Optional[Byte3] = json_property("value", Byte3)
     
     @property
     def value_type_name(self) -> str:
         return "byte3?"
 
 
-@json_model("byte4")
+@json_model("byte4", Member)
 @dataclass(slots=True)
 class Field_Byte4(Field):
-    value : Annotated[Byte4, JSONProperty("value", element_type="t_byte4")] = MISSING
+    value : Byte4 = json_property("value", Byte4)
     
     @property
     def value_type_name(self) -> str:
         return "byte4"
 
 
-@json_model("byte4?")
+@json_model("byte4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Byte4(Field):
-    value : Annotated[Optional[Byte4], JSONProperty("value", element_type="t_byte4")] = MISSING
+    value : Optional[Byte4] = json_property("value", Byte4)
     
     @property
     def value_type_name(self) -> str:
         return "byte4?"
 
 
-@json_model("sbyte2")
+@json_model("sbyte2", Member)
 @dataclass(slots=True)
 class Field_Sbyte2(Field):
-    value : Annotated[SByte2, JSONProperty("value", element_type="t_sbyte2")] = MISSING
+    value : SByte2 = json_property("value", SByte2)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte2"
 
 
-@json_model("sbyte2?")
+@json_model("sbyte2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Sbyte2(Field):
-    value : Annotated[Optional[SByte2], JSONProperty("value", element_type="t_sbyte2")] = MISSING
+    value : Optional[SByte2] = json_property("value", SByte2)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte2?"
 
 
-@json_model("sbyte3")
+@json_model("sbyte3", Member)
 @dataclass(slots=True)
 class Field_Sbyte3(Field):
-    value : Annotated[SByte3, JSONProperty("value", element_type="t_sbyte3")] = MISSING
+    value : SByte3 = json_property("value", SByte3)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte3"
 
 
-@json_model("sbyte3?")
+@json_model("sbyte3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Sbyte3(Field):
-    value : Annotated[Optional[SByte3], JSONProperty("value", element_type="t_sbyte3")] = MISSING
+    value : Optional[SByte3] = json_property("value", SByte3)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte3?"
 
 
-@json_model("sbyte4")
+@json_model("sbyte4", Member)
 @dataclass(slots=True)
 class Field_Sbyte4(Field):
-    value : Annotated[SByte4, JSONProperty("value", element_type="t_sbyte4")] = MISSING
+    value : SByte4 = json_property("value", SByte4)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte4"
 
 
-@json_model("sbyte4?")
+@json_model("sbyte4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Sbyte4(Field):
-    value : Annotated[Optional[SByte4], JSONProperty("value", element_type="t_sbyte4")] = MISSING
+    value : Optional[SByte4] = json_property("value", SByte4)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte4?"
 
 
-@json_model("ushort2")
+@json_model("ushort2", Member)
 @dataclass(slots=True)
 class Field_Ushort2(Field):
-    value : Annotated[UShort2, JSONProperty("value", element_type="t_ushort2")] = MISSING
+    value : UShort2 = json_property("value", UShort2)
     
     @property
     def value_type_name(self) -> str:
         return "ushort2"
 
 
-@json_model("ushort2?")
+@json_model("ushort2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Ushort2(Field):
-    value : Annotated[Optional[UShort2], JSONProperty("value", element_type="t_ushort2")] = MISSING
+    value : Optional[UShort2] = json_property("value", UShort2)
     
     @property
     def value_type_name(self) -> str:
         return "ushort2?"
 
 
-@json_model("ushort3")
+@json_model("ushort3", Member)
 @dataclass(slots=True)
 class Field_Ushort3(Field):
-    value : Annotated[UShort3, JSONProperty("value", element_type="t_ushort3")] = MISSING
+    value : UShort3 = json_property("value", UShort3)
     
     @property
     def value_type_name(self) -> str:
         return "ushort3"
 
 
-@json_model("ushort3?")
+@json_model("ushort3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Ushort3(Field):
-    value : Annotated[Optional[UShort3], JSONProperty("value", element_type="t_ushort3")] = MISSING
+    value : Optional[UShort3] = json_property("value", UShort3)
     
     @property
     def value_type_name(self) -> str:
         return "ushort3?"
 
 
-@json_model("ushort4")
+@json_model("ushort4", Member)
 @dataclass(slots=True)
 class Field_Ushort4(Field):
-    value : Annotated[UShort4, JSONProperty("value", element_type="t_ushort4")] = MISSING
+    value : UShort4 = json_property("value", UShort4)
     
     @property
     def value_type_name(self) -> str:
         return "ushort4"
 
 
-@json_model("ushort4?")
+@json_model("ushort4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Ushort4(Field):
-    value : Annotated[Optional[UShort4], JSONProperty("value", element_type="t_ushort4")] = MISSING
+    value : Optional[UShort4] = json_property("value", UShort4)
     
     @property
     def value_type_name(self) -> str:
         return "ushort4?"
 
 
-@json_model("short2")
+@json_model("short2", Member)
 @dataclass(slots=True)
 class Field_Short2(Field):
-    value : Annotated[Short2, JSONProperty("value", element_type="t_short2")] = MISSING
+    value : Short2 = json_property("value", Short2)
     
     @property
     def value_type_name(self) -> str:
         return "short2"
 
 
-@json_model("short2?")
+@json_model("short2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Short2(Field):
-    value : Annotated[Optional[Short2], JSONProperty("value", element_type="t_short2")] = MISSING
+    value : Optional[Short2] = json_property("value", Short2)
     
     @property
     def value_type_name(self) -> str:
         return "short2?"
 
 
-@json_model("short3")
+@json_model("short3", Member)
 @dataclass(slots=True)
 class Field_Short3(Field):
-    value : Annotated[Short3, JSONProperty("value", element_type="t_short3")] = MISSING
+    value : Short3 = json_property("value", Short3)
     
     @property
     def value_type_name(self) -> str:
         return "short3"
 
 
-@json_model("short3?")
+@json_model("short3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Short3(Field):
-    value : Annotated[Optional[Short3], JSONProperty("value", element_type="t_short3")] = MISSING
+    value : Optional[Short3] = json_property("value", Short3)
     
     @property
     def value_type_name(self) -> str:
         return "short3?"
 
 
-@json_model("short4")
+@json_model("short4", Member)
 @dataclass(slots=True)
 class Field_Short4(Field):
-    value : Annotated[Short4, JSONProperty("value", element_type="t_short4")] = MISSING
+    value : Short4 = json_property("value", Short4)
     
     @property
     def value_type_name(self) -> str:
         return "short4"
 
 
-@json_model("short4?")
+@json_model("short4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Short4(Field):
-    value : Annotated[Optional[Short4], JSONProperty("value", element_type="t_short4")] = MISSING
+    value : Optional[Short4] = json_property("value", Short4)
     
     @property
     def value_type_name(self) -> str:
         return "short4?"
 
 
-@json_model("uint2")
+@json_model("uint2", Member)
 @dataclass(slots=True)
 class Field_Uint2(Field):
-    value : Annotated[UInt2, JSONProperty("value", element_type="t_uint2")] = MISSING
+    value : UInt2 = json_property("value", UInt2)
     
     @property
     def value_type_name(self) -> str:
         return "uint2"
 
 
-@json_model("uint2?")
+@json_model("uint2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Uint2(Field):
-    value : Annotated[Optional[UInt2], JSONProperty("value", element_type="t_uint2")] = MISSING
+    value : Optional[UInt2] = json_property("value", UInt2)
     
     @property
     def value_type_name(self) -> str:
         return "uint2?"
 
 
-@json_model("uint3")
+@json_model("uint3", Member)
 @dataclass(slots=True)
 class Field_Uint3(Field):
-    value : Annotated[UInt3, JSONProperty("value", element_type="t_uint3")] = MISSING
+    value : UInt3 = json_property("value", UInt3)
     
     @property
     def value_type_name(self) -> str:
         return "uint3"
 
 
-@json_model("uint3?")
+@json_model("uint3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Uint3(Field):
-    value : Annotated[Optional[UInt3], JSONProperty("value", element_type="t_uint3")] = MISSING
+    value : Optional[UInt3] = json_property("value", UInt3)
     
     @property
     def value_type_name(self) -> str:
         return "uint3?"
 
 
-@json_model("uint4")
+@json_model("uint4", Member)
 @dataclass(slots=True)
 class Field_Uint4(Field):
-    value : Annotated[UInt4, JSONProperty("value", element_type="t_uint4")] = MISSING
+    value : UInt4 = json_property("value", UInt4)
     
     @property
     def value_type_name(self) -> str:
         return "uint4"
 
 
-@json_model("uint4?")
+@json_model("uint4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Uint4(Field):
-    value : Annotated[Optional[UInt4], JSONProperty("value", element_type="t_uint4")] = MISSING
+    value : Optional[UInt4] = json_property("value", UInt4)
     
     @property
     def value_type_name(self) -> str:
         return "uint4?"
 
 
-@json_model("int2")
+@json_model("int2", Member)
 @dataclass(slots=True)
 class Field_Int2(Field):
-    value : Annotated[Int2, JSONProperty("value", element_type="t_int2")] = MISSING
+    value : Int2 = json_property("value", Int2)
     
     @property
     def value_type_name(self) -> str:
         return "int2"
 
 
-@json_model("int2?")
+@json_model("int2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Int2(Field):
-    value : Annotated[Optional[Int2], JSONProperty("value", element_type="t_int2")] = MISSING
+    value : Optional[Int2] = json_property("value", Int2)
     
     @property
     def value_type_name(self) -> str:
         return "int2?"
 
 
-@json_model("int3")
+@json_model("int3", Member)
 @dataclass(slots=True)
 class Field_Int3(Field):
-    value : Annotated[Int3, JSONProperty("value", element_type="t_int3")] = MISSING
+    value : Int3 = json_property("value", Int3)
     
     @property
     def value_type_name(self) -> str:
         return "int3"
 
 
-@json_model("int3?")
+@json_model("int3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Int3(Field):
-    value : Annotated[Optional[Int3], JSONProperty("value", element_type="t_int3")] = MISSING
+    value : Optional[Int3] = json_property("value", Int3)
     
     @property
     def value_type_name(self) -> str:
         return "int3?"
 
 
-@json_model("int4")
+@json_model("int4", Member)
 @dataclass(slots=True)
 class Field_Int4(Field):
-    value : Annotated[Int4, JSONProperty("value", element_type="t_int4")] = MISSING
+    value : Int4 = json_property("value", Int4)
     
     @property
     def value_type_name(self) -> str:
         return "int4"
 
 
-@json_model("int4?")
+@json_model("int4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Int4(Field):
-    value : Annotated[Optional[Int4], JSONProperty("value", element_type="t_int4")] = MISSING
+    value : Optional[Int4] = json_property("value", Int4)
     
     @property
     def value_type_name(self) -> str:
         return "int4?"
 
 
-@json_model("ulong2")
+@json_model("ulong2", Member)
 @dataclass(slots=True)
 class Field_Ulong2(Field):
-    value : Annotated[ULong2, JSONProperty("value", element_type="t_ulong2")] = MISSING
+    value : ULong2 = json_property("value", ULong2)
     
     @property
     def value_type_name(self) -> str:
         return "ulong2"
 
 
-@json_model("ulong2?")
+@json_model("ulong2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Ulong2(Field):
-    value : Annotated[Optional[ULong2], JSONProperty("value", element_type="t_ulong2")] = MISSING
+    value : Optional[ULong2] = json_property("value", ULong2)
     
     @property
     def value_type_name(self) -> str:
         return "ulong2?"
 
 
-@json_model("ulong3")
+@json_model("ulong3", Member)
 @dataclass(slots=True)
 class Field_Ulong3(Field):
-    value : Annotated[ULong3, JSONProperty("value", element_type="t_ulong3")] = MISSING
+    value : ULong3 = json_property("value", ULong3)
     
     @property
     def value_type_name(self) -> str:
         return "ulong3"
 
 
-@json_model("ulong3?")
+@json_model("ulong3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Ulong3(Field):
-    value : Annotated[Optional[ULong3], JSONProperty("value", element_type="t_ulong3")] = MISSING
+    value : Optional[ULong3] = json_property("value", ULong3)
     
     @property
     def value_type_name(self) -> str:
         return "ulong3?"
 
 
-@json_model("ulong4")
+@json_model("ulong4", Member)
 @dataclass(slots=True)
 class Field_Ulong4(Field):
-    value : Annotated[ULong4, JSONProperty("value", element_type="t_ulong4")] = MISSING
+    value : ULong4 = json_property("value", ULong4)
     
     @property
     def value_type_name(self) -> str:
         return "ulong4"
 
 
-@json_model("ulong4?")
+@json_model("ulong4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Ulong4(Field):
-    value : Annotated[Optional[ULong4], JSONProperty("value", element_type="t_ulong4")] = MISSING
+    value : Optional[ULong4] = json_property("value", ULong4)
     
     @property
     def value_type_name(self) -> str:
         return "ulong4?"
 
 
-@json_model("long2")
+@json_model("long2", Member)
 @dataclass(slots=True)
 class Field_Long2(Field):
-    value : Annotated[Long2, JSONProperty("value", element_type="t_long2")] = MISSING
+    value : Long2 = json_property("value", Long2)
     
     @property
     def value_type_name(self) -> str:
         return "long2"
 
 
-@json_model("long2?")
+@json_model("long2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Long2(Field):
-    value : Annotated[Optional[Long2], JSONProperty("value", element_type="t_long2")] = MISSING
+    value : Optional[Long2] = json_property("value", Long2)
     
     @property
     def value_type_name(self) -> str:
         return "long2?"
 
 
-@json_model("long3")
+@json_model("long3", Member)
 @dataclass(slots=True)
 class Field_Long3(Field):
-    value : Annotated[Long3, JSONProperty("value", element_type="t_long3")] = MISSING
+    value : Long3 = json_property("value", Long3)
     
     @property
     def value_type_name(self) -> str:
         return "long3"
 
 
-@json_model("long3?")
+@json_model("long3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Long3(Field):
-    value : Annotated[Optional[Long3], JSONProperty("value", element_type="t_long3")] = MISSING
+    value : Optional[Long3] = json_property("value", Long3)
     
     @property
     def value_type_name(self) -> str:
         return "long3?"
 
 
-@json_model("long4")
+@json_model("long4", Member)
 @dataclass(slots=True)
 class Field_Long4(Field):
-    value : Annotated[Long4, JSONProperty("value", element_type="t_long4")] = MISSING
+    value : Long4 = json_property("value", Long4)
     
     @property
     def value_type_name(self) -> str:
         return "long4"
 
 
-@json_model("long4?")
+@json_model("long4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Long4(Field):
-    value : Annotated[Optional[Long4], JSONProperty("value", element_type="t_long4")] = MISSING
+    value : Optional[Long4] = json_property("value", Long4)
     
     @property
     def value_type_name(self) -> str:
         return "long4?"
 
 
-@json_model("float2")
+@json_model("float2", Member)
 @dataclass(slots=True)
 class Field_Float2(Field):
-    value : Annotated[Float2, JSONProperty("value", element_type="t_float2")] = MISSING
+    value : Float2 = json_property("value", Float2)
     
     @property
     def value_type_name(self) -> str:
         return "float2"
 
 
-@json_model("float2?")
+@json_model("float2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Float2(Field):
-    value : Annotated[Optional[Float2], JSONProperty("value", element_type="t_float2")] = MISSING
+    value : Optional[Float2] = json_property("value", Float2)
     
     @property
     def value_type_name(self) -> str:
         return "float2?"
 
 
-@json_model("float3")
+@json_model("float3", Member)
 @dataclass(slots=True)
 class Field_Float3(Field):
-    value : Annotated[Float3, JSONProperty("value", element_type="t_float3")] = MISSING
+    value : Float3 = json_property("value", Float3)
     
     @property
     def value_type_name(self) -> str:
         return "float3"
 
 
-@json_model("float3?")
+@json_model("float3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Float3(Field):
-    value : Annotated[Optional[Float3], JSONProperty("value", element_type="t_float3")] = MISSING
+    value : Optional[Float3] = json_property("value", Float3)
     
     @property
     def value_type_name(self) -> str:
         return "float3?"
 
 
-@json_model("float4")
+@json_model("float4", Member)
 @dataclass(slots=True)
 class Field_Float4(Field):
-    value : Annotated[Float4, JSONProperty("value", element_type="t_float4")] = MISSING
+    value : Float4 = json_property("value", Float4)
     
     @property
     def value_type_name(self) -> str:
         return "float4"
 
 
-@json_model("float4?")
+@json_model("float4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Float4(Field):
-    value : Annotated[Optional[Float4], JSONProperty("value", element_type="t_float4")] = MISSING
+    value : Optional[Float4] = json_property("value", Float4)
     
     @property
     def value_type_name(self) -> str:
         return "float4?"
 
 
-@json_model("double2")
+@json_model("double2", Member)
 @dataclass(slots=True)
 class Field_Double2(Field):
-    value : Annotated[Double2, JSONProperty("value", element_type="t_double2")] = MISSING
+    value : Double2 = json_property("value", Double2)
     
     @property
     def value_type_name(self) -> str:
         return "double2"
 
 
-@json_model("double2?")
+@json_model("double2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Double2(Field):
-    value : Annotated[Optional[Double2], JSONProperty("value", element_type="t_double2")] = MISSING
+    value : Optional[Double2] = json_property("value", Double2)
     
     @property
     def value_type_name(self) -> str:
         return "double2?"
 
 
-@json_model("double3")
+@json_model("double3", Member)
 @dataclass(slots=True)
 class Field_Double3(Field):
-    value : Annotated[Double3, JSONProperty("value", element_type="t_double3")] = MISSING
+    value : Double3 = json_property("value", Double3)
     
     @property
     def value_type_name(self) -> str:
         return "double3"
 
 
-@json_model("double3?")
+@json_model("double3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Double3(Field):
-    value : Annotated[Optional[Double3], JSONProperty("value", element_type="t_double3")] = MISSING
+    value : Optional[Double3] = json_property("value", Double3)
     
     @property
     def value_type_name(self) -> str:
         return "double3?"
 
 
-@json_model("double4")
+@json_model("double4", Member)
 @dataclass(slots=True)
 class Field_Double4(Field):
-    value : Annotated[Double4, JSONProperty("value", element_type="t_double4")] = MISSING
+    value : Double4 = json_property("value", Double4)
     
     @property
     def value_type_name(self) -> str:
         return "double4"
 
 
-@json_model("double4?")
+@json_model("double4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Double4(Field):
-    value : Annotated[Optional[Double4], JSONProperty("value", element_type="t_double4")] = MISSING
+    value : Optional[Double4] = json_property("value", Double4)
     
     @property
     def value_type_name(self) -> str:
         return "double4?"
 
 
-@json_model("float2x2")
+@json_model("float2x2", Member)
 @dataclass(slots=True)
 class Field_Float2x2(Field):
-    value : Annotated[Float2x2, JSONProperty("value", element_type="t_float2x2")] = MISSING
+    value : Float2x2 = json_property("value", Float2x2)
     
     @property
     def value_type_name(self) -> str:
         return "float2x2"
 
 
-@json_model("float2x2?")
+@json_model("float2x2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Float2x2(Field):
-    value : Annotated[Optional[Float2x2], JSONProperty("value", element_type="t_float2x2")] = MISSING
+    value : Optional[Float2x2] = json_property("value", Float2x2)
     
     @property
     def value_type_name(self) -> str:
         return "float2x2?"
 
 
-@json_model("float3x3")
+@json_model("float3x3", Member)
 @dataclass(slots=True)
 class Field_Float3x3(Field):
-    value : Annotated[Float3x3, JSONProperty("value", element_type="t_float3x3")] = MISSING
+    value : Float3x3 = json_property("value", Float3x3)
     
     @property
     def value_type_name(self) -> str:
         return "float3x3"
 
 
-@json_model("float3x3?")
+@json_model("float3x3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Float3x3(Field):
-    value : Annotated[Optional[Float3x3], JSONProperty("value", element_type="t_float3x3")] = MISSING
+    value : Optional[Float3x3] = json_property("value", Float3x3)
     
     @property
     def value_type_name(self) -> str:
         return "float3x3?"
 
 
-@json_model("float4x4")
+@json_model("float4x4", Member)
 @dataclass(slots=True)
 class Field_Float4x4(Field):
-    value : Annotated[Float4x4, JSONProperty("value", element_type="t_float4x4")] = MISSING
+    value : Float4x4 = json_property("value", Float4x4)
     
     @property
     def value_type_name(self) -> str:
         return "float4x4"
 
 
-@json_model("float4x4?")
+@json_model("float4x4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Float4x4(Field):
-    value : Annotated[Optional[Float4x4], JSONProperty("value", element_type="t_float4x4")] = MISSING
+    value : Optional[Float4x4] = json_property("value", Float4x4)
     
     @property
     def value_type_name(self) -> str:
         return "float4x4?"
 
 
-@json_model("double2x2")
+@json_model("double2x2", Member)
 @dataclass(slots=True)
 class Field_Double2x2(Field):
-    value : Annotated[Double2x2, JSONProperty("value", element_type="t_double2x2")] = MISSING
+    value : Double2x2 = json_property("value", Double2x2)
     
     @property
     def value_type_name(self) -> str:
         return "double2x2"
 
 
-@json_model("double2x2?")
+@json_model("double2x2?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Double2x2(Field):
-    value : Annotated[Optional[Double2x2], JSONProperty("value", element_type="t_double2x2")] = MISSING
+    value : Optional[Double2x2] = json_property("value", Double2x2)
     
     @property
     def value_type_name(self) -> str:
         return "double2x2?"
 
 
-@json_model("double3x3")
+@json_model("double3x3", Member)
 @dataclass(slots=True)
 class Field_Double3x3(Field):
-    value : Annotated[Double3x3, JSONProperty("value", element_type="t_double3x3")] = MISSING
+    value : Double3x3 = json_property("value", Double3x3)
     
     @property
     def value_type_name(self) -> str:
         return "double3x3"
 
 
-@json_model("double3x3?")
+@json_model("double3x3?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Double3x3(Field):
-    value : Annotated[Optional[Double3x3], JSONProperty("value", element_type="t_double3x3")] = MISSING
+    value : Optional[Double3x3] = json_property("value", Double3x3)
     
     @property
     def value_type_name(self) -> str:
         return "double3x3?"
 
 
-@json_model("double4x4")
+@json_model("double4x4", Member)
 @dataclass(slots=True)
 class Field_Double4x4(Field):
-    value : Annotated[Double4x4, JSONProperty("value", element_type="t_double4x4")] = MISSING
+    value : Double4x4 = json_property("value", Double4x4)
     
     @property
     def value_type_name(self) -> str:
         return "double4x4"
 
 
-@json_model("double4x4?")
+@json_model("double4x4?", Member)
 @dataclass(slots=True)
 class Field_Nullable_Double4x4(Field):
-    value : Annotated[Optional[Double4x4], JSONProperty("value", element_type="t_double4x4")] = MISSING
+    value : Optional[Double4x4] = json_property("value", Double4x4)
     
     @property
     def value_type_name(self) -> str:

@@ -2,617 +2,617 @@
 # NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!
 #       >=============================================================================<
 from resonitelink.models.datamodel.primitives import *
-from resonitelink.models.datamodel import SyncArray
-from decimal import Decimal
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.models.datamodel import Member, SyncArray
+from resonitelink.json import JSONPropertyType, json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated, List
+from decimal import Decimal
+from typing import List
 
 
-@json_model("bool[]")
+@json_model("bool[]", Member)
 @dataclass(slots=True)
 class Array_Bool(SyncArray):
-    values : Annotated[List[bool], JSONProperty("values")] = MISSING
+    values : List[bool] = json_property("values", bool, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "bool"
 
 
-@json_model("byte[]")
+@json_model("byte[]", Member)
 @dataclass(slots=True)
 class Array_Byte(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "byte"
 
 
-@json_model("sbyte[]")
+@json_model("sbyte[]", Member)
 @dataclass(slots=True)
 class Array_SByte(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte"
 
 
-@json_model("ushort[]")
+@json_model("ushort[]", Member)
 @dataclass(slots=True)
 class Array_UShort(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ushort"
 
 
-@json_model("short[]")
+@json_model("short[]", Member)
 @dataclass(slots=True)
 class Array_Short(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "short"
 
 
-@json_model("uint[]")
+@json_model("uint[]", Member)
 @dataclass(slots=True)
 class Array_UInt(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "uint"
 
 
-@json_model("int[]")
+@json_model("int[]", Member)
 @dataclass(slots=True)
 class Array_Int(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "int"
 
 
-@json_model("ulong[]")
+@json_model("ulong[]", Member)
 @dataclass(slots=True)
 class Array_ULong(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ulong"
 
 
-@json_model("long[]")
+@json_model("long[]", Member)
 @dataclass(slots=True)
 class Array_Long(SyncArray):
-    values : Annotated[List[int], JSONProperty("values")] = MISSING
+    values : List[int] = json_property("values", int, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "long"
 
 
-@json_model("float[]")
+@json_model("float[]", Member)
 @dataclass(slots=True)
 class Array_Float(SyncArray):
-    values : Annotated[List[float], JSONProperty("values")] = MISSING
+    values : List[float] = json_property("values", float, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "float"
 
 
-@json_model("double[]")
+@json_model("double[]", Member)
 @dataclass(slots=True)
 class Array_Double(SyncArray):
-    values : Annotated[List[float], JSONProperty("values")] = MISSING
+    values : List[float] = json_property("values", float, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "double"
 
 
-@json_model("decimal[]")
+@json_model("decimal[]", Member)
 @dataclass(slots=True)
 class Array_Decimal(SyncArray):
-    values : Annotated[List[Decimal], JSONProperty("values")] = MISSING
+    values : List[Decimal] = json_property("values", Decimal, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "decimal"
 
 
-@json_model("char[]")
+@json_model("char[]", Member)
 @dataclass(slots=True)
 class Array_Char(SyncArray):
-    values : Annotated[List[str], JSONProperty("values")] = MISSING
+    values : List[str] = json_property("values", str, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "char"
 
 
-@json_model("string[]")
+@json_model("string[]", Member)
 @dataclass(slots=True)
 class Array_String(SyncArray):
-    values : Annotated[List[str], JSONProperty("values")] = MISSING
+    values : List[str] = json_property("values", str, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "string"
 
 
-@json_model("Uri[]")
+@json_model("Uri[]", Member)
 @dataclass(slots=True)
 class Array_Uri(SyncArray):
-    values : Annotated[List[str], JSONProperty("values")] = MISSING
+    values : List[str] = json_property("values", str, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "Uri"
 
 
-@json_model("DateTime[]")
+@json_model("DateTime[]", Member)
 @dataclass(slots=True)
 class Array_DateTime(SyncArray):
-    values : Annotated[List[str], JSONProperty("values")] = MISSING
+    values : List[str] = json_property("values", str, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "DateTime"
 
 
-@json_model("TimeSpan[]")
+@json_model("TimeSpan[]", Member)
 @dataclass(slots=True)
 class Array_TimeSpan(SyncArray):
-    values : Annotated[List[str], JSONProperty("values")] = MISSING
+    values : List[str] = json_property("values", str, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "TimeSpan"
 
 
-@json_model("color[]")
+@json_model("color[]", Member)
 @dataclass(slots=True)
 class Array_Color(SyncArray):
-    values : Annotated[List[Color], JSONProperty("values", element_type="t_color")] = MISSING
+    values : List[Color] = json_property("values", Color, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "color"
 
 
-@json_model("colorX[]")
+@json_model("colorX[]", Member)
 @dataclass(slots=True)
 class Array_ColorX(SyncArray):
-    values : Annotated[List[ColorX], JSONProperty("values", element_type="t_colorX")] = MISSING
+    values : List[ColorX] = json_property("values", ColorX, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "colorX"
 
 
-@json_model("color32[]")
+@json_model("color32[]", Member)
 @dataclass(slots=True)
 class Array_Color32(SyncArray):
-    values : Annotated[List[Color32], JSONProperty("values", element_type="t_color32")] = MISSING
+    values : List[Color32] = json_property("values", Color32, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "color32"
 
 
-@json_model("floatQ[]")
+@json_model("floatQ[]", Member)
 @dataclass(slots=True)
 class Array_FloatQ(SyncArray):
-    values : Annotated[List[FloatQ], JSONProperty("values", element_type="t_floatQ")] = MISSING
+    values : List[FloatQ] = json_property("values", FloatQ, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "floatQ"
 
 
-@json_model("doubleQ[]")
+@json_model("doubleQ[]", Member)
 @dataclass(slots=True)
 class Array_DoubleQ(SyncArray):
-    values : Annotated[List[DoubleQ], JSONProperty("values", element_type="t_doubleQ")] = MISSING
+    values : List[DoubleQ] = json_property("values", DoubleQ, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "doubleQ"
 
 
-@json_model("bool2[]")
+@json_model("bool2[]", Member)
 @dataclass(slots=True)
 class Array_Bool2(SyncArray):
-    values : Annotated[List[Bool2], JSONProperty("values", element_type="t_bool2")] = MISSING
+    values : List[Bool2] = json_property("values", Bool2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "bool2"
 
 
-@json_model("bool3[]")
+@json_model("bool3[]", Member)
 @dataclass(slots=True)
 class Array_Bool3(SyncArray):
-    values : Annotated[List[Bool3], JSONProperty("values", element_type="t_bool3")] = MISSING
+    values : List[Bool3] = json_property("values", Bool3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "bool3"
 
 
-@json_model("bool4[]")
+@json_model("bool4[]", Member)
 @dataclass(slots=True)
 class Array_Bool4(SyncArray):
-    values : Annotated[List[Bool4], JSONProperty("values", element_type="t_bool4")] = MISSING
+    values : List[Bool4] = json_property("values", Bool4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "bool4"
 
 
-@json_model("byte2[]")
+@json_model("byte2[]", Member)
 @dataclass(slots=True)
 class Array_Byte2(SyncArray):
-    values : Annotated[List[Byte2], JSONProperty("values", element_type="t_byte2")] = MISSING
+    values : List[Byte2] = json_property("values", Byte2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "byte2"
 
 
-@json_model("byte3[]")
+@json_model("byte3[]", Member)
 @dataclass(slots=True)
 class Array_Byte3(SyncArray):
-    values : Annotated[List[Byte3], JSONProperty("values", element_type="t_byte3")] = MISSING
+    values : List[Byte3] = json_property("values", Byte3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "byte3"
 
 
-@json_model("byte4[]")
+@json_model("byte4[]", Member)
 @dataclass(slots=True)
 class Array_Byte4(SyncArray):
-    values : Annotated[List[Byte4], JSONProperty("values", element_type="t_byte4")] = MISSING
+    values : List[Byte4] = json_property("values", Byte4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "byte4"
 
 
-@json_model("sbyte2[]")
+@json_model("sbyte2[]", Member)
 @dataclass(slots=True)
 class Array_Sbyte2(SyncArray):
-    values : Annotated[List[SByte2], JSONProperty("values", element_type="t_sbyte2")] = MISSING
+    values : List[SByte2] = json_property("values", SByte2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte2"
 
 
-@json_model("sbyte3[]")
+@json_model("sbyte3[]", Member)
 @dataclass(slots=True)
 class Array_Sbyte3(SyncArray):
-    values : Annotated[List[SByte3], JSONProperty("values", element_type="t_sbyte3")] = MISSING
+    values : List[SByte3] = json_property("values", SByte3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte3"
 
 
-@json_model("sbyte4[]")
+@json_model("sbyte4[]", Member)
 @dataclass(slots=True)
 class Array_Sbyte4(SyncArray):
-    values : Annotated[List[SByte4], JSONProperty("values", element_type="t_sbyte4")] = MISSING
+    values : List[SByte4] = json_property("values", SByte4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "sbyte4"
 
 
-@json_model("ushort2[]")
+@json_model("ushort2[]", Member)
 @dataclass(slots=True)
 class Array_Ushort2(SyncArray):
-    values : Annotated[List[UShort2], JSONProperty("values", element_type="t_ushort2")] = MISSING
+    values : List[UShort2] = json_property("values", UShort2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ushort2"
 
 
-@json_model("ushort3[]")
+@json_model("ushort3[]", Member)
 @dataclass(slots=True)
 class Array_Ushort3(SyncArray):
-    values : Annotated[List[UShort3], JSONProperty("values", element_type="t_ushort3")] = MISSING
+    values : List[UShort3] = json_property("values", UShort3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ushort3"
 
 
-@json_model("ushort4[]")
+@json_model("ushort4[]", Member)
 @dataclass(slots=True)
 class Array_Ushort4(SyncArray):
-    values : Annotated[List[UShort4], JSONProperty("values", element_type="t_ushort4")] = MISSING
+    values : List[UShort4] = json_property("values", UShort4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ushort4"
 
 
-@json_model("short2[]")
+@json_model("short2[]", Member)
 @dataclass(slots=True)
 class Array_Short2(SyncArray):
-    values : Annotated[List[Short2], JSONProperty("values", element_type="t_short2")] = MISSING
+    values : List[Short2] = json_property("values", Short2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "short2"
 
 
-@json_model("short3[]")
+@json_model("short3[]", Member)
 @dataclass(slots=True)
 class Array_Short3(SyncArray):
-    values : Annotated[List[Short3], JSONProperty("values", element_type="t_short3")] = MISSING
+    values : List[Short3] = json_property("values", Short3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "short3"
 
 
-@json_model("short4[]")
+@json_model("short4[]", Member)
 @dataclass(slots=True)
 class Array_Short4(SyncArray):
-    values : Annotated[List[Short4], JSONProperty("values", element_type="t_short4")] = MISSING
+    values : List[Short4] = json_property("values", Short4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "short4"
 
 
-@json_model("uint2[]")
+@json_model("uint2[]", Member)
 @dataclass(slots=True)
 class Array_Uint2(SyncArray):
-    values : Annotated[List[UInt2], JSONProperty("values", element_type="t_uint2")] = MISSING
+    values : List[UInt2] = json_property("values", UInt2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "uint2"
 
 
-@json_model("uint3[]")
+@json_model("uint3[]", Member)
 @dataclass(slots=True)
 class Array_Uint3(SyncArray):
-    values : Annotated[List[UInt3], JSONProperty("values", element_type="t_uint3")] = MISSING
+    values : List[UInt3] = json_property("values", UInt3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "uint3"
 
 
-@json_model("uint4[]")
+@json_model("uint4[]", Member)
 @dataclass(slots=True)
 class Array_Uint4(SyncArray):
-    values : Annotated[List[UInt4], JSONProperty("values", element_type="t_uint4")] = MISSING
+    values : List[UInt4] = json_property("values", UInt4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "uint4"
 
 
-@json_model("int2[]")
+@json_model("int2[]", Member)
 @dataclass(slots=True)
 class Array_Int2(SyncArray):
-    values : Annotated[List[Int2], JSONProperty("values", element_type="t_int2")] = MISSING
+    values : List[Int2] = json_property("values", Int2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "int2"
 
 
-@json_model("int3[]")
+@json_model("int3[]", Member)
 @dataclass(slots=True)
 class Array_Int3(SyncArray):
-    values : Annotated[List[Int3], JSONProperty("values", element_type="t_int3")] = MISSING
+    values : List[Int3] = json_property("values", Int3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "int3"
 
 
-@json_model("int4[]")
+@json_model("int4[]", Member)
 @dataclass(slots=True)
 class Array_Int4(SyncArray):
-    values : Annotated[List[Int4], JSONProperty("values", element_type="t_int4")] = MISSING
+    values : List[Int4] = json_property("values", Int4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "int4"
 
 
-@json_model("ulong2[]")
+@json_model("ulong2[]", Member)
 @dataclass(slots=True)
 class Array_Ulong2(SyncArray):
-    values : Annotated[List[ULong2], JSONProperty("values", element_type="t_ulong2")] = MISSING
+    values : List[ULong2] = json_property("values", ULong2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ulong2"
 
 
-@json_model("ulong3[]")
+@json_model("ulong3[]", Member)
 @dataclass(slots=True)
 class Array_Ulong3(SyncArray):
-    values : Annotated[List[ULong3], JSONProperty("values", element_type="t_ulong3")] = MISSING
+    values : List[ULong3] = json_property("values", ULong3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ulong3"
 
 
-@json_model("ulong4[]")
+@json_model("ulong4[]", Member)
 @dataclass(slots=True)
 class Array_Ulong4(SyncArray):
-    values : Annotated[List[ULong4], JSONProperty("values", element_type="t_ulong4")] = MISSING
+    values : List[ULong4] = json_property("values", ULong4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "ulong4"
 
 
-@json_model("long2[]")
+@json_model("long2[]", Member)
 @dataclass(slots=True)
 class Array_Long2(SyncArray):
-    values : Annotated[List[Long2], JSONProperty("values", element_type="t_long2")] = MISSING
+    values : List[Long2] = json_property("values", Long2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "long2"
 
 
-@json_model("long3[]")
+@json_model("long3[]", Member)
 @dataclass(slots=True)
 class Array_Long3(SyncArray):
-    values : Annotated[List[Long3], JSONProperty("values", element_type="t_long3")] = MISSING
+    values : List[Long3] = json_property("values", Long3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "long3"
 
 
-@json_model("long4[]")
+@json_model("long4[]", Member)
 @dataclass(slots=True)
 class Array_Long4(SyncArray):
-    values : Annotated[List[Long4], JSONProperty("values", element_type="t_long4")] = MISSING
+    values : List[Long4] = json_property("values", Long4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "long4"
 
 
-@json_model("float2[]")
+@json_model("float2[]", Member)
 @dataclass(slots=True)
 class Array_Float2(SyncArray):
-    values : Annotated[List[Float2], JSONProperty("values", element_type="t_float2")] = MISSING
+    values : List[Float2] = json_property("values", Float2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "float2"
 
 
-@json_model("float3[]")
+@json_model("float3[]", Member)
 @dataclass(slots=True)
 class Array_Float3(SyncArray):
-    values : Annotated[List[Float3], JSONProperty("values", element_type="t_float3")] = MISSING
+    values : List[Float3] = json_property("values", Float3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "float3"
 
 
-@json_model("float4[]")
+@json_model("float4[]", Member)
 @dataclass(slots=True)
 class Array_Float4(SyncArray):
-    values : Annotated[List[Float4], JSONProperty("values", element_type="t_float4")] = MISSING
+    values : List[Float4] = json_property("values", Float4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "float4"
 
 
-@json_model("double2[]")
+@json_model("double2[]", Member)
 @dataclass(slots=True)
 class Array_Double2(SyncArray):
-    values : Annotated[List[Double2], JSONProperty("values", element_type="t_double2")] = MISSING
+    values : List[Double2] = json_property("values", Double2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "double2"
 
 
-@json_model("double3[]")
+@json_model("double3[]", Member)
 @dataclass(slots=True)
 class Array_Double3(SyncArray):
-    values : Annotated[List[Double3], JSONProperty("values", element_type="t_double3")] = MISSING
+    values : List[Double3] = json_property("values", Double3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "double3"
 
 
-@json_model("double4[]")
+@json_model("double4[]", Member)
 @dataclass(slots=True)
 class Array_Double4(SyncArray):
-    values : Annotated[List[Double4], JSONProperty("values", element_type="t_double4")] = MISSING
+    values : List[Double4] = json_property("values", Double4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "double4"
 
 
-@json_model("float2x2[]")
+@json_model("float2x2[]", Member)
 @dataclass(slots=True)
 class Array_Float2x2(SyncArray):
-    values : Annotated[List[Float2x2], JSONProperty("values", element_type="t_float2x2")] = MISSING
+    values : List[Float2x2] = json_property("values", Float2x2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "float2x2"
 
 
-@json_model("float3x3[]")
+@json_model("float3x3[]", Member)
 @dataclass(slots=True)
 class Array_Float3x3(SyncArray):
-    values : Annotated[List[Float3x3], JSONProperty("values", element_type="t_float3x3")] = MISSING
+    values : List[Float3x3] = json_property("values", Float3x3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "float3x3"
 
 
-@json_model("float4x4[]")
+@json_model("float4x4[]", Member)
 @dataclass(slots=True)
 class Array_Float4x4(SyncArray):
-    values : Annotated[List[Float4x4], JSONProperty("values", element_type="t_float4x4")] = MISSING
+    values : List[Float4x4] = json_property("values", Float4x4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "float4x4"
 
 
-@json_model("double2x2[]")
+@json_model("double2x2[]", Member)
 @dataclass(slots=True)
 class Array_Double2x2(SyncArray):
-    values : Annotated[List[Double2x2], JSONProperty("values", element_type="t_double2x2")] = MISSING
+    values : List[Double2x2] = json_property("values", Double2x2, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "double2x2"
 
 
-@json_model("double3x3[]")
+@json_model("double3x3[]", Member)
 @dataclass(slots=True)
 class Array_Double3x3(SyncArray):
-    values : Annotated[List[Double3x3], JSONProperty("values", element_type="t_double3x3")] = MISSING
+    values : List[Double3x3] = json_property("values", Double3x3, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:
         return "double3x3"
 
 
-@json_model("double4x4[]")
+@json_model("double4x4[]", Member)
 @dataclass(slots=True)
 class Array_Double4x4(SyncArray):
-    values : Annotated[List[Double4x4], JSONProperty("values", element_type="t_double4x4")] = MISSING
+    values : List[Double4x4] = json_property("values", Double4x4, JSONPropertyType.LIST)
     
     @property
     def value_type_name(self) -> str:

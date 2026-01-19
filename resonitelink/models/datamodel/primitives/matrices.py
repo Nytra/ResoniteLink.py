@@ -1,94 +1,93 @@
 #       >=============================================================================<
 # NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!
 #       >=============================================================================<
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated
 
 
 @json_model("t_float2x2")
 @dataclass(slots=True)
 class Float2x2():
-    m00 : Annotated[float, JSONProperty("m00")] = MISSING
-    m01 : Annotated[float, JSONProperty("m01")] = MISSING
-    m10 : Annotated[float, JSONProperty("m10")] = MISSING
-    m11 : Annotated[float, JSONProperty("m11")] = MISSING
+    m00 : float = json_property("m00", float)
+    m01 : float = json_property("m01", float)
+    m10 : float = json_property("m10", float)
+    m11 : float = json_property("m11", float)
 
 
 @json_model("t_float3x3")
 @dataclass(slots=True)
 class Float3x3():
-    m00 : Annotated[float, JSONProperty("m00")] = MISSING
-    m01 : Annotated[float, JSONProperty("m01")] = MISSING
-    m02 : Annotated[float, JSONProperty("m02")] = MISSING
-    m10 : Annotated[float, JSONProperty("m10")] = MISSING
-    m11 : Annotated[float, JSONProperty("m11")] = MISSING
-    m12 : Annotated[float, JSONProperty("m12")] = MISSING
-    m20 : Annotated[float, JSONProperty("m20")] = MISSING
-    m21 : Annotated[float, JSONProperty("m21")] = MISSING
-    m22 : Annotated[float, JSONProperty("m22")] = MISSING
+    m00 : float = json_property("m00", float)
+    m01 : float = json_property("m01", float)
+    m02 : float = json_property("m02", float)
+    m10 : float = json_property("m10", float)
+    m11 : float = json_property("m11", float)
+    m12 : float = json_property("m12", float)
+    m20 : float = json_property("m20", float)
+    m21 : float = json_property("m21", float)
+    m22 : float = json_property("m22", float)
 
 
 @json_model("t_float4x4")
 @dataclass(slots=True)
 class Float4x4():
-    m00 : Annotated[float, JSONProperty("m00")] = MISSING
-    m01 : Annotated[float, JSONProperty("m01")] = MISSING
-    m02 : Annotated[float, JSONProperty("m02")] = MISSING
-    m03 : Annotated[float, JSONProperty("m03")] = MISSING
-    m10 : Annotated[float, JSONProperty("m10")] = MISSING
-    m11 : Annotated[float, JSONProperty("m11")] = MISSING
-    m12 : Annotated[float, JSONProperty("m12")] = MISSING
-    m13 : Annotated[float, JSONProperty("m13")] = MISSING
-    m20 : Annotated[float, JSONProperty("m20")] = MISSING
-    m21 : Annotated[float, JSONProperty("m21")] = MISSING
-    m22 : Annotated[float, JSONProperty("m22")] = MISSING
-    m23 : Annotated[float, JSONProperty("m23")] = MISSING
-    m30 : Annotated[float, JSONProperty("m30")] = MISSING
-    m31 : Annotated[float, JSONProperty("m31")] = MISSING
-    m32 : Annotated[float, JSONProperty("m32")] = MISSING
-    m33 : Annotated[float, JSONProperty("m33")] = MISSING
+    m00 : float = json_property("m00", float)
+    m01 : float = json_property("m01", float)
+    m02 : float = json_property("m02", float)
+    m03 : float = json_property("m03", float)
+    m10 : float = json_property("m10", float)
+    m11 : float = json_property("m11", float)
+    m12 : float = json_property("m12", float)
+    m13 : float = json_property("m13", float)
+    m20 : float = json_property("m20", float)
+    m21 : float = json_property("m21", float)
+    m22 : float = json_property("m22", float)
+    m23 : float = json_property("m23", float)
+    m30 : float = json_property("m30", float)
+    m31 : float = json_property("m31", float)
+    m32 : float = json_property("m32", float)
+    m33 : float = json_property("m33", float)
 
 
 @json_model("t_double2x2")
 @dataclass(slots=True)
 class Double2x2():
-    m00 : Annotated[float, JSONProperty("m00")] = MISSING
-    m01 : Annotated[float, JSONProperty("m01")] = MISSING
-    m10 : Annotated[float, JSONProperty("m10")] = MISSING
-    m11 : Annotated[float, JSONProperty("m11")] = MISSING
+    m00 : float = json_property("m00", float)
+    m01 : float = json_property("m01", float)
+    m10 : float = json_property("m10", float)
+    m11 : float = json_property("m11", float)
 
 
 @json_model("t_double3x3")
 @dataclass(slots=True)
 class Double3x3():
-    m00 : Annotated[float, JSONProperty("m00")] = MISSING
-    m01 : Annotated[float, JSONProperty("m01")] = MISSING
-    m02 : Annotated[float, JSONProperty("m02")] = MISSING
-    m10 : Annotated[float, JSONProperty("m10")] = MISSING
-    m11 : Annotated[float, JSONProperty("m11")] = MISSING
-    m12 : Annotated[float, JSONProperty("m12")] = MISSING
-    m20 : Annotated[float, JSONProperty("m20")] = MISSING
-    m21 : Annotated[float, JSONProperty("m21")] = MISSING
-    m22 : Annotated[float, JSONProperty("m22")] = MISSING
+    m00 : float = json_property("m00", float)
+    m01 : float = json_property("m01", float)
+    m02 : float = json_property("m02", float)
+    m10 : float = json_property("m10", float)
+    m11 : float = json_property("m11", float)
+    m12 : float = json_property("m12", float)
+    m20 : float = json_property("m20", float)
+    m21 : float = json_property("m21", float)
+    m22 : float = json_property("m22", float)
 
 
 @json_model("t_double4x4")
 @dataclass(slots=True)
 class Double4x4():
-    m00 : Annotated[float, JSONProperty("m00")] = MISSING
-    m01 : Annotated[float, JSONProperty("m01")] = MISSING
-    m02 : Annotated[float, JSONProperty("m02")] = MISSING
-    m03 : Annotated[float, JSONProperty("m03")] = MISSING
-    m10 : Annotated[float, JSONProperty("m10")] = MISSING
-    m11 : Annotated[float, JSONProperty("m11")] = MISSING
-    m12 : Annotated[float, JSONProperty("m12")] = MISSING
-    m13 : Annotated[float, JSONProperty("m13")] = MISSING
-    m20 : Annotated[float, JSONProperty("m20")] = MISSING
-    m21 : Annotated[float, JSONProperty("m21")] = MISSING
-    m22 : Annotated[float, JSONProperty("m22")] = MISSING
-    m23 : Annotated[float, JSONProperty("m23")] = MISSING
-    m30 : Annotated[float, JSONProperty("m30")] = MISSING
-    m31 : Annotated[float, JSONProperty("m31")] = MISSING
-    m32 : Annotated[float, JSONProperty("m32")] = MISSING
-    m33 : Annotated[float, JSONProperty("m33")] = MISSING
+    m00 : float = json_property("m00", float)
+    m01 : float = json_property("m01", float)
+    m02 : float = json_property("m02", float)
+    m03 : float = json_property("m03", float)
+    m10 : float = json_property("m10", float)
+    m11 : float = json_property("m11", float)
+    m12 : float = json_property("m12", float)
+    m13 : float = json_property("m13", float)
+    m20 : float = json_property("m20", float)
+    m21 : float = json_property("m21", float)
+    m22 : float = json_property("m22", float)
+    m23 : float = json_property("m23", float)
+    m30 : float = json_property("m30", float)
+    m31 : float = json_property("m31", float)
+    m32 : float = json_property("m32", float)
+    m33 : float = json_property("m33", float)

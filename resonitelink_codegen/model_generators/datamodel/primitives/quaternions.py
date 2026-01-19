@@ -4,17 +4,16 @@ from typing import Type, Generator
 
 
 # NOTE: Reference output:
-# from resonitelink.json import JSONProperty, json_model
+# from resonitelink.json import json_model, json_property
 # from dataclasses import dataclass
-# from typing import Annotated
 
 # @json_model("floatQ")
 # @dataclass(slots=True)
 # class Quaternion_Float():
-#     x : Annotated[float, JSONProperty("x")]
-#     y : Annotated[float, JSONProperty("y")]
-#     z : Annotated[float, JSONProperty("z")]
-#     w : Annotated[float, JSONProperty("w")]
+#     x : float = json_property("x", float)
+#     y : float = json_property("y", float)
+#     z : float = json_property("z", float)
+#     w : float = json_property("w", float)
 
 
 class QuaternionsGenerator(CodeGenerator):
@@ -30,19 +29,18 @@ class QuaternionsGenerator(CodeGenerator):
         Generates the content of quaternions.py
 
         """
-        yield f"from resonitelink.json import MISSING, JSONProperty, json_model\n"
+        yield f"from resonitelink.json import json_model, json_property\n"
         yield f"from dataclasses import dataclass\n"
-        yield f"from typing import Annotated\n"
         yield f"\n\n"
 
         def _generate_quaternion_class(model_name : str, class_name : str, element_type : Type):
             yield f"@json_model(\"t_{model_name}\")\n"
             yield f"@dataclass(slots=True)\n"
             yield f"class {class_name}():\n"
-            yield f"    x : Annotated[{element_type.__name__}, JSONProperty(\"x\")] = MISSING\n"
-            yield f"    y : Annotated[{element_type.__name__}, JSONProperty(\"y\")] = MISSING\n"
-            yield f"    z : Annotated[{element_type.__name__}, JSONProperty(\"z\")] = MISSING\n"
-            yield f"    w : Annotated[{element_type.__name__}, JSONProperty(\"w\")] = MISSING\n"
+            yield f"    x : {element_type.__name__} = json_property(\"x\", {element_type.__name__})\n"
+            yield f"    y : {element_type.__name__} = json_property(\"y\", {element_type.__name__})\n"
+            yield f"    z : {element_type.__name__} = json_property(\"z\", {element_type.__name__})\n"
+            yield f"    w : {element_type.__name__} = json_property(\"w\", {element_type.__name__})\n"
 
         for quaternion_type in quaternion_types:
             type_info = type_mappings[quaternion_type]

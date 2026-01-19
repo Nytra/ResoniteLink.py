@@ -4,15 +4,14 @@ from typing import Type, List, Generator
 
 
 # NOTE: Reference output:
-# from resonitelink.json import JSONProperty, json_model
+# from resonitelink.json import json_model, json_property
 # from dataclasses import dataclass
-# from typing import Annotated
 
 # @json_model("int2")
 # @dataclass(slots=True)
 # class Vector_Int2():
-#     x : Annotated[int, JSONProperty("x")]
-#     y : Annotated[int, JSONProperty("y")]
+#     x : int = json_property("x", int)]
+#     y : int = json_property("y", int)]
 
 
 class VectorsGenerator(CodeGenerator):
@@ -28,9 +27,8 @@ class VectorsGenerator(CodeGenerator):
         Generates the content of vectors.py
 
         """
-        yield f"from resonitelink.json import MISSING, JSONProperty, json_model\n"
+        yield f"from resonitelink.json import json_model, json_property\n"
         yield f"from dataclasses import dataclass\n"
-        yield f"from typing import Annotated\n"
         yield f"\n\n"
 
         def _generate_vector_class(model_name : str, class_name : str, element_type : Type, element_names : List[str]):
@@ -38,7 +36,7 @@ class VectorsGenerator(CodeGenerator):
             yield f"@dataclass(slots=True)\n"
             yield f"class {class_name}():\n"
             for element_name in element_names:
-                yield f"    {element_name} : Annotated[{element_type.__name__}, JSONProperty(\"{element_name}\")] = MISSING\n"
+                yield f"    {element_name} : {element_type.__name__} = json_property(\"{element_name}\", {element_type.__name__})\n"
 
         for vector_type in vector_types:
             type_info = type_mappings[vector_type]
