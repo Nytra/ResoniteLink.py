@@ -1,10 +1,10 @@
 from resonitelink.models.datamodel import Member
-from resonitelink.json import MISSING, JSONProperty, JSONPropertyType, json_model
+from resonitelink.json import JSONPropertyType, json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated, Dict
+from typing import Dict
 
 
-@json_model("syncObject")
+@json_model("syncObject", Member)
 @dataclass(slots=True)
 class SyncObject(Member):
-    members : Annotated[Dict[str, Member], JSONProperty("members", property_type=JSONPropertyType.DICT)] = MISSING
+    members : Dict[str, Member] = json_property("members", Member, JSONPropertyType.DICT)

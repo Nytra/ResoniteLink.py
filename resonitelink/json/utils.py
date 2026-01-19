@@ -1,39 +1,11 @@
-from .models import JSONModel, JSONPropertyType
+from .models import _MissingSentinel, MISSING, JSONModel, JSONPropertyType
 from typing import Any, List, Callable
 
 __all__ = (
-    'MISSING',
     'is_missing',
     'optional',
     'format_object_structure',
 )
-
-
-class _MissingSentinel:
-    """
-    Sentinel class used to represent missing values.
-
-    Note
-    ----
-    Missing values are NOT `null`, they are *missing* (i.e. they won't be included in JSON objects)!
-
-    """
-    __slots__ = ()
-
-    def __eq__(self, other) -> bool:
-        return False
-
-    def __bool__(self) -> bool:
-        return False
-
-    def __hash__(self) -> int:
-        return 0
-
-    def __repr__(self):
-        return '...'
-
-
-MISSING: Any = _MissingSentinel()
 
 
 def is_missing(value : Any) -> bool:
@@ -87,8 +59,8 @@ def format_object_structure(obj : Any, print_missing : bool = False, prefix : st
     """
     structure_str : str
     try:
-        # Attempt to 
-        model = JSONModel.get_for_data_class(type(obj))
+        # Attempt to find model for potential model's data class
+        model = JSONModel.find_model(target_type=type(obj))
     
     except KeyError:
         # Not a model

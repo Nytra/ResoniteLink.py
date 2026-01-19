@@ -3,7 +3,7 @@ from resonitelink.json import json_model
 from dataclasses import dataclass
 
 
-@json_model("empty")
+@json_model("empty", Member)
 @dataclass(slots=True)
 class EmptyElement(Member):
     pass

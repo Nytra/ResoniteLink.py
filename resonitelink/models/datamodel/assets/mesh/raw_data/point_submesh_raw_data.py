@@ -1,13 +1,12 @@
 from .submesh_raw_data import SubmeshRawData
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated
 
 
-@json_model("pointSubmeshRawData") # TODO: Anonymous model
+@json_model("points", SubmeshRawData)
 @dataclass(slots=True)
 class PointSubmeshRawData(SubmeshRawData):
-    point_count : Annotated[int, JSONProperty("pointCount")] = MISSING
+    point_count : int = json_property("pointCount", int)
 
     @property
     def indices_count(self) -> int:

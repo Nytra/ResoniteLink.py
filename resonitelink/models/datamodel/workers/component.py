@@ -1,11 +1,11 @@
 from resonitelink.models.datamodel import Worker, Member
-from resonitelink.json import MISSING, JSONProperty, JSONPropertyType, json_model
-from dataclasses import dataclass, field
-from typing import Annotated, Dict
+from resonitelink.json import JSONPropertyType, json_model, json_property
+from dataclasses import dataclass
+from typing import Dict
 
 
-@json_model("component")
+@json_model() # NOT derived from Worker, it's the same in the reference C# implementation.
 @dataclass(slots=False)
 class Component(Worker):
-    component_type : Annotated[str, JSONProperty("componentType")] = MISSING
-    members : Annotated[Dict[str, Member], JSONProperty("members", property_type=JSONPropertyType.DICT)] = MISSING
+    component_type : str = json_property("componentType", str)
+    members : Dict[str, Member] = json_property("members", Member, JSONPropertyType.DICT)

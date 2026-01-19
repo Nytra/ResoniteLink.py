@@ -1,10 +1,9 @@
 from resonitelink.models.messages import Message
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated
 
 
 @dataclass(slots=True)
-@json_model("importTexture2DFile")
+@json_model("importTexture2DFile", Message)
 class ImportTexture2DFile(Message):
-    file_path : Annotated[str, JSONProperty("filePath")] = MISSING
+    file_path : str = json_property("filePath", str)

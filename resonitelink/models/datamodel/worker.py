@@ -1,10 +1,9 @@
-from resonitelink.json import MISSING, JSONProperty
+from resonitelink.json import json_property
 from dataclasses import dataclass
-from typing import Annotated
 from abc import ABC
 
 
 @dataclass(slots=False)
 class Worker(ABC):
-    id : Annotated[str, JSONProperty("id")] = MISSING
-    is_reference_only : Annotated[bool, JSONProperty("isReferenceOnly")] = MISSING
+    id : str = json_property("id", str)
+    is_reference_only : bool = json_property("isReferenceOnly", bool)

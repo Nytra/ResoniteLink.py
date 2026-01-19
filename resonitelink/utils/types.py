@@ -2,7 +2,7 @@ from resonitelink.utils import make_first_char_uppercase
 from resonitelink.json import JSONModel
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Type, List, Dict
+from typing import Optional, Type, List, Dict
 import logging
 
 
@@ -104,7 +104,7 @@ for matrix_type in matrix_types:
 class LibraryTypeInfo():
     type_name : str
     type : Type
-    model_type_name : str
+    model_type_name : Optional[str]
 
 
 type_mappings : Dict[str, LibraryTypeInfo] = { }
@@ -143,7 +143,7 @@ for primitive_type in primitive_types:
 
     try:
         # Try get the model for this primitive type
-        model = JSONModel.get_for_type_name(f"t_{primitive_type}")
+        model = JSONModel.find_model(target_type_name=f"t_{primitive_type}")
 
     except KeyError:
         # Model not found!

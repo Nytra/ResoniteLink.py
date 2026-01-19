@@ -1,18 +1,48 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
-from typing import Union, Optional, Any, Type, Tuple, Dict, Generator, TypeVar, Generic
-from annotationlib import get_annotations
+
+from dataclasses import field, fields
+from typing import Optional, Any, Type, Tuple, Dict, Generator, TypeVar, Generic
 from enum import Enum
 import logging
 
 __all__ = (
+    'MISSING',
     'JSONPropertyType',
     'JSONProperty',
     'JSONModel',
+    'json_property',
     'json_model',
 )
 
 logger = logging.getLogger("ResoniteLinkModels")
 logger.setLevel(logging.DEBUG)
+
+
+class _MissingSentinel:
+    """
+    Sentinel class used to represent missing values.
+
+    Note
+    ----
+    Missing values are NOT `null`, they are *missing* (i.e. they won't be included in JSON objects)!
+
+    """
+    __slots__ = ()
+
+    def __eq__(self, other) -> bool:
+        return False
+
+    def __bool__(self) -> bool:
+        return False
+
+    def __hash__(self) -> int:
+        return 0
+
+    def __repr__(self):
+        return '...'
+
+
+MISSING: Any = _MissingSentinel()
 
 
 class JSONPropertyType(Enum):
@@ -23,6 +53,8 @@ class JSONPropertyType(Enum):
 
 class JSONProperty():
     """
+    TODO: Documentation needs to be updated once rework is done!
+    
     Denotes a JSON property of a model data class that will be picked up by the serializer / deserializer.
     This should be added as an annotation to the members that should be JSON serialized / deserialized:
         
@@ -33,27 +65,27 @@ class JSONProperty():
     
     """
     _json_name : str
-    _model_type_name : Optional[str]
-    _abstract : bool
+    _element_type : type
     _property_type : JSONPropertyType
+    _abstract : bool
 
     @property
     def json_name(self) -> str:
         return self._json_name
 
     @property
-    def model_type_name(self) -> Optional[str]:
-        return self._model_type_name
-
-    @property
-    def abstract(self) -> bool:
-        return self._abstract
+    def element_type(self) -> type:
+        return self._element_type
     
     @property
     def property_type(self) -> JSONPropertyType:
         return self._property_type
+    
+    @property
+    def abstract(self) -> bool:
+        return self._abstract
 
-    def __init__(self, json_name : str, model_type_name : Optional[str] = None, abstract = False, property_type : JSONPropertyType = JSONPropertyType.ELEMENT):
+    def __init__(self, json_name : str, element_type : type, property_type : JSONPropertyType, abstract : bool):
         """
         Defines a new JSONProperty.
 
@@ -73,37 +105,57 @@ class JSONProperty():
 
         """
         self._json_name = json_name
-        self._model_type_name = model_type_name
-        self._abstract = abstract
+        self._element_type = element_type
         self._property_type = property_type
+        self._abstract = abstract
     
     def __repr__(self) -> str:
-        return f"<JSONProperty name='{self.json_name}{f', model_type_name:{self._model_type_name}' if self._model_type_name else ''}{' (abstract)' if self._abstract else ''}'>"
+        return f"<JSONProperty name='{self.json_name}', element_type={self.element_type}, property_type={self.property_type}{' (abstract)' if self._abstract else ''}>"
+
+
+def json_property(json_name : str, element_type : type, property_type : JSONPropertyType = JSONPropertyType.ELEMENT, abstract = False):
+    """
+    Utility function for easily defining fields in a dataclass as JSON-Properties.
+    Returns a field for use in dataclass.
+
+    """
+    json_prop = JSONProperty(json_name=json_name, element_type=element_type, property_type=property_type, abstract=abstract)
+
+    return field(default=MISSING, metadata={'JSONProperty': json_prop})
 
 
 D = TypeVar('D', bound=Type)
 class JSONModel(Generic[D]):
     """
+    TODO: Documentation needs to be updated once rework is done!
+
     Descriptor class for JSON serializable "models" with "properties".
     A model is associated with a unique type name, which in JSON is represented in the "$type" parameter.
     A model is also backed by a data class, which is the class that holds the actual data of the model in the program.
     
     """
-    _model_type_name_mapping : Dict[str, JSONModel] = {}
-    _model_data_class_mapping : Dict[Type, JSONModel] = {}
+    _model_data_class_mapping : Dict[Type, JSONModel] = {} # Mapping from data class to model
+    _global_model_type_name_mapping : Dict[str, JSONModel] = {} # Mappings of model type names for all non-derived (global) models.
+    _derived_model_type_name_mappings : Dict[Type, Dict[str, JSONModel]] = {} # Mapping from base type to all 
 
-    _type_name : str
     _data_class : D
+    _type_name : Optional[str]
+    _derived_from : Optional[type]
     _properties : Dict[str, JSONProperty]
     _property_name_mapping : Dict[str, str]
     
-    @property
-    def type_name(self) -> str:
-        return self._type_name
     
     @property
     def data_class(self) -> D:
         return self._data_class
+    
+    @property
+    def type_name(self) -> Optional[str]:
+        return self._type_name
+    
+    @property
+    def derived_from(self) -> Optional[type]:
+        return self._derived_from
     
     @property
     def properties(self) -> Dict[str, JSONProperty]:
@@ -113,15 +165,19 @@ class JSONModel(Generic[D]):
     def property_name_mapping(self) -> Dict[str, str]:
         return self._property_name_mapping
 
-    def __init__(self, type_name : str, data_class : D):
-        self._type_name = type_name
+    def __init__(self, data_class : D, type_name : Optional[str] = None, derived_from : Optional[type] = None):
+        if derived_from is not None and not type_name:
+            raise ValueError(f"A `type_name` needs to be speficied if the model is derived!")
+        
         self._data_class = data_class
-        self._properties = dict(self._find_properties_in_data_class(self.data_class)) # type: ignore
+        self._type_name = type_name
+        self._derived_from = derived_from
+        self._properties = dict(self._find_properties_in_data_class(self.data_class))
         self._verify_properties(self._properties)
         self._property_name_mapping = dict(self._get_property_name_mapping(self._properties))
         self._register()
     
-    def _find_properties_in_data_class(self, data_class : Type) -> Generator[Tuple[str, JSONProperty], Any, Any]:
+    def _find_properties_in_data_class(self, data_class : D) -> Generator[Tuple[str, JSONProperty], Any, Any]:
         """
         Inspects the specified data class and produces key-value pairs for all defined JSONProperties.
         Also recursively processes all base classes (if any).
@@ -132,25 +188,18 @@ class JSONModel(Generic[D]):
         and tpl[1] is the first JSONProperty found in its annotation metadata.
 
         """
-        # TODO: Error for duplicate property names, they have to be unique!
-        for base_class in data_class.__bases__:
-            # If there are base classes, they will be processed recursively first
-            for tpl in self._find_properties_in_data_class(base_class): yield tpl
-
-        for key, annotation in get_annotations(data_class).items():
-            if not hasattr(annotation, '__metadata__'):
-                # We can skip all annotations that don't have metadata
+        for field in fields(data_class):
+            if 'JSONProperty' not in field.metadata:
+                # We can skip all fields that don't have 'JSONProperty' metadata.
                 continue
-            
-            # The __metadata__ tuple contains metadata injected by typing.Annotated
-            metadata = getattr(annotation, '__metadata__')
 
-            # Find first metadata that is a JSONProperty instance (if it exists)
-            json_property : Union[JSONProperty, None] = next(iter([ m for m in metadata if isinstance(m, JSONProperty) ]), None)
+            # Get JSONProperty instance from field metadata
+            json_prop = field.metadata['JSONProperty']
+            if not isinstance(json_prop, JSONProperty):
+                raise TypeError(f"Expected 'JSONProperty' field metadata to be of type 'JSONProperty', not '{type(json_prop)}'!")
             
-            if json_property:
-                # Success! We've found a JSON property of the model class
-                yield (key, json_property)
+            # Yield field name and associated JSONProperty
+            yield (field.name, json_prop)
     
     def _verify_properties(self, properties : Dict[str, JSONProperty]):
         """
@@ -159,10 +208,10 @@ class JSONModel(Generic[D]):
         for example wether a abstract JSONProperty has not been overridden.
 
         """
-        for key, json_property in properties.items():
-            if json_property.abstract:
+        for key, json_prop in properties.items():
+            if json_prop.abstract:
                 # Abstract property that wasn't overridden
-                raise TypeError(f"Invalid properties for JSONModel '{self}': Data class does not provide concrete implementation of abstract JSONProperty '{json_property}'!")
+                raise TypeError(f"Invalid properties for JSONModel '{self}': Data class does not provide concrete implementation of abstract JSONProperty '{json_prop}'!")
 
     
     def _get_property_name_mapping(self, properties : Dict[str, JSONProperty]) -> Generator[Tuple[str, str], Any, Any]:
@@ -176,12 +225,12 @@ class JSONModel(Generic[D]):
         and tpl[1] is the name of the corresponding annotated field in the model's data class.
 
         """
-        for key, json_property in properties.items():
-            yield json_property.json_name, key
+        for key, json_prop in properties.items():
+            yield json_prop.json_name, key
 
     def _register(self):
         """
-        Registers this model by adding it to the global _model_mapping and _model_reverse_mapping dicts.
+        Registers this model.
         
         Raises
         ------
@@ -189,11 +238,11 @@ class JSONModel(Generic[D]):
             If a model with the same type name is already registered, or if this model instance is already registered under a different name.
 
         """
-        if self.type_name in JSONModel._model_type_name_mapping.keys():
-            raise KeyError(f"A different model with type name '{self.type_name}' is already registered!")
+        if len(self.properties) == 0: return # Skip registering for testing TODO: Remove!!!
+
         if self.data_class in JSONModel._model_data_class_mapping.keys():
             raise KeyError(f"A different model with data class '{self.data_class}' is already registered!")
-        if self in JSONModel._model_type_name_mapping.values():
+        if self in JSONModel._global_model_type_name_mapping.values():
             raise KeyError(f"This model instance is already registered under a different type name!")
         
         logger.debug(f"Registering JSONModel '{self.type_name}' with data class '{self.data_class}':")
@@ -201,61 +250,83 @@ class JSONModel(Generic[D]):
             logger.debug(f"  -> No fields annotated with JSONProperty found!")
             logger.warning(f"Data class '{self.data_class}' of JSONModel '{self.type_name}' has no fields annotated with JSONProperty!")
         else:
-            for key, json_property in self.properties.items():
-                logger.debug(f"  -> '{key}': {json_property}")
+            for key, json_prop in self.properties.items():
+                logger.debug(f"  -> '{key}': {json_prop}")
         
-        JSONModel._model_type_name_mapping[self.type_name] = self
         JSONModel._model_data_class_mapping[self.data_class] = self # type: ignore
+        
+        if self.derived_from is not None:
+            # Register as derived model
+            derived_mappings = JSONModel._derived_model_type_name_mappings.setdefault(self.derived_from, {})
+            type_name : str = self.type_name # type: ignore This will never be `None` if derived_from is specified (ensured in constructor).
+
+            if type_name in derived_mappings.keys():
+                raise KeyError(f"A different model derived from '{self.derived_from}' with type name '{self.type_name}' is already registered!")
+            
+            derived_mappings[type_name] = self
+
+        elif self.type_name:
+            # Register as global model
+            if self.type_name in JSONModel._global_model_type_name_mapping.keys():
+                raise KeyError(f"A different global model with type name '{self.type_name}' is already registered!")
+            
+            JSONModel._global_model_type_name_mapping[self.type_name] = self
     
     @staticmethod
-    def get_for_data_class(data_class : Type) -> JSONModel:
+    def find_model(target_type : Optional[type] = None, target_type_name : Optional[str] = None) -> JSONModel:
         """
-        Returns the model instance registered for the provided data class.
+        Searches for a registered `JSONModel`. The following search order is used:
+
+        1. A registered model with a data class that matches target_type.
+        2. A registered model that is derived from target_type matching the specified target_type_name.
+        3. A registered model that is not derived (global) matching the specified target_type_name.
+
+        Notes
+        -----
+        * If the `target_type` originates from an already object instance, it should never be the base of a derived model, as abstract bases should never get instanced!
 
         Parameters
         ----------
-        data_class : Type
-            The type of the requested model's data class.
+        target_type : Optional[type]
+            Type to select a model for. This is either a model's data class, or a base class of one or more derived models.
+            If not provided, only non-derived (global) models can be found based on the specified target_type_name.
+        target_type_name : Optional[str]
+            The type name to search a model for. This is either a derived model's type name, or a non-derived (global) model's type name.
+            If not provided, only models with with a data class that exactly matches the specified target_type can be found.
         
-        Returns
-        -------
-        The JSONModel associated with this data class.
-
         Raises
         ------
+        ValueError
+            When `target_type` is a base class of one or more derived models, but `target_type_name` was not specified.
         KeyError
-            If there is no registered model with the specified data class.
+            When no model was found for the specified `target_type` and / or `target_type_name`.
 
         """
-        return JSONModel._model_data_class_mapping[data_class]
+        if target_type is not None:
+            # Type specified
+            if target_type in JSONModel._model_data_class_mapping:
+                # Target type is registered as a data class of a model, return associated model
+                return JSONModel._model_data_class_mapping[target_type]
+            
+            if target_type in JSONModel._derived_model_type_name_mappings:
+                # Target type is base for one or more derived models. In this case we also need a type name.
+                if target_type_name is None:
+                    raise ValueError(f"Target type '{target_type}' is a base for one or more derived models, but no `target_type_name` was specified to select one!")
 
-    @staticmethod
-    def get_for_type_name(type_name : str) -> JSONModel:
-        """
-        Returns the model instance registered for the provided type name.
-
-        Parameters
-        ----------
-        type_name : str
-            The type name of the requested model.
-
-        Returns
-        -------
-        The JSONModel associated with this type name.
-
-        Raises
-        ------
-        KeyError
-            If there is no registered model with the specified type name.
-
-        """
-        return JSONModel._model_type_name_mapping[type_name]
+                # Will raise a KeyError if no derived model for specified type name is registered.
+                return JSONModel._derived_model_type_name_mappings[target_type][target_type_name]
+        
+        if target_type_name is not None:
+            # Assume  if the type name corresponds with a non-derived (global) model.
+            return JSONModel._global_model_type_name_mapping[target_type_name]
+        
+        raise KeyError(f"No model found for `target_type` {target_type} and / or `target_type_name` {target_type_name}`")
     
     def __repr__(self) -> str:
-        return f"<JSONModel type_name='{self.type_name}', data_class='{self.data_class}', property_count={len(self.properties)}>"
+        return f"<JSONModel data_class={self.data_class}, type_name='{self.type_name}', derived_from={self.derived_from}, property_count={len(self.properties)}>"
 
 
-def json_model(type_name : str):
+def json_model(type_name : Optional[str] = None, derived_from : Optional[type] = None):
     """
     Class decorator to easily declare models from their data classes.
     This decorator does **not** modify the decorated class, but globally registers a model for it.
@@ -269,7 +340,7 @@ def json_model(type_name : str):
     """
     def _model_decorator(data_class : D) -> D:
         # Creating a model instance automatically registers it
-        model = JSONModel(type_name=type_name, data_class=data_class)
+        model = JSONModel(data_class=data_class, type_name=type_name, derived_from=derived_from)
 
         # Inject custom __repr__
         def _repr(self) -> str:

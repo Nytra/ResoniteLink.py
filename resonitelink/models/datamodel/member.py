@@ -1,9 +1,8 @@
-from resonitelink.json import MISSING, JSONProperty
+from resonitelink.json import json_property
 from dataclasses import dataclass
-from typing import Annotated
 from abc import ABC
 
 
 @dataclass(slots=True)
 class Member(ABC):
-    id : Annotated[str, JSONProperty("id")] = MISSING
+    id : str = json_property("id", str)

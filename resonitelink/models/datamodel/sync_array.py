@@ -1,13 +1,13 @@
 from resonitelink.models.datamodel import Member
-from resonitelink.json import MISSING, JSONProperty
+from resonitelink.json import JSONPropertyType, json_property
 from dataclasses import dataclass
-from typing import Annotated, List, Any
+from typing import List, Any
 from abc import ABC, abstractmethod
 
 
 @dataclass(slots=True)
 class SyncArray(Member, ABC):
-    values : Annotated[List[Any], JSONProperty("values", abstract=True)] = MISSING
+    values : List[Any] = json_property("values", object, JSONPropertyType.LIST, abstract=True)
 
     @property
     @abstractmethod

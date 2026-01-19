@@ -1,12 +1,11 @@
-from resonitelink.json import MISSING, JSONProperty
+from resonitelink.json import json_property
 from dataclasses import dataclass
-from typing import Annotated
 from abc import ABC, abstractmethod
 
 
 @dataclass(slots=True)
 class Message(ABC):
-    message_id : Annotated[str, JSONProperty("messageId")] = MISSING
+    message_id : str = json_property("messageId", str)
 
 
 @dataclass(slots=True)

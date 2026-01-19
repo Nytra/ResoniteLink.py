@@ -1,25 +1,24 @@
 from resonitelink.models.datamodel import Field
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated, Optional
 
 
-@json_model("enum")
+@json_model("enum", Field)
 @dataclass(slots=True)
 class Field_Enum(Field):
-    value : Annotated[str, JSONProperty("value")] = MISSING
-    enum_type : Annotated[str, JSONProperty("enumType")] = MISSING
+    value : str = json_property("value", str)
+    enum_type : str = json_property("enumType", str)
 
     @property
     def value_type_name(self) -> str:
         return "enum"
 
 
-@json_model("enum?")
+@json_model("enum?", Field)
 @dataclass(slots=True)
 class Field_Nullable_Enum(Field):
-    value : Annotated[Optional[str], JSONProperty("value")] = MISSING
-    enum_type : Annotated[str, JSONProperty("enumType")] = MISSING
+    value : str = json_property("value", str) # TODO: This is optional. Is that a problem?
+    enum_type : str = json_property("enumType", str)
 
     @property
     def value_type_name(self) -> str:

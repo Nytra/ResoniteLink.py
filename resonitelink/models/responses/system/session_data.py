@@ -1,12 +1,11 @@
 from resonitelink.models.responses import Response
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated
 
 
-@json_model("sessionData")
+@json_model("sessionData", Response)
 @dataclass(slots=True)
 class SessionData(Response):
-    resonite_version : Annotated[str, JSONProperty("resoniteVersion")] = MISSING
-    resonite_link_version : Annotated[str, JSONProperty("resoniteLinkVersion")] = MISSING
-    unique_session_id : Annotated[str, JSONProperty("uniqueSessionId")] = MISSING
+    resonite_version : str = json_property("resoniteVersion", str)
+    resonite_link_version : str = json_property("resoniteLinkVersion", str)
+    unique_session_id : str = json_property("uniqueSessionId", str)

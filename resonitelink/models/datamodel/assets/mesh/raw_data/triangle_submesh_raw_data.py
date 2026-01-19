@@ -1,13 +1,12 @@
 from .submesh_raw_data import SubmeshRawData
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated
 
 
-@json_model("triangleSubmeshRawData") # TODO: Anonymous model
+@json_model("triangles", SubmeshRawData)
 @dataclass(slots=True)
 class TriangleSubmeshRawData(SubmeshRawData):
-    triangle_count : Annotated[int, JSONProperty("triangleCount")] = MISSING
+    triangle_count : int = json_property("triangleCount", int)
 
     @property
     def indices_count(self) -> int:

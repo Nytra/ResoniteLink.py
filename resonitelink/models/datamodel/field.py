@@ -1,13 +1,13 @@
 from resonitelink.models.datamodel import Member
-from resonitelink.json import MISSING, JSONProperty
+from resonitelink.json import json_property
 from dataclasses import dataclass
-from typing import Annotated, Any
+from typing import Any
 from abc import ABC, abstractmethod
 
 
 @dataclass(slots=True)
 class Field(Member, ABC):
-    value : Annotated[Any, JSONProperty("value", abstract=True)] = MISSING
+    value : Any = json_property("value", object, abstract=True)
 
     @property
     @abstractmethod

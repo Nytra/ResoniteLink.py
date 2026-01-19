@@ -1,9 +1,8 @@
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated
 
 
-@json_model("triangle") # TODO: Anonymous
+@json_model()
 @dataclass(slots=True)
 class Triangle():
     """
@@ -11,10 +10,10 @@ class Triangle():
     
     """
     # Index of the first vertex that forms this triangle.
-    vertex_0_index : Annotated[int, JSONProperty("vertex0Index")] = MISSING
+    vertex_0_index : int = json_property("vertex0Index", int)
 
     # Index of the second vertex that forms this triangle.
-    vertex_1_index : Annotated[int, JSONProperty("vertex0Index")] = MISSING
+    vertex_1_index : int = json_property("vertex1Index", int)
 
     # Index of the third vertex that forms this triangle.
-    vertex_2_index : Annotated[int, JSONProperty("vertex0Index")] = MISSING
+    vertex_2_index : int = json_property("vertex2Index", int)

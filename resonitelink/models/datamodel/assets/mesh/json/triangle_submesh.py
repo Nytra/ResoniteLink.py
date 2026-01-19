@@ -1,12 +1,12 @@
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import JSONPropertyType, json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated, List
+from typing import List
 
 from .triangle import Triangle
 from .submesh import Submesh
 
 
-@json_model("triangleSubmesh") # TODO: Anonymous model
+@json_model("triangles", Submesh)
 @dataclass(slots=True)
 class TriangleSubmesh(Submesh):
     """
@@ -14,10 +14,10 @@ class TriangleSubmesh(Submesh):
     
     """
     # All the triangles that form this submesh.
-    triangles : Annotated[List[Triangle], JSONProperty("triangles")] = MISSING
+    triangles : List[Triangle] = json_property("triangles", Triangle, JSONPropertyType.LIST)
 
 
-@json_model("triangleSubmeshFlat") # TODO: Anonymous model
+@json_model("trianglesFlat", Submesh)
 @dataclass(slots=True)
 class TriangleSubmeshFlat(Submesh):
     """
@@ -29,4 +29,4 @@ class TriangleSubmeshFlat(Submesh):
     """
     # Indexes of vertices representing triangles of this mesh.
     # Note that each triangle needs three consecutive indicies in this list.
-    vertex_indices : Annotated[List[int], JSONProperty("vertexIndices")] = MISSING
+    vertex_indices : List[int] = json_property("vertexIndices", int, JSONPropertyType.LIST)

@@ -1,26 +1,28 @@
-# from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
+from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
+
 from resonitelink.models.datamodel import Worker, Reference, Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
-from resonitelink.json import MISSING, JSONProperty, JSONPropertyType, json_model
-from .component import Component
+from resonitelink.json import JSONPropertyType, json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated, List
+from typing import List
+
+from .component import Component
 
 
-@json_model("slot")
+@json_model() # NOT derived from Worker, it's the same in the reference C# implementation.
 @dataclass(slots=False)
 class Slot(Worker):
-    parent : Annotated[Reference, JSONProperty("parent", model_type_name="reference")] = MISSING
-    position : Annotated[Field_Float3, JSONProperty("position", model_type_name="float3")] = MISSING
-    rotation : Annotated[Field_FloatQ, JSONProperty("rotation", model_type_name="floatQ")] = MISSING
-    scale : Annotated[Field_Float3, JSONProperty("scale", model_type_name="float3")] = MISSING
-    is_active : Annotated[Field_Bool, JSONProperty("isActive", model_type_name="bool")] = MISSING
-    is_persistent : Annotated[Field_Bool, JSONProperty("isPersistent", model_type_name="bool")] = MISSING
-    name : Annotated[Field_String, JSONProperty("name", model_type_name="string")] = MISSING
-    tag : Annotated[Field_String, JSONProperty("tag", model_type_name="string")] = MISSING
-    order_offset : Annotated[Field_Long, JSONProperty("orderOffset", model_type_name="long")] = MISSING
+    parent : Reference = json_property("parent", Reference)
+    position : Field_Float3 = json_property("position", Field_Float3)
+    rotation : Field_FloatQ = json_property("rotation", Field_FloatQ)
+    scale : Field_Float3 = json_property("scale", Field_Float3)
+    is_active : Field_Bool = json_property("isActive", Field_Bool)
+    is_persistent : Field_Bool = json_property("isPersistent", Field_Bool)
+    name : Field_String = json_property("name", Field_String)
+    tag : Field_String = json_property("tag", Field_String)
+    order_offset : Field_Long = json_property("orderOffset", Field_Long)
 
-    components : Annotated[List[Component], JSONProperty("components", model_type_name="component", property_type=JSONPropertyType.LIST)] = MISSING
-    children : Annotated[List['Slot'], JSONProperty("children", model_type_name="slot", property_type=JSONPropertyType.LIST)] = MISSING
+    components : List[Component] = json_property("components", Component, JSONPropertyType.LIST)
+    # children : List[Slot] = json_property("children", Slot, JSONPropertyType.LIST) # TODO: This doesn't work... We probably need a specific self-reference handling
 
     # Special Slot references
     Root = Reference(target_id="Root", target_type="slot")

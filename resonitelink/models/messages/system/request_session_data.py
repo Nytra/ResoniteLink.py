@@ -3,7 +3,7 @@ from resonitelink.json import json_model
 from dataclasses import dataclass
 
 
-@json_model("requestSessionData")
+@json_model("requestSessionData", Message)
 @dataclass(slots=True)
 class RequestSessionData(Message):
     pass

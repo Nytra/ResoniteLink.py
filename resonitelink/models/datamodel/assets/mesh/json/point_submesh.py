@@ -1,10 +1,11 @@
-from .submesh import Submesh
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import JSONPropertyType, json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated, List
+from typing import List
+
+from .submesh import Submesh
 
 
-@json_model("pointSubmesh") # TODO: Anonymous model
+@json_model("points", Submesh)
 @dataclass(slots=True)
 class PointSubmesh(Submesh):
-    vertex_indices : Annotated[List[int], JSONProperty("vertexIndices")] = MISSING
+    vertex_indices : List[int] = json_property("vertexIndices", int, JSONPropertyType.LIST)

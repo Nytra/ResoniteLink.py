@@ -1,9 +1,8 @@
-from resonitelink.json import MISSING, JSONProperty, json_model
+from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
-from typing import Annotated
 
 
-@json_model("boneWeight") # TODO: Anonymous
+@json_model()
 @dataclass(slots=True)
 class BoneWeight():
     """
@@ -11,7 +10,7 @@ class BoneWeight():
     
     """
     # Index of the bone this maps too in the Bones list of the mesh.
-    bone_index : Annotated[int, JSONProperty("boneIndex")] = MISSING
+    bone_index : int = json_property("boneIndex", int)
 
     # Weight from 0...1 that influences how much is this vertex affected by the bone.
-    weight : Annotated[float, JSONProperty("weight")] = MISSING
+    weight : float = json_property("weight", float)
