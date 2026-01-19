@@ -15,7 +15,7 @@ logger.setLevel(logging.DEBUG)
 
 
 # port = int(input("ResoniteLink Port: "))
-port = 57770
+port = 29919
 
 
 def test_generate_image_bytes() -> bytes:

@@ -13,7 +13,7 @@ from resonitelink.exceptions import ResoniteLinkException
 from resonitelink.proxies import SlotProxy, ComponentProxy
 from websockets.exceptions import ConnectionClosed as WebSocketConnectionClosed
 from resonitelink.utils import IDRegistry, get_slot_id, get_component_id, optional_slot_reference, optional_field
-from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
+from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, JSONModel, format_object_structure
 from websockets import connect as websocket_connect, ClientConnection as WebSocketClientConnection
 from asyncio import AbstractEventLoop, Event, Future, get_running_loop, wait_for, gather
 from typing import Optional, Union, List, Dict, Callable, Coroutine, Any
@@ -29,7 +29,7 @@ class ResoniteLinkClientEvent(Enum):
     STOPPING=2
     STOPPED=3
     MESSAGE_SENT=4
-    MESSAGE_RECEIVED=5
+    RESPONSE_RECEIVED=5
 
 
 class ResoniteLinkClient(ABC):
@@ -376,13 +376,8 @@ class ResoniteLinkClient(ABC):
         self._logger.debug(f"Received raw message: {message_bytes.decode('utf-8')}")
         
         # Decode message into object
-        message : Any = json.loads(message_bytes, cls=ResoniteLinkJSONDecoder)
-        self._logger.debug(f"Received message:\n   {'\n   '.join(format_object_structure(message, print_missing=True).split('\n'))}")
-        
-        # Currently nothing other than `Response` instances and derivatives thereof are expected to be received from ResoniteLink.
-        if not isinstance(message, Response):
-            raise RuntimeError("Received message did not decode into `Response` instance!")
-        response = message
+        response : Response = json.loads(message_bytes, cls=ResoniteLinkJSONDecoder, root_model_type=Response)
+        self._logger.debug(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
 
         # We're only expecting responses that we sent, so they should always have a `source_message_id`!
         if not response.source_message_id:
@@ -395,7 +390,7 @@ class ResoniteLinkClient(ABC):
             raise RuntimeError(f"Received response's `source_message_id` could not get resolved to source message's future!")
 
         # Invoke message sent event BEFORE responding to message's future
-        await self._invoke_event_handlers(ResoniteLinkClientEvent.MESSAGE_RECEIVED, message)
+        await self._invoke_event_handlers(ResoniteLinkClientEvent.RESPONSE_RECEIVED, response)
 
         # Responds to the future, this will continue the original message sent
         if response.success:

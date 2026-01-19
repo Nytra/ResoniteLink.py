@@ -37,7 +37,7 @@ class ResoniteLinkJSONEncoder(JSONEncoder):
         """
         try:
             # Try retrieving a model to quickly check if the object to encode is a model's data class
-            model = JSONModel.get_for_data_class(type(o))
+            model = JSONModel.find_model(type(o))
         
         except KeyError:
             # Not a registered model class, forward to default encoder

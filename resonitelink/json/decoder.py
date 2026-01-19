@@ -16,13 +16,13 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
     Custom decoder for ResoniteLink model classes.
 
     """
-    _root_model : JSONModel
+    _root_model_type : type
 
-    def __init__(self, *args, root_model : JSONModel, **kwargs):
-        if not root_model:
+    def __init__(self, *args, root_model_type : type, **kwargs):
+        if not root_model_type:
             raise ValueError("No root model provided for decoder!")
 
-        self._root_model = root_model
+        self._root_model_type = root_model_type
 
         super().__init__(*args, **kwargs)
     
@@ -157,11 +157,28 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
         This is unfortunately exactly the opposite of what we need. So instead, this decoder works the following way:
 
         1. Run the default decoder first, which decodes the JSON string / bytes into a raw python object.
+        2. Determine the root model, based on the decoder's 'root_model_type' and potential '$type' argument in JSON. 
         2. Take the resulting raw object and attept to recursively decode it into the decoder's root model.
 
         That root model is than returned.
 
         """
-        raw_obj = super().decode(*args, **kwargs)
-        model_obj = ResoniteLinkJSONDecoder._decode_model(raw_obj, self._root_model)
-        return model_obj
+        # 1. Parse JSON into raw python object
+        obj : Dict[str, Any] = super().decode(*args, **kwargs)
+
+        if not isinstance(obj, dict):
+            raise TypeError("JSON-Data did not decode into dictionary object!")
+
+        # 2. Find root model to use for decoding
+        root_model : JSONModel
+        if '$type' in obj:
+            # Include type name, this allows resolving derived or global models by their type name.
+            root_model = JSONModel.find_model(self._root_model_type, obj['$type'])
+        else:
+            # Can only be exact match
+            root_model = JSONModel.find_model(self._root_model_type)
+
+        # 3. Decode raw python object to model instance
+        obj = ResoniteLinkJSONDecoder._decode_model(obj, root_model)
+
+        return obj
