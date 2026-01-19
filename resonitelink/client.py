@@ -12,10 +12,11 @@ from resonitelink.models.messages import \
 from resonitelink.exceptions import ResoniteLinkException
 from resonitelink.proxies import SlotProxy, ComponentProxy
 from websockets.exceptions import ConnectionClosed as WebSocketConnectionClosed
-from resonitelink.utils import IDRegistry, get_slot_id, get_component_id, optional_slot_reference, optional_field
-from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, JSONModel, format_object_structure
+from resonitelink.utils.id_registry import IDRegistry
+from resonitelink.utils import get_slot_id, get_component_id, optional_slot_reference, optional_field
+from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
 from websockets import connect as websocket_connect, ClientConnection as WebSocketClientConnection
-from asyncio import AbstractEventLoop, Event, Future, get_running_loop, wait_for, gather
+from asyncio import Event, Future, get_running_loop, wait_for, gather
 from typing import Optional, Union, List, Dict, Callable, Coroutine, Any
 from enum import Enum
 from abc import ABC, abstractmethod

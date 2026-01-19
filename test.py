@@ -1,21 +1,15 @@
-import logging
-logging.basicConfig(format='%(asctime)s [%(levelname)-8s] %(name)s: %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-
 from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ResoniteLinkClientEvent
 from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, format_object_structure
 from resonitelink.models.datamodel import Slot, Component, Reference, Field, Field_String
 from resonitelink.models.messages import RemoveSlot, GetSlot, AddSlot, AddComponent, ImportTexture2DRawData, RequestSessionData
-from random import randint
 from typing import List
 import asyncio
-import json
+import logging
+
+port = 49155
 
 logger = logging.getLogger("App")
 logger.setLevel(logging.DEBUG)
-
-
-# port = int(input("ResoniteLink Port: "))
-port = 29919
 
 
 def test_generate_image_bytes() -> bytes:
@@ -35,13 +29,18 @@ async def on_client_started(client : ResoniteLinkClient):
     # msg = RequestSessionData()
     # await client.send_message(msg)
 
-    slot = await client.add_slot()
-    await slot.set_name("Renamed!")
+    # slot = await client.add_slot()
+    # await slot.set_name("Renamed!")
 
-    logger.info(f"Received proxy: {slot}")
+    # logger.info(f"Received proxy: {slot}")
 
-    # msg = AddSlot(data=Slot(id=new_slot_id, parent=Slot.Root, name=Field_String(value="My awesome slot!!!")))
-    # response = await client.send_message(msg)
+    
+    slot1 = await client.add_slot(name="Test Slot")
+    slot2 = await client.add_slot(name="Test Child Slot", parent=slot1)
+    slot_data = await client.get_slot(slot1)
+
+    # component = await client.add_component(slot, "[FrooxEngine]FrooxEngine.ValueField<bool>")
+    # component
 
     # logger.info(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
 

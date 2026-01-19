@@ -1,4 +1,4 @@
-from .models import JSONModel, JSONProperty, JSONPropertyType
+from .models import SELF, JSONModel, JSONProperty, JSONPropertyType
 from typing import Any, Dict
 from json import JSONDecoder
 import logging
@@ -27,7 +27,7 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
         super().__init__(*args, **kwargs)
     
     @staticmethod
-    def _decode_element(obj : Any, prop : JSONProperty):
+    def _decode_element(obj : Any, model : JSONModel, prop : JSONProperty):
         """
         Processes a single element of a property (properties have multiple elements if they are List or Dicts).
 
@@ -36,12 +36,13 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
             # We assume that any JSON-Dictionary should map to a registered model
             try:
                 # Check if the property is a child model.
+                target_type = model.data_class if prop.element_type is SELF else prop.element_type # Special case: self-reference in model
                 if '$type' in obj:
                     # Include type name, this allows resolving derived or global models by their type name.
-                    child_model = JSONModel.find_model(prop.element_type, obj['$type'])
+                    child_model = JSONModel.find_model(target_type, obj['$type'])
                 else:
                     # Can only be exact match
-                    child_model = JSONModel.find_model(prop.element_type)
+                    child_model = JSONModel.find_model(target_type)
 
             except KeyError:
                 # No model found, raw dict will be kept in decoded data, log warning.
@@ -59,7 +60,7 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
         return obj
     
     @staticmethod
-    def _decode_property(obj : Any, prop : JSONProperty) -> Any:
+    def _decode_property(obj : Any, model : JSONModel, prop : JSONProperty) -> Any:
         """
         Decodes a parsed JSON object for the given property into a suitable value.
 
@@ -83,21 +84,21 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
         
         elif prop.property_type == JSONPropertyType.ELEMENT:
             # Resolve property as single element
-            obj = ResoniteLinkJSONDecoder._decode_element(obj, prop)
+            obj = ResoniteLinkJSONDecoder._decode_element(obj, model, prop)
         
         elif prop.property_type == JSONPropertyType.LIST:
             # Resolve property as list
             if not isinstance(obj, list): 
                 raise TypeError(f"Error decoding JSON-Data into {prop}: Object expected to be of type {list}, not {type(obj)}!")
             
-            obj = [ ResoniteLinkJSONDecoder._decode_element(o, prop) for o in obj ]
+            obj = [ ResoniteLinkJSONDecoder._decode_element(o, model, prop) for o in obj ]
 
         elif prop.property_type == JSONPropertyType.DICT:
             # Resolve property as dict
             if not isinstance(obj, dict): 
                 raise TypeError(f"Error decoding JSON-Data into {prop}: Object expected to be of type {dict}, not {type(obj)}!")
             
-            obj = { k: ResoniteLinkJSONDecoder._decode_element(v, prop) for k, v in obj.items() }
+            obj = { k: ResoniteLinkJSONDecoder._decode_element(v, model, prop) for k, v in obj.items() }
 
         else:
             raise ValueError(f"Error decoding JSON-Data into {prop}: Invalid JSONPropertyType: {prop.property_type}")
@@ -131,7 +132,8 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
                 
                 else:
                     # Type is explicitly defined and matches the model we're decoding into, all is good.
-                    pass
+                    # We're skipping it since we don't need to explicitly parse that information, already checked it.
+                    continue
             
             try:
                 # Try to get the property key associated with the name of the JSON attribute.
@@ -144,7 +146,7 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
             else:
                 # JSON attribute is associated with a JSONProperty
                 prop = model.properties[key]
-                setattr(data_class, key, ResoniteLinkJSONDecoder._decode_property(value, prop))
+                setattr(data_class, key, ResoniteLinkJSONDecoder._decode_property(value, model, prop))
             
         return data_class
     

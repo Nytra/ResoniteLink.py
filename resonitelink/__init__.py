@@ -17,6 +17,12 @@ __version__ = "0.1.0a"
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
 
+# Logging setup is run first, otherwise we miss logging during import phase.
+# NOTE: If you want to use your own logging configuration, simply configure it before importing this module,
+#       setup_logging does nothing if the root logger already has handlers configured.
+from .logging import setup_logging
+setup_logging()
+
 from .exceptions import *
 from .json import *
 from .models.datamodel import *

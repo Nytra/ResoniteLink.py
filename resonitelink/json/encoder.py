@@ -1,5 +1,4 @@
-from .models import JSONModel, JSONProperty
-from .utils import is_missing
+from .models import MISSING, JSONModel, JSONProperty
 from typing import Any
 from json import JSONEncoder
 
@@ -52,7 +51,7 @@ class ResoniteLinkJSONEncoder(JSONEncoder):
                 if hasattr(o, key):
                     # Object has property for key, include
                     value = getattr(o, key)
-                    if is_missing(value):
+                    if value is MISSING:
                         # Skip any properties that are set to the MISSING sentinel
                         # (This is also needed because the _MissingSentinel class can't be JSON encoded!)
                         continue

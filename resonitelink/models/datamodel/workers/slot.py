@@ -1,7 +1,7 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
 from resonitelink.models.datamodel import Worker, Reference, Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
-from resonitelink.json import JSONPropertyType, json_model, json_property
+from resonitelink.json import SELF, JSONPropertyType, json_model, json_property
 from dataclasses import dataclass
 from typing import List
 
@@ -9,7 +9,7 @@ from .component import Component
 
 
 @json_model() # NOT derived from Worker, it's the same in the reference C# implementation.
-@dataclass(slots=False)
+@dataclass(slots=True)
 class Slot(Worker):
     parent : Reference = json_property("parent", Reference)
     position : Field_Float3 = json_property("position", Field_Float3)
@@ -22,7 +22,7 @@ class Slot(Worker):
     order_offset : Field_Long = json_property("orderOffset", Field_Long)
 
     components : List[Component] = json_property("components", Component, JSONPropertyType.LIST)
-    # children : List[Slot] = json_property("children", Slot, JSONPropertyType.LIST) # TODO: This doesn't work... We probably need a specific self-reference handling
+    children : List[Slot] = json_property("children", SELF, JSONPropertyType.LIST)
 
     # Special Slot references
     Root = Reference(target_id="Root", target_type="slot")

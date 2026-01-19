@@ -1,28 +1,10 @@
-from .models import _MissingSentinel, MISSING, JSONModel, JSONPropertyType
+from .models import MISSING, JSONModel, JSONPropertyType
 from typing import Any, List, Callable
 
 __all__ = (
-    'is_missing',
     'optional',
     'format_object_structure',
 )
-
-
-def is_missing(value : Any) -> bool:
-    """
-    Checks wether the specified value is "missing" (i.e. is of type `_MissingSentinel`).
-
-    Parameters
-    ----------
-    value : Any
-        The value to check.
-
-    Returns
-    -------
-    `True` if the provided value has the `_MissingSentinel` type. 
-
-    """
-    return type(value) is _MissingSentinel
 
 
 def optional(value : Any, func : Callable[[], Any]) -> Any:
@@ -31,7 +13,7 @@ def optional(value : Any, func : Callable[[], Any]) -> Any:
     Otherwise returns result of func.
 
     """
-    if is_missing(value):
+    if value is MISSING:
         return MISSING
     else:
         return func()
@@ -76,11 +58,19 @@ def format_object_structure(obj : Any, print_missing : bool = False, prefix : st
 
                 if json_property.property_type == JSONPropertyType.LIST and isinstance(val, list):
                     # Resolve property as list
-                    property_lines.append(f" - {key} (List):\n{prefix}    - {f'\n{prefix}    - '.join([ format_object_structure(v, prefix=f'{prefix}      ') for v in val ])}")
+                    if len(val) == 0:
+                        # Empty list
+                        property_lines.append(f" - {key} (List): []")
+                    else:
+                        property_lines.append(f" - {key} (List):\n{prefix}    - {f'\n{prefix}    - '.join([ format_object_structure(v, prefix=f'{prefix}      ') for v in val ])}")
 
                 elif json_property.property_type == JSONPropertyType.DICT and isinstance(val, dict):
                     # Resolve property as dict
-                    property_lines.append(f" - {key} (Dict):\n{prefix}    - {f'\n{prefix}    - '.join([ f'{k}: {format_object_structure(v, prefix=f'{prefix}      ')}' for k, v in val.items() ])}")
+                    if len(val.items()) == 0:
+                        # Empty dict
+                        property_lines.append(f" - {key} (Dict): {{}}")
+                    else:
+                        property_lines.append(f" - {key} (Dict):\n{prefix}    - {f'\n{prefix}    - '.join([ f'{k}: {format_object_structure(v, prefix=f'{prefix}      ')}' for k, v in val.items() ])}")
                 
                 else:
                     # Resolve property as single element
@@ -90,6 +80,6 @@ def format_object_structure(obj : Any, print_missing : bool = False, prefix : st
                 # Value for key missing & missing values should be printed
                 property_lines.append(f"{key}: MISSING")
         
-        structure_str = f"Type '{type(obj).__name__}' (Data class for model '{model.type_name}'):\n{prefix}{f'\n{prefix}'.join(property_lines)}"
+        structure_str = f"Type '{type(obj).__name__}':\n{prefix}{f'\n{prefix}'.join(property_lines)}"
 
     return structure_str

@@ -7,6 +7,7 @@ import logging
 
 __all__ = (
     'MISSING',
+    'SELF',
     'JSONPropertyType',
     'JSONProperty',
     'JSONModel',
@@ -18,13 +19,9 @@ logger = logging.getLogger("ResoniteLinkModels")
 logger.setLevel(logging.DEBUG)
 
 
-class _MissingSentinel:
+class _Sentinel:
     """
-    Sentinel class used to represent missing values.
-
-    Note
-    ----
-    Missing values are NOT `null`, they are *missing* (i.e. they won't be included in JSON objects)!
+    Base class for sentinel values used in this library.
 
     """
     __slots__ = ()
@@ -41,8 +38,13 @@ class _MissingSentinel:
     def __repr__(self):
         return '...'
 
+# Sentinel used to represent missing values.
+# NOTE: Missing values are NOT `null`, they are *missing* (i.e. they won't be included in JSON objects)!
+MISSING: Any = _Sentinel()
 
-MISSING: Any = _MissingSentinel()
+# Sentinel used to represent self references.
+# This can be used when a JSONProperty of a JSONModel is of the containing model's type (recursion).
+SELF : Any = _Sentinel()
 
 
 class JSONPropertyType(Enum):
@@ -54,7 +56,7 @@ class JSONPropertyType(Enum):
 class JSONProperty():
     """
     TODO: Documentation needs to be updated once rework is done!
-    
+
     Denotes a JSON property of a model data class that will be picked up by the serializer / deserializer.
     This should be added as an annotation to the members that should be JSON serialized / deserialized:
         
@@ -238,8 +240,6 @@ class JSONModel(Generic[D]):
             If a model with the same type name is already registered, or if this model instance is already registered under a different name.
 
         """
-        if len(self.properties) == 0: return # Skip registering for testing TODO: Remove!!!
-
         if self.data_class in JSONModel._model_data_class_mapping.keys():
             raise KeyError(f"A different model with data class '{self.data_class}' is already registered!")
         if self in JSONModel._global_model_type_name_mapping.values():
