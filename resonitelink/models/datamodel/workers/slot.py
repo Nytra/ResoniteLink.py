@@ -25,4 +25,4 @@ class Slot(Worker):
     children : List[Slot] = json_property("children", SELF, JSONPropertyType.LIST)
 
     # Special Slot references
-    Root = Reference(target_id="Root", target_type="slot")
+    Root = Reference(target_id="Root", target_type="[FrooxEngine]FrooxEngine.Slot")

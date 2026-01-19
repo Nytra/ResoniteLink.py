@@ -368,11 +368,11 @@ class ResoniteLinkClient(ABC):
         Parameters
         ----------
         container_slot : Union[str, Slot, SlotProxy, Reference]
-            Unique ID or reference of slot to attach the new component to.
+            Unique ID or reference of the slot to attach the new component to.
         component_type : str
             Type of the component to create.
         members : Dict[str, Member], optional
-            Members of the component to create.
+            Members of the component to create. Any field that isn't provided will be populated with the component's default values.
 
         Returns
         -------
@@ -392,11 +392,46 @@ class ResoniteLinkClient(ABC):
         await self.send_message(msg)
         return ComponentProxy(self, component_id)
 
-    async def update_component(self, component : Any) -> Any:
-        raise NotImplementedError()
+    async def update_component(
+        self, 
+        component : Union[str, Component, ComponentProxy, Reference],
+        members : Dict[str, Member]
+    ):
+        """
+        Updates an existng component.
 
-    async def remove_component(self, component : Any) -> Any:
-        raise NotImplementedError()
+        Parameters
+        ----------
+        component : Union[str, Component, ComponentProxy, Reference]
+            Unique ID or reference of the component to update.
+        members : Dict[str, Member]
+            Dict of members to update. Any field that isn't provided will be left as is.
+
+        """
+        component_id = get_component_id(component)
+        msg = UpdateComponent(
+            data=Component(
+                id=component_id,
+                members=members
+            )
+        )
+        await self.send_message(msg)
+
+    async def remove_component(self, component : Union[str, Component, ComponentProxy, Reference]):
+        """
+        Removes a component.
+
+        Parameters
+        ----------
+        component : Union[str, Component, ComponentProxy, Reference]
+            Unique ID or reference of the component to remove.
+
+        """
+        component_id = get_component_id(component)
+        msg = RemoveComponent(
+            component_id=component_id
+        )
+        await self.send_message(msg)
     
     async def send_message(self, message : Message) -> Response:
         """
