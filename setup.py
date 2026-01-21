@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 from typing import Union
 import re
 
@@ -45,10 +45,7 @@ def derive_version() -> str:
 
     return version
 
-
 setup(
     version=derive_version(),
-    include_package_data=True, # Only include package data
-    packages=[ "resonitelink" ] # This specifies which of the packages in dir to include
+    py_modules=[ ], # All included modules / files defined via MANIFEST.in 
 )
-

@@ -1,0 +1,6 @@
+# Every .py file in resonitelink (This will also include nested directories without intermediate packages.)
+recursive-include resonitelink/ *.py
+
+# Exclude pycache stuff
+global-exclude */__pycache__/*
+global-exclude *.pyc
