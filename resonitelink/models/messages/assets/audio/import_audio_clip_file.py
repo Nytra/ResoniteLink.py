@@ -6,4 +6,12 @@ from dataclasses import dataclass
 @json_model("importAudioClipFile", Message)
 @dataclass(slots=True)
 class ImportAudioClipFile(Message):
-    pass
+    """
+    Import a audio clip asset from a file on the local file system. Note that this must be a file
+    format supported by Resonite, otherwise this will fail. 
+    If you are unsure if the file format is supported, send raw audio data instead.
+    Generally WAV, OGG & FLAC files are supported as audio clips.
+    
+    """
+    # Path of the audio clip file to import.
+    file_path : str = json_property("filePath", str)

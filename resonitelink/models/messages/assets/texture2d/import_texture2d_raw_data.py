@@ -7,9 +7,13 @@ from abc import ABC, abstractmethod
 
 @dataclass(slots=True)
 class ImportTexture2DRawDataBase(BinaryPayloadMessage, ABC):
-    width : int = json_property("width", int)
-    height : int = json_property("height", int)
     _data : Optional[bytes] = None
+    
+    # Width of the texture.
+    width : int = json_property("width", int)
+    
+    # Height of the texture.
+    height : int = json_property("height", int)
 
     @property
     @abstractmethod
