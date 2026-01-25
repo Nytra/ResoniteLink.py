@@ -1,11 +1,11 @@
-from resonitelink.json import json_property
+from resonitelink.json import json_element
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
-
+from typing import List
 
 @dataclass(slots=True)
 class Message(ABC):
-    message_id : str = json_property("messageId", str)
+    message_id : str = json_element("messageId", str)
 
 
 @dataclass(slots=True)

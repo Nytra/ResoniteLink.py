@@ -1,13 +1,13 @@
 from resonitelink.models.messages import Message, BinaryPayloadMessage
 from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 
 @json_model("importAudioClipRawData", Message)
 @dataclass(slots=True)
 class ImportAudioClipRawData(BinaryPayloadMessage):
-    _data : Optional[bytes] = None
+    _data : Optional[bytes] = field(default=None, init=False)
 
     # Number of audio samples in this audio clip. This does NOT account for channel count and will be the same
     # regardless of mono/stereo/5.1 etc.

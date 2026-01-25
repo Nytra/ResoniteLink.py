@@ -5,14 +5,14 @@ from resonitelink.json import json_model, json_property
 from dataclasses import dataclass
 
 
-@json_model("t_bool2")
+@json_model("t_bool2", type_name_is_internal=True)
 @dataclass(slots=True)
 class Bool2():
     x : bool = json_property("x", bool)
     y : bool = json_property("y", bool)
 
 
-@json_model("t_bool3")
+@json_model("t_bool3", type_name_is_internal=True)
 @dataclass(slots=True)
 class Bool3():
     x : bool = json_property("x", bool)
@@ -20,7 +20,7 @@ class Bool3():
     z : bool = json_property("z", bool)
 
 
-@json_model("t_bool4")
+@json_model("t_bool4", type_name_is_internal=True)
 @dataclass(slots=True)
 class Bool4():
     x : bool = json_property("x", bool)
@@ -29,14 +29,14 @@ class Bool4():
     w : bool = json_property("w", bool)
 
 
-@json_model("t_byte2")
+@json_model("t_byte2", type_name_is_internal=True)
 @dataclass(slots=True)
 class Byte2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_byte3")
+@json_model("t_byte3", type_name_is_internal=True)
 @dataclass(slots=True)
 class Byte3():
     x : int = json_property("x", int)
@@ -44,7 +44,7 @@ class Byte3():
     z : int = json_property("z", int)
 
 
-@json_model("t_byte4")
+@json_model("t_byte4", type_name_is_internal=True)
 @dataclass(slots=True)
 class Byte4():
     x : int = json_property("x", int)
@@ -53,14 +53,14 @@ class Byte4():
     w : int = json_property("w", int)
 
 
-@json_model("t_sbyte2")
+@json_model("t_sbyte2", type_name_is_internal=True)
 @dataclass(slots=True)
 class SByte2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_sbyte3")
+@json_model("t_sbyte3", type_name_is_internal=True)
 @dataclass(slots=True)
 class SByte3():
     x : int = json_property("x", int)
@@ -68,7 +68,7 @@ class SByte3():
     z : int = json_property("z", int)
 
 
-@json_model("t_sbyte4")
+@json_model("t_sbyte4", type_name_is_internal=True)
 @dataclass(slots=True)
 class SByte4():
     x : int = json_property("x", int)
@@ -77,14 +77,14 @@ class SByte4():
     w : int = json_property("w", int)
 
 
-@json_model("t_ushort2")
+@json_model("t_ushort2", type_name_is_internal=True)
 @dataclass(slots=True)
 class UShort2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_ushort3")
+@json_model("t_ushort3", type_name_is_internal=True)
 @dataclass(slots=True)
 class UShort3():
     x : int = json_property("x", int)
@@ -92,7 +92,7 @@ class UShort3():
     z : int = json_property("z", int)
 
 
-@json_model("t_ushort4")
+@json_model("t_ushort4", type_name_is_internal=True)
 @dataclass(slots=True)
 class UShort4():
     x : int = json_property("x", int)
@@ -101,14 +101,14 @@ class UShort4():
     w : int = json_property("w", int)
 
 
-@json_model("t_short2")
+@json_model("t_short2", type_name_is_internal=True)
 @dataclass(slots=True)
 class Short2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_short3")
+@json_model("t_short3", type_name_is_internal=True)
 @dataclass(slots=True)
 class Short3():
     x : int = json_property("x", int)
@@ -116,7 +116,7 @@ class Short3():
     z : int = json_property("z", int)
 
 
-@json_model("t_short4")
+@json_model("t_short4", type_name_is_internal=True)
 @dataclass(slots=True)
 class Short4():
     x : int = json_property("x", int)
@@ -125,14 +125,14 @@ class Short4():
     w : int = json_property("w", int)
 
 
-@json_model("t_uint2")
+@json_model("t_uint2", type_name_is_internal=True)
 @dataclass(slots=True)
 class UInt2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_uint3")
+@json_model("t_uint3", type_name_is_internal=True)
 @dataclass(slots=True)
 class UInt3():
     x : int = json_property("x", int)
@@ -140,7 +140,7 @@ class UInt3():
     z : int = json_property("z", int)
 
 
-@json_model("t_uint4")
+@json_model("t_uint4", type_name_is_internal=True)
 @dataclass(slots=True)
 class UInt4():
     x : int = json_property("x", int)
@@ -149,14 +149,14 @@ class UInt4():
     w : int = json_property("w", int)
 
 
-@json_model("t_int2")
+@json_model("t_int2", type_name_is_internal=True)
 @dataclass(slots=True)
 class Int2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_int3")
+@json_model("t_int3", type_name_is_internal=True)
 @dataclass(slots=True)
 class Int3():
     x : int = json_property("x", int)
@@ -164,7 +164,7 @@ class Int3():
     z : int = json_property("z", int)
 
 
-@json_model("t_int4")
+@json_model("t_int4", type_name_is_internal=True)
 @dataclass(slots=True)
 class Int4():
     x : int = json_property("x", int)
@@ -173,14 +173,14 @@ class Int4():
     w : int = json_property("w", int)
 
 
-@json_model("t_ulong2")
+@json_model("t_ulong2", type_name_is_internal=True)
 @dataclass(slots=True)
 class ULong2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_ulong3")
+@json_model("t_ulong3", type_name_is_internal=True)
 @dataclass(slots=True)
 class ULong3():
     x : int = json_property("x", int)
@@ -188,7 +188,7 @@ class ULong3():
     z : int = json_property("z", int)
 
 
-@json_model("t_ulong4")
+@json_model("t_ulong4", type_name_is_internal=True)
 @dataclass(slots=True)
 class ULong4():
     x : int = json_property("x", int)
@@ -197,14 +197,14 @@ class ULong4():
     w : int = json_property("w", int)
 
 
-@json_model("t_long2")
+@json_model("t_long2", type_name_is_internal=True)
 @dataclass(slots=True)
 class Long2():
     x : int = json_property("x", int)
     y : int = json_property("y", int)
 
 
-@json_model("t_long3")
+@json_model("t_long3", type_name_is_internal=True)
 @dataclass(slots=True)
 class Long3():
     x : int = json_property("x", int)
@@ -212,7 +212,7 @@ class Long3():
     z : int = json_property("z", int)
 
 
-@json_model("t_long4")
+@json_model("t_long4", type_name_is_internal=True)
 @dataclass(slots=True)
 class Long4():
     x : int = json_property("x", int)
@@ -221,14 +221,14 @@ class Long4():
     w : int = json_property("w", int)
 
 
-@json_model("t_float2")
+@json_model("t_float2", type_name_is_internal=True)
 @dataclass(slots=True)
 class Float2():
     x : float = json_property("x", float)
     y : float = json_property("y", float)
 
 
-@json_model("t_float3")
+@json_model("t_float3", type_name_is_internal=True)
 @dataclass(slots=True)
 class Float3():
     x : float = json_property("x", float)
@@ -236,7 +236,7 @@ class Float3():
     z : float = json_property("z", float)
 
 
-@json_model("t_float4")
+@json_model("t_float4", type_name_is_internal=True)
 @dataclass(slots=True)
 class Float4():
     x : float = json_property("x", float)
@@ -245,14 +245,14 @@ class Float4():
     w : float = json_property("w", float)
 
 
-@json_model("t_double2")
+@json_model("t_double2", type_name_is_internal=True)
 @dataclass(slots=True)
 class Double2():
     x : float = json_property("x", float)
     y : float = json_property("y", float)
 
 
-@json_model("t_double3")
+@json_model("t_double3", type_name_is_internal=True)
 @dataclass(slots=True)
 class Double3():
     x : float = json_property("x", float)
@@ -260,7 +260,7 @@ class Double3():
     z : float = json_property("z", float)
 
 
-@json_model("t_double4")
+@json_model("t_double4", type_name_is_internal=True)
 @dataclass(slots=True)
 class Double4():
     x : float = json_property("x", float)

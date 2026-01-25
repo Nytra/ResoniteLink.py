@@ -1,7 +1,7 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
 from dataclasses import field, fields
-from typing import Optional, Any, Type, Tuple, Dict, Generator, TypeVar, Generic
+from typing import Optional, Any, Type, Tuple, List, Dict, Generator, TypeVar, Generic
 from enum import Enum
 import logging
 
@@ -12,6 +12,9 @@ __all__ = (
     'JSONProperty',
     'JSONModel',
     'json_property',
+    'json_element',
+    'json_list',
+    'json_dict',
     'json_model',
 )
 
@@ -114,16 +117,60 @@ class JSONProperty():
     def __repr__(self) -> str:
         return f"<JSONProperty name='{self.json_name}', element_type={self.element_type}, property_type={self.property_type}{' (abstract)' if self._abstract else ''}>"
 
+from typing import dataclass_transform
+
+# def json_property(json_name : str, element_type : type, property_type : JSONPropertyType = JSONPropertyType.ELEMENT, abstract = False, init = True):
+#     """
+#     Utility function for easily defining fields in a dataclass as JSON-Properties.
+#     Returns a field for use in dataclass.
+
+#     """
+#     json_prop = JSONProperty(json_name=json_name, element_type=element_type, property_type=property_type, abstract=abstract)
+
+#     return field(default=MISSING, init=init, metadata={'JSONProperty': json_prop})
 
 def json_property(json_name : str, element_type : type, property_type : JSONPropertyType = JSONPropertyType.ELEMENT, abstract = False):
     """
     Utility function for easily defining fields in a dataclass as JSON-Properties.
     Returns a field for use in dataclass.
 
+    Note
+    ----
+    This doesn't provide proper static type hinting, as it returns 'Any'.
+    For static type hinting, use json_element, json_list or json_dict respectively.
+
     """
     json_prop = JSONProperty(json_name=json_name, element_type=element_type, property_type=property_type, abstract=abstract)
 
     return field(default=MISSING, metadata={'JSONProperty': json_prop})
+
+
+T = TypeVar('T')
+def json_element(json_name : str, element_type : Type[T], abstract = False) -> T:
+    """
+    Utility function for easily definiing fields in dataclasses as JSON-Element-Properties.
+    Returns a field for use in dataclass.
+
+    """
+    return json_property(json_name=json_name, element_type=element_type, property_type=JSONPropertyType.ELEMENT, abstract=abstract)
+
+
+def json_list(json_name : str, element_type : Type[T], abstract = False) -> List[T]:
+    """
+    Utility function for easily definiing fields in dataclasses as JSON-List-Properties.
+    Returns a field for use in dataclass.
+
+    """
+    return json_property(json_name=json_name, element_type=element_type, property_type=JSONPropertyType.LIST, abstract=abstract)
+
+
+def json_dict(json_name : str, element_type : Type[T], abstract = False) -> Dict[str, T]:
+    """
+    Utility function for easily definiing fields in dataclasses as JSON-Dict-Properties.
+    Returns a field for use in dataclass.
+
+    """
+    return json_property(json_name=json_name, element_type=element_type, property_type=JSONPropertyType.DICT, abstract=abstract)
 
 
 D = TypeVar('D', bound=Type)
@@ -143,6 +190,7 @@ class JSONModel(Generic[D]):
     _data_class : D
     _type_name : Optional[str]
     _derived_from : Optional[type]
+    _type_name_is_internal : bool
     _properties : Dict[str, JSONProperty]
     _property_name_mapping : Dict[str, str]
     
@@ -160,6 +208,10 @@ class JSONModel(Generic[D]):
         return self._derived_from
     
     @property
+    def type_name_is_internal(self) -> bool: # TODO: This is a bit ugly. Maybe refactor by separating public and internal model type name.
+        return self._type_name_is_internal
+    
+    @property
     def properties(self) -> Dict[str, JSONProperty]:
         return self._properties
     
@@ -167,13 +219,14 @@ class JSONModel(Generic[D]):
     def property_name_mapping(self) -> Dict[str, str]:
         return self._property_name_mapping
 
-    def __init__(self, data_class : D, type_name : Optional[str] = None, derived_from : Optional[type] = None):
+    def __init__(self, data_class : D, type_name : Optional[str] = None, derived_from : Optional[type] = None, type_name_is_internal = False):
         if derived_from is not None and not type_name:
             raise ValueError(f"A `type_name` needs to be speficied if the model is derived!")
         
         self._data_class = data_class
         self._type_name = type_name
         self._derived_from = derived_from
+        self._type_name_is_internal = type_name_is_internal
         self._properties = dict(self._find_properties_in_data_class(self.data_class))
         self._verify_properties(self._properties)
         self._property_name_mapping = dict(self._get_property_name_mapping(self._properties))
@@ -326,7 +379,7 @@ class JSONModel(Generic[D]):
         return f"<JSONModel data_class={self.data_class}, type_name='{self.type_name}', derived_from={self.derived_from}, property_count={len(self.properties)}>"
 
 
-def json_model(type_name : Optional[str] = None, derived_from : Optional[type] = None):
+def json_model(type_name : Optional[str] = None, derived_from : Optional[type] = None, type_name_is_internal = False):
     """
     Class decorator to easily declare models from their data classes.
     This decorator does **not** modify the decorated class, but globally registers a model for it.
@@ -340,7 +393,7 @@ def json_model(type_name : Optional[str] = None, derived_from : Optional[type] =
     """
     def _model_decorator(data_class : D) -> D:
         # Creating a model instance automatically registers it
-        model = JSONModel(data_class=data_class, type_name=type_name, derived_from=derived_from)
+        model = JSONModel(data_class=data_class, type_name=type_name, derived_from=derived_from, type_name_is_internal=type_name_is_internal)
 
         # Inject custom __repr__
         def _repr(self) -> str:

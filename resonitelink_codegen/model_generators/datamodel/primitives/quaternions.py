@@ -34,7 +34,7 @@ class QuaternionsGenerator(CodeGenerator):
         yield f"\n\n"
 
         def _generate_quaternion_class(model_name : str, class_name : str, element_type : Type):
-            yield f"@json_model(\"t_{model_name}\")\n"
+            yield f"@json_model(\"t_{model_name}\", type_name_is_internal=True)\n"
             yield f"@dataclass(slots=True)\n"
             yield f"class {class_name}():\n"
             yield f"    x : {element_type.__name__} = json_property(\"x\", {element_type.__name__})\n"

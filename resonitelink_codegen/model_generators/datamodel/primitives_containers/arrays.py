@@ -49,7 +49,7 @@ class ArraysGenerator(CodeGenerator):
             yield f"    values : List[{value_type.__name__}] = json_property(\"values\", {value_type.__name__}, JSONPropertyType.LIST)\n"
             yield f"    \n"
             yield f"    @property\n"
-            yield f"    def value_type_name(self) -> str:\n"
+            yield f"    def element_type(self) -> str:\n"
             yield f"        return \"{value_type_name}\"\n"
 
         for primitive_type in primitive_types:

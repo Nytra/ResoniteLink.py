@@ -44,7 +44,9 @@ class ResoniteLinkJSONEncoder(JSONEncoder):
         
         else:
             # Object is data class of a model, resolve into object
-            obj = { '$type': model.type_name }
+            obj = { }
+            if not model.type_name_is_internal and model.type_name:
+                obj['$type'] = model.type_name
 
             json_property : JSONProperty
             for key, json_property in model.properties.items():
