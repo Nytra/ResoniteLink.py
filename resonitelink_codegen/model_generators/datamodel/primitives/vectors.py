@@ -3,17 +3,6 @@ from resonitelink.utils.types import type_mappings, vector_types
 from typing import Type, List, Generator
 
 
-# NOTE: Reference output:
-# from resonitelink.json import json_model, json_property
-# from dataclasses import dataclass
-
-# @json_model("int2")
-# @dataclass(slots=True)
-# class Vector_Int2():
-#     x : int = json_property("x", int)]
-#     y : int = json_property("y", int)]
-
-
 class VectorsGenerator(CodeGenerator):
     """
     Generator for the vectors.py model file.

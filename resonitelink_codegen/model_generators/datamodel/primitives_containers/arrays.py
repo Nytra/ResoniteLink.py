@@ -3,24 +3,6 @@ from resonitelink.utils.types import type_mappings, primitive_types
 from typing import Type, Generator
 
 
-# NOTE: Reference output:
-# from resonitelink.models.datamodel.primitives import *
-# from resonitelink.models.datamodel import Member, SyncArray
-# from resonitelink.json import JSONPropertyType, json_model, json_property
-# from dataclasses import dataclass
-# from decimal import Decimal
-# from typing import List
-
-# @json_model("bool[]", Member)
-# @dataclass(slots=True)
-# class Array_Bool(SyncArray):
-#     values : List[bool] = json_property("values", bool, JSONPropertyType.LIST)
-    
-#     @property
-#     def element_type(self) -> str:
-#         return "bool"
-
-
 class ArraysGenerator(CodeGenerator):
     """
     Generator for the arrays.py model file.

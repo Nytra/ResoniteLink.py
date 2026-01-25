@@ -3,24 +3,6 @@ from resonitelink.utils.types import type_mappings, primitive_types, non_nullabl
 from typing import Type, Generator
 
 
-# NOTE: Reference output:
-# from resonitelink.models.datamodel.primitives import *
-# from resonitelink.models.datamodel import Member, Field
-# from resonitelink.json import json_model, json_property
-# from dataclasses import dataclass
-# from decimal import Decimal
-# from typing import Optional
-
-# @json_model("bool", Member)
-# @dataclass(slots=True)
-# class Field_Bool(Field):
-#     value : bool = json_property("value", bool)]
-    
-#     @property
-#     def value_type_name(self) -> str:
-#         return "bool"
-
-
 class FieldsGenerator(CodeGenerator):
     """
     Generator for the fields.py model file.

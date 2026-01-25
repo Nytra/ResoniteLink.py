@@ -3,19 +3,6 @@ from resonitelink.utils.types import type_mappings, matrix_types
 from typing import Type, List, Generator
 
 
-# NOTE: Reference output:
-# from resonitelink.json import json_model, json_property
-# from dataclasses import dataclass
-
-# @json_model("float2x2")
-# @dataclass(slots=True)
-# class Float2x2():
-#     m00 : float = json_property("m00", float)
-#     m01 : float = json_property("m01", float)
-#     m10 : float = json_property("m10", float)
-#     m11 : float = json_property("m11", flaot)
-
-
 class MatricesGenerator(CodeGenerator):
     """
     Generator for the matrices.py model file.
