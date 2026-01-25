@@ -1,10 +1,9 @@
-from resonitelink.models.datamodel import Member
-from resonitelink.json import JSONPropertyType, json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_dict
 from typing import Dict
+
+from .member import Member
 
 
 @json_model("syncObject", Member)
-@dataclass(slots=True)
 class SyncObject(Member):
-    members : Dict[str, Member] = json_property("members", Member, JSONPropertyType.DICT)
+    members : Dict[str, Member] = json_dict("members", Member)

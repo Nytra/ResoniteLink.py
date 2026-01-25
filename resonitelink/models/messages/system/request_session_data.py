@@ -1,9 +1,8 @@
-from resonitelink.models.messages import Message
 from resonitelink.json import json_model
-from dataclasses import dataclass
+
+from ...messages import Message
 
 
 @json_model("requestSessionData", Message)
-@dataclass(slots=True)
 class RequestSessionData(Message):
     pass

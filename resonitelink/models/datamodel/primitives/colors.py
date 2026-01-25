@@ -1,30 +1,26 @@
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
 
 
-@json_model("t_color", type_name_is_internal=True)
-@dataclass(slots=True)
+@json_model(internal_type_name="t_color")
 class Color():
-    r : float = json_property("r", float)
-    g : float = json_property("g", float)
-    b : float = json_property("b", float)
-    a : float = json_property("a", float)
+    r : float = json_element("r", float)
+    g : float = json_element("g", float)
+    b : float = json_element("b", float)
+    a : float = json_element("a", float)
 
 
-@json_model("t_color32", type_name_is_internal=True)
-@dataclass(slots=True)
+@json_model(internal_type_name="t_color32")
 class Color32():
-    r : int = json_property("r", int)
-    g : int = json_property("g", int)
-    b : int = json_property("b", int)
-    a : int = json_property("a", int)
+    r : int = json_element("r", int)
+    g : int = json_element("g", int)
+    b : int = json_element("b", int)
+    a : int = json_element("a", int)
 
 
-@json_model("t_colorX", type_name_is_internal=True)
-@dataclass(slots=True)
+@json_model(internal_type_name="t_colorX")
 class ColorX():
-    r : float = json_property("r", float)
-    g : float = json_property("g", float)
-    b : float = json_property("b", float)
-    a : float = json_property("a", float)
-    profile : str = json_property("profile", str)
+    r : float = json_element("r", float)
+    g : float = json_element("g", float)
+    b : float = json_element("b", float)
+    a : float = json_element("a", float)
+    profile : str = json_element("profile", str)

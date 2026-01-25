@@ -1,11 +1,11 @@
-from resonitelink.models.datamodel import Worker, Member
-from resonitelink.json import JSONPropertyType, json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element, json_dict
 from typing import Dict
+
+from ..worker import Worker
+from ..member import Member
 
 
 @json_model() # NOT derived from Worker, it's the same in the reference C# implementation.
-@dataclass(slots=False)
 class Component(Worker):
-    component_type : str = json_property("componentType", str)
-    members : Dict[str, Member] = json_property("members", Member, JSONPropertyType.DICT)
+    component_type : str = json_element("componentType", str)
+    members : Dict[str, Member] = json_dict("members", Member)

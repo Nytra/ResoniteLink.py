@@ -1,9 +1,8 @@
-from resonitelink.models.datamodel import Member
 from resonitelink.json import json_model
-from dataclasses import dataclass
+
+from ..member import Member
 
 
 @json_model("empty", Member)
-@dataclass(slots=True)
 class EmptyElement(Member):
     pass

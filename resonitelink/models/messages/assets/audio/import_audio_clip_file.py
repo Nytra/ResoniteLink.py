@@ -1,10 +1,8 @@
 from resonitelink.models.messages import Message
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
 
 
 @json_model("importAudioClipFile", Message)
-@dataclass(slots=True)
 class ImportAudioClipFile(Message):
     """
     Import a audio clip asset from a file on the local file system. Note that this must be a file
@@ -14,4 +12,4 @@ class ImportAudioClipFile(Message):
     
     """
     # Path of the audio clip file to import.
-    file_path : str = json_property("filePath", str)
+    file_path : str = json_element("filePath", str)

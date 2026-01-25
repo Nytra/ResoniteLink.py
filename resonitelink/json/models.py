@@ -1,21 +1,20 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from dataclasses import field, fields
-from typing import Optional, Any, Type, Tuple, List, Dict, Generator, TypeVar, Generic
+from dataclasses import dataclass, field, fields
+from typing import Optional, Any, Type, Tuple, List, Dict, Generator, TypeVar, Generic, dataclass_transform
 from enum import Enum
 import logging
 
 __all__ = (
     'MISSING',
     'SELF',
-    'JSONPropertyType',
     'JSONProperty',
     'JSONModel',
-    'json_property',
     'json_element',
     'json_list',
     'json_dict',
     'json_model',
+    'abstract_json_model'
 )
 
 logger = logging.getLogger("ResoniteLinkModels")
@@ -50,7 +49,7 @@ MISSING: Any = _Sentinel()
 SELF : Any = _Sentinel()
 
 
-class JSONPropertyType(Enum):
+class _JSONPropertyType(Enum):
     ELEMENT = 0,
     LIST = 1,
     DICT = 2
@@ -71,7 +70,7 @@ class JSONProperty():
     """
     _json_name : str
     _element_type : type
-    _property_type : JSONPropertyType
+    _property_type : _JSONPropertyType
     _abstract : bool
 
     @property
@@ -83,14 +82,14 @@ class JSONProperty():
         return self._element_type
     
     @property
-    def property_type(self) -> JSONPropertyType:
+    def property_type(self) -> _JSONPropertyType:
         return self._property_type
     
     @property
     def abstract(self) -> bool:
         return self._abstract
 
-    def __init__(self, json_name : str, element_type : type, property_type : JSONPropertyType, abstract : bool):
+    def __init__(self, json_name : str, element_type : type, property_type : _JSONPropertyType, abstract : bool):
         """
         Defines a new JSONProperty.
 
@@ -117,19 +116,8 @@ class JSONProperty():
     def __repr__(self) -> str:
         return f"<JSONProperty name='{self.json_name}', element_type={self.element_type}, property_type={self.property_type}{' (abstract)' if self._abstract else ''}>"
 
-from typing import dataclass_transform
 
-# def json_property(json_name : str, element_type : type, property_type : JSONPropertyType = JSONPropertyType.ELEMENT, abstract = False, init = True):
-#     """
-#     Utility function for easily defining fields in a dataclass as JSON-Properties.
-#     Returns a field for use in dataclass.
-
-#     """
-#     json_prop = JSONProperty(json_name=json_name, element_type=element_type, property_type=property_type, abstract=abstract)
-
-#     return field(default=MISSING, init=init, metadata={'JSONProperty': json_prop})
-
-def json_property(json_name : str, element_type : type, property_type : JSONPropertyType = JSONPropertyType.ELEMENT, abstract = False):
+def _json_property(json_name : str, element_type : type, property_type : _JSONPropertyType = _JSONPropertyType.ELEMENT, abstract = False, init = True):
     """
     Utility function for easily defining fields in a dataclass as JSON-Properties.
     Returns a field for use in dataclass.
@@ -142,35 +130,34 @@ def json_property(json_name : str, element_type : type, property_type : JSONProp
     """
     json_prop = JSONProperty(json_name=json_name, element_type=element_type, property_type=property_type, abstract=abstract)
 
-    return field(default=MISSING, metadata={'JSONProperty': json_prop})
+    return field(default=MISSING, init=init, metadata={'JSONProperty': json_prop})
 
 
-T = TypeVar('T')
-def json_element(json_name : str, element_type : Type[T], abstract = False) -> T:
+def json_element[T](json_name : str, element_type : Type[T], abstract = False, init = True) -> T:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Element-Properties.
     Returns a field for use in dataclass.
 
     """
-    return json_property(json_name=json_name, element_type=element_type, property_type=JSONPropertyType.ELEMENT, abstract=abstract)
+    return _json_property(json_name=json_name, element_type=element_type, property_type=_JSONPropertyType.ELEMENT, abstract=abstract, init=init)
 
 
-def json_list(json_name : str, element_type : Type[T], abstract = False) -> List[T]:
+def json_list[T](json_name : str, element_type : Type[T], abstract = False, init = True) -> List[T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-List-Properties.
     Returns a field for use in dataclass.
 
     """
-    return json_property(json_name=json_name, element_type=element_type, property_type=JSONPropertyType.LIST, abstract=abstract)
+    return _json_property(json_name=json_name, element_type=element_type, property_type=_JSONPropertyType.LIST, abstract=abstract, init=init)
 
 
-def json_dict(json_name : str, element_type : Type[T], abstract = False) -> Dict[str, T]:
+def json_dict[T](json_name : str, element_type : Type[T], abstract = False, init = True) -> Dict[str, T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Dict-Properties.
     Returns a field for use in dataclass.
 
     """
-    return json_property(json_name=json_name, element_type=element_type, property_type=JSONPropertyType.DICT, abstract=abstract)
+    return _json_property(json_name=json_name, element_type=element_type, property_type=_JSONPropertyType.DICT, abstract=abstract, init=init)
 
 
 D = TypeVar('D', bound=Type)
@@ -186,11 +173,12 @@ class JSONModel(Generic[D]):
     _model_data_class_mapping : Dict[Type, JSONModel] = {} # Mapping from data class to model
     _global_model_type_name_mapping : Dict[str, JSONModel] = {} # Mappings of model type names for all non-derived (global) models.
     _derived_model_type_name_mappings : Dict[Type, Dict[str, JSONModel]] = {} # Mapping from base type to all 
+    _internal_model_type_name_mappings : Dict[str, JSONModel] = {} # Mappings for internal type names only
 
     _data_class : D
     _type_name : Optional[str]
     _derived_from : Optional[type]
-    _type_name_is_internal : bool
+    _internal_type_name : Optional[str] # Can be used as an unique internal identifier for types, but has no impact on JSON serialization / deserialization
     _properties : Dict[str, JSONProperty]
     _property_name_mapping : Dict[str, str]
     
@@ -208,8 +196,8 @@ class JSONModel(Generic[D]):
         return self._derived_from
     
     @property
-    def type_name_is_internal(self) -> bool: # TODO: This is a bit ugly. Maybe refactor by separating public and internal model type name.
-        return self._type_name_is_internal
+    def internal_type_name(self) -> Optional[str]:
+        return self._internal_type_name
     
     @property
     def properties(self) -> Dict[str, JSONProperty]:
@@ -219,14 +207,14 @@ class JSONModel(Generic[D]):
     def property_name_mapping(self) -> Dict[str, str]:
         return self._property_name_mapping
 
-    def __init__(self, data_class : D, type_name : Optional[str] = None, derived_from : Optional[type] = None, type_name_is_internal = False):
+    def __init__(self, data_class : D, type_name : Optional[str] = None, derived_from : Optional[type] = None, internal_type_name : Optional[str] = None):
         if derived_from is not None and not type_name:
             raise ValueError(f"A `type_name` needs to be speficied if the model is derived!")
         
         self._data_class = data_class
         self._type_name = type_name
         self._derived_from = derived_from
-        self._type_name_is_internal = type_name_is_internal
+        self._internal_type_name = internal_type_name
         self._properties = dict(self._find_properties_in_data_class(self.data_class))
         self._verify_properties(self._properties)
         self._property_name_mapping = dict(self._get_property_name_mapping(self._properties))
@@ -297,6 +285,8 @@ class JSONModel(Generic[D]):
             raise KeyError(f"A different model with data class '{self.data_class}' is already registered!")
         if self in JSONModel._global_model_type_name_mapping.values():
             raise KeyError(f"This model instance is already registered under a different type name!")
+        if self.internal_type_name and self.internal_type_name in JSONModel._internal_model_type_name_mappings.keys():
+            raise KeyError(f"A different model with internal type name '{self.internal_type_name}' is already registered!")
         
         logger.debug(f"Registering JSONModel '{self.type_name}' with data class '{self.data_class}':")
         if len(self.properties) == 0:
@@ -347,6 +337,10 @@ class JSONModel(Generic[D]):
             The type name to search a model for. This is either a derived model's type name, or a non-derived (global) model's type name.
             If not provided, only models with with a data class that exactly matches the specified target_type can be found.
         
+        Returns
+        -------
+        The found `JSONModel` instance.
+        
         Raises
         ------
         ValueError
@@ -375,14 +369,42 @@ class JSONModel(Generic[D]):
         
         raise KeyError(f"No model found for `target_type` {target_type} and / or `target_type_name` {target_type_name}`")
     
+    @staticmethod
+    def find_model_internal(target_internal_type_name : str) -> JSONModel:
+        """
+        Searches for a registered `JSONModel` by its `internal_type_name`.
+        Is only able to find models that specify an `internal_type_name`.
+        The `internal_type_name` has to be globally unique. 
+
+        Parameters
+        ----------
+        target_internal_type_name : str
+            The `internal_type_name` of the model to find.
+        
+        Returns
+        -------
+        The found `JSONModel` instance.
+
+        Raises
+        ------
+        KeyError
+            When no model was found for the specified `target_internal_type_name`.
+
+        """
+        return JSONModel._internal_model_type_name_mappings[target_internal_type_name]
+    
     def __repr__(self) -> str:
-        return f"<JSONModel data_class={self.data_class}, type_name='{self.type_name}', derived_from={self.derived_from}, property_count={len(self.properties)}>"
+        return f"<JSONModel data_class={self.data_class}, type_name='{self.type_name}', derived_from={self.derived_from}, internal_type_name='{self.internal_type_name}', property_count={len(self.properties)}>"
 
 
-def json_model(type_name : Optional[str] = None, derived_from : Optional[type] = None, type_name_is_internal = False):
+# This decorator tells type checkers that the returned object behaves like a dataclass (because it is one),
+# but we're also specifying our custon property functions as field specifiers. Otherwise, those would *not* get
+# recognized as dataclass field specifiers by type checkers, and those would produce incorrect type information.
+@dataclass_transform(field_specifiers=(field, _json_property, json_element, json_list, json_dict))
+def json_model(type_name : Optional[str] = None, derived_from : Optional[type] = None, internal_type_name : Optional[str] = None, slots=True):
     """
     Class decorator to easily declare models from their data classes.
-    This decorator does **not** modify the decorated class, but globally registers a model for it.
+    The type will be wrapped into a dataclass.
 
     Parameters
     ----------
@@ -391,17 +413,35 @@ def json_model(type_name : Optional[str] = None, derived_from : Optional[type] =
         (This will be used by JSON serializer / deserializer as the '$type' value.)
 
     """
-    def _model_decorator(data_class : D) -> D:
+    def _model_decorator[T](data_class : Type[T]) -> Type[T]:
         # Creating a model instance automatically registers it
-        model = JSONModel(data_class=data_class, type_name=type_name, derived_from=derived_from, type_name_is_internal=type_name_is_internal)
+        model = JSONModel(data_class=data_class, type_name=type_name, derived_from=derived_from, internal_type_name=internal_type_name)
 
         # Inject custom __repr__
         def _repr(self) -> str:
             return f"<{data_class.__name__} (data class for JSONModel '{model.type_name}')>"
-
         setattr(data_class, '__repr__', _repr)
 
-        # Return decorated class again
-        return data_class
+        # Return decorated class wrapped into a dataclass
+        return dataclass(data_class, slots=slots)
 
     return _model_decorator
+
+
+@dataclass_transform(field_specifiers=(field, _json_property, json_element, json_list, json_dict))
+def abstract_json_model(slots=True):
+    """
+    Class decorator to easily declare abstract models from their (also abstract) data classes.
+    This will NOT register a JSON model, but wrap the type into dataclass.
+
+    """
+    def _abstract_model_decorator[T](abstract_data_class : Type[T]) -> Type[T]:
+        # Inject custom __repr__
+        def _repr(self) -> str:
+            return f"<{abstract_data_class.__name__} (abstract data class for JSONModels)>"
+        setattr(abstract_data_class, '__repr__', _repr)
+
+        # Return decorated class wrapped into a dataclass
+        return dataclass(abstract_data_class, slots=slots)
+    
+    return _abstract_model_decorator

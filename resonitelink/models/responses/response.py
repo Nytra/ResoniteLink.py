@@ -1,16 +1,14 @@
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model, json_model, json_element
 from abc import ABC
 
 
-@dataclass(slots=True)
+@abstract_json_model()
 class Response(ABC):
-    source_message_id : str = json_property("sourceMessageId", str)
-    success : bool = json_property("success", bool)
-    error_info : str = json_property("errorInfo", str)
+    source_message_id : str = json_element("sourceMessageId", str)
+    success : bool = json_element("success", bool)
+    error_info : str = json_element("errorInfo", str)
 
 
 @json_model("response", derived_from=Response)
-@dataclass(slots=True)
 class GenericResponse(Response):
     pass

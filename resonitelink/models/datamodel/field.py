@@ -1,13 +1,13 @@
-from resonitelink.models.datamodel import Member
-from resonitelink.json import json_property
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model, json_element
 from typing import Any
 from abc import ABC, abstractmethod
 
+from .member import Member
 
-@dataclass(slots=True)
+
+@abstract_json_model()
 class Field(Member, ABC):
-    value : Any = json_property("value", object, abstract=True)
+    value : Any = json_element("value", object, abstract=True)
 
     @property
     @abstractmethod

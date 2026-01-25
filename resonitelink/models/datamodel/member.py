@@ -1,8 +1,7 @@
-from resonitelink.json import json_property
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model, json_element
 from abc import ABC
 
 
-@dataclass(slots=True)
+@abstract_json_model()
 class Member(ABC):
-    id : str = json_property("id", str)
+    id : str = json_element("id", str, init=False)

@@ -1,14 +1,13 @@
-from resonitelink.json import json_element
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model, json_element
 from abc import ABC, abstractmethod
-from typing import List
 
-@dataclass(slots=True)
+
+@abstract_json_model()
 class Message(ABC):
     message_id : str = json_element("messageId", str)
 
 
-@dataclass(slots=True)
+@abstract_json_model()
 class BinaryPayloadMessage(Message, ABC):
     @property
     @abstractmethod

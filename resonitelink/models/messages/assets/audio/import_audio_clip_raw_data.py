@@ -1,25 +1,25 @@
-from resonitelink.models.messages import Message, BinaryPayloadMessage
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass, field
+from resonitelink.json import json_model, json_element
+from dataclasses import field
 from typing import Optional
+
+from ...messages import Message, BinaryPayloadMessage
 
 
 @json_model("importAudioClipRawData", Message)
-@dataclass(slots=True)
 class ImportAudioClipRawData(BinaryPayloadMessage):
     _data : Optional[bytes] = field(default=None, init=False)
 
     # Number of audio samples in this audio clip. This does NOT account for channel count and will be the same
     # regardless of mono/stereo/5.1 etc.
-    sample_count : int = json_property("sampleCount", int)
+    sample_count : int = json_element("sampleCount", int)
     
     # Sample rate of the audio data.
-    sample_rate : int = json_property("sampleRate", int)
+    sample_rate : int = json_element("sampleRate", int)
 
     # Number of audio channels. 1 mono, 2 stereo, 6 is 5.1 surround.
     # It's your responsibility to make sure that Resonite supports given audio channel count.
     # The actual audio sample data is interleaved in the buffer.
-    channel_count : int = json_property("channelCount", int)
+    channel_count : int = json_element("channelCount", int)
     
     @property
     def duration(self) -> float:

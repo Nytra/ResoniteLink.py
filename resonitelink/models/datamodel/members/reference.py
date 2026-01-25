@@ -1,10 +1,9 @@
-from resonitelink.models.datamodel import Member
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
+
+from ..member import Member
 
 
 @json_model("reference", Member)
-@dataclass(slots=True)
 class Reference(Member):
-    target_id : str = json_property("targetId", str)
-    target_type : str = json_property("targetType", str)
+    target_id : str = json_element("targetId", str)
+    target_type : str = json_element("targetType", str)

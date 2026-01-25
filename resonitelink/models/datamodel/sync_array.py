@@ -1,13 +1,13 @@
-from resonitelink.models.datamodel import Member
-from resonitelink.json import JSONPropertyType, json_property
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model, json_list
 from typing import List, Any
 from abc import ABC, abstractmethod
 
+from .member import Member
 
-@dataclass(slots=True)
+
+@abstract_json_model()
 class SyncArray(Member, ABC):
-    values : List[Any] = json_property("values", object, JSONPropertyType.LIST, abstract=True)
+    values : List[Any] = json_list("values", object, abstract=True)
 
     @property
     @abstractmethod

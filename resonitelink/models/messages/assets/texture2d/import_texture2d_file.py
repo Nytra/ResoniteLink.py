@@ -1,9 +1,8 @@
-from resonitelink.models.messages import Message
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
+
+from ...messages import Message
 
 
-@dataclass(slots=True)
 @json_model("importTexture2DFile", Message)
 class ImportTexture2DFile(Message):
     """
@@ -13,4 +12,4 @@ class ImportTexture2DFile(Message):
     
     """
     # Path of the texture file to import.
-    file_path : str = json_property("filePath", str)
+    file_path : str = json_element("filePath", str)

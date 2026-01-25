@@ -1,11 +1,9 @@
 from resonitelink.models.responses import Response
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
 
 
 @json_model("sessionData", Response)
-@dataclass(slots=True)
 class SessionData(Response):
-    resonite_version : str = json_property("resoniteVersion", str)
-    resonite_link_version : str = json_property("resoniteLinkVersion", str)
-    unique_session_id : str = json_property("uniqueSessionId", str)
+    resonite_version : str = json_element("resoniteVersion", str)
+    resonite_link_version : str = json_element("resoniteLinkVersion", str)
+    unique_session_id : str = json_element("uniqueSessionId", str)

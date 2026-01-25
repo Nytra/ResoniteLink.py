@@ -1,7 +1,7 @@
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model
 from abc import ABC
 
 
-@dataclass(slots=True)
+@abstract_json_model()
 class Submesh(ABC):
     pass

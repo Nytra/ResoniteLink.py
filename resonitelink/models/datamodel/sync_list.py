@@ -1,10 +1,8 @@
-from resonitelink.models.datamodel import Member
-from resonitelink.json import JSONPropertyType, json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_list
 from typing import List
 
+from .member import Member
 
 @json_model("list", Member)
-@dataclass(slots=True)
 class SyncList(Member):
-    elements : List[Member] = json_property("elements", Member, JSONPropertyType.LIST)
+    elements : List[Member] = json_list("elements", Member)

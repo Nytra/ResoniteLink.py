@@ -1,12 +1,11 @@
-from resonitelink.models.datamodel.assets.mesh import Vertex, Submesh, Bone, Blendshape
-from resonitelink.models.messages import Message
-from resonitelink.json import JSONPropertyType, json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_list
 from typing import List
+
+from ....datamodel.assets.mesh import Vertex, Submesh, Bone, Blendshape
+from ...messages import Message
 
 
 @json_model("importMeshJSON", Message)
-@dataclass(slots=True)
 class ImportMeshJSON(Message):
     """
     Imports a mesh asset from purely JSON definition.
@@ -16,17 +15,17 @@ class ImportMeshJSON(Message):
 
     """
     #  Vertices of this mesh. These are shared across sub-meshes.
-    vertices : List[Vertex] = json_property("vertices", Vertex, JSONPropertyType.LIST)
+    vertices : List[Vertex] = json_list("vertices", Vertex)
     
     # List of submeshes (points, triangles...) representing this mesh.
     # Meshes will typically have at least one submesh.
     # Each submesh uses indicies of the vertices for its primitives.
-    submeshes : List[Submesh] = json_property("submeshes", Submesh, JSONPropertyType.LIST)
+    submeshes : List[Submesh] = json_list("submeshes", Submesh)
 
     # Bones of the mesh when data represents a skinned mesh.
     # These will be referred to by their index from vertex data.
-    bones : List[Bone] = json_property("bones", Bone, JSONPropertyType.LIST)
+    bones : List[Bone] = json_list("bones", Bone)
 
     # Blendshapes of this mesh.
     # These allow modifying the vertex positions, normals & tangents for animations such as facial expressions.
-    blendshapes : List[Blendshape] = json_property("blendshapes", Blendshape, JSONPropertyType.LIST)
+    blendshapes : List[Blendshape] = json_list("blendshapes", Blendshape)

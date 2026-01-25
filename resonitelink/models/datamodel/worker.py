@@ -1,9 +1,8 @@
-from resonitelink.json import json_property
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model, json_element
 from abc import ABC
 
 
-@dataclass(slots=False)
+@abstract_json_model()
 class Worker(ABC):
-    id : str = json_property("id", str)
-    is_reference_only : bool = json_property("isReferenceOnly", bool)
+    id : str = json_element("id", str)
+    is_reference_only : bool = json_element("isReferenceOnly", bool)

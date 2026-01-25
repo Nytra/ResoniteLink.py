@@ -1,14 +1,13 @@
-from resonitelink.models.datamodel import Member, Field
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
-from typing import Optional
+from resonitelink.json import json_model, json_element
+
+from ..member import Member
+from ..field import Field
 
 
 @json_model("enum", Member)
-@dataclass(slots=True)
 class Field_Enum(Field):
-    value : str = json_property("value", str)
-    enum_type : str = json_property("enumType", str)
+    value : str = json_element("value", str)
+    enum_type : str = json_element("enumType", str)
 
     @property
     def value_type_name(self) -> str:
@@ -16,10 +15,9 @@ class Field_Enum(Field):
 
 
 @json_model("enum?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Enum(Field):
-    value : Optional[str] = json_property("value", str)
-    enum_type : str = json_property("enumType", str)
+    value : str = json_element("value", str)
+    enum_type : str = json_element("enumType", str)
 
     @property
     def value_type_name(self) -> str:

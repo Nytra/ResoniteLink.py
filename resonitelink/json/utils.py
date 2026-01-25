@@ -1,4 +1,4 @@
-from .models import MISSING, JSONModel, JSONPropertyType
+from .models import MISSING, JSONModel, _JSONPropertyType
 from typing import Any, List, Callable
 
 __all__ = (
@@ -56,7 +56,7 @@ def format_object_structure(obj : Any, print_missing : bool = False, prefix : st
                 # Value for key present
                 val = getattr(obj, key)
 
-                if json_property.property_type == JSONPropertyType.LIST and isinstance(val, list):
+                if json_property.property_type == _JSONPropertyType.LIST and isinstance(val, list):
                     # Resolve property as list
                     if len(val) == 0:
                         # Empty list
@@ -64,7 +64,7 @@ def format_object_structure(obj : Any, print_missing : bool = False, prefix : st
                     else:
                         property_lines.append(f" - {key} (List):\n{prefix}    - {f'\n{prefix}    - '.join([ format_object_structure(v, prefix=f'{prefix}      ') for v in val ])}")
 
-                elif json_property.property_type == JSONPropertyType.DICT and isinstance(val, dict):
+                elif json_property.property_type == _JSONPropertyType.DICT and isinstance(val, dict):
                     # Resolve property as dict
                     if len(val.items()) == 0:
                         # Empty dict

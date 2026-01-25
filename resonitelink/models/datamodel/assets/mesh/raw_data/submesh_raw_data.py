@@ -1,8 +1,8 @@
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model
 from abc import ABC, abstractmethod
 
 
-@dataclass(slots=True)
+@abstract_json_model()
 class SubmeshRawData(ABC):
     @property
     @abstractmethod

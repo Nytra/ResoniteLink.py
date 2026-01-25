@@ -1,23 +1,20 @@
-from resonitelink.models.responses import Response
-from resonitelink.models.datamodel import Slot, Component
-from resonitelink.json import json_property, json_model
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
+
+from ...datamodel import Slot, Component
+from ..response import Response
 
 
 @json_model("slotData", Response)
-@dataclass(slots=True)
 class SlotData(Response):
-    depth : int = json_property("depth", int)
-    data : Slot = json_property("data", Slot)
+    depth : int = json_element("depth", int)
+    data : Slot = json_element("data", Slot)
 
 
 @json_model("componentData", Response)
-@dataclass(slots=True)
 class ComponentData(Response):
-    data : Component = json_property("data", Component)
+    data : Component = json_element("data", Component)
 
 
 @json_model("assetData", Response)
-@dataclass(slots=True)
 class AssetData(Response):
-    asset_url : str = json_property("assetURL", str)
+    asset_url : str = json_element("assetURL", str)

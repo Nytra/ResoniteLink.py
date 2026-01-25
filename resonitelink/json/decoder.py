@@ -1,4 +1,4 @@
-from .models import SELF, JSONModel, JSONProperty, JSONPropertyType
+from .models import SELF, JSONModel, JSONProperty, _JSONPropertyType
 from typing import Any, Dict
 from json import JSONDecoder
 import logging
@@ -82,18 +82,18 @@ class ResoniteLinkJSONDecoder(JSONDecoder):
             # Object not provided, that's okay, but nothing to do!
             pass # TODO this isn't nice! We should skip the object entirely.
         
-        elif prop.property_type == JSONPropertyType.ELEMENT:
+        elif prop.property_type == _JSONPropertyType.ELEMENT:
             # Resolve property as single element
             obj = ResoniteLinkJSONDecoder._decode_element(obj, model, prop)
         
-        elif prop.property_type == JSONPropertyType.LIST:
+        elif prop.property_type == _JSONPropertyType.LIST:
             # Resolve property as list
             if not isinstance(obj, list): 
                 raise TypeError(f"Error decoding JSON-Data into {prop}: Object expected to be of type {list}, not {type(obj)}!")
             
             obj = [ ResoniteLinkJSONDecoder._decode_element(o, model, prop) for o in obj ]
 
-        elif prop.property_type == JSONPropertyType.DICT:
+        elif prop.property_type == _JSONPropertyType.DICT:
             # Resolve property as dict
             if not isinstance(obj, dict): 
                 raise TypeError(f"Error decoding JSON-Data into {prop}: Object expected to be of type {dict}, not {type(obj)}!")

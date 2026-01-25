@@ -1,19 +1,20 @@
-from resonitelink.models.messages import Message, BinaryPayloadMessage
-from resonitelink.json import json_model, json_property
-from dataclasses import dataclass
+from resonitelink.json import abstract_json_model, json_model, json_element
+from dataclasses import field
 from typing import Optional
 from abc import ABC, abstractmethod
 
+from ...messages import Message, BinaryPayloadMessage
 
-@dataclass(slots=True)
+
+@abstract_json_model()
 class ImportTexture2DRawDataBase(BinaryPayloadMessage, ABC):
-    _data : Optional[bytes] = None
+    _data : Optional[bytes] = field(default=None, init=False)
     
     # Width of the texture.
-    width : int = json_property("width", int)
+    width : int = json_element("width", int)
     
     # Height of the texture.
-    height : int = json_property("height", int)
+    height : int = json_element("height", int)
 
     @property
     @abstractmethod
@@ -43,9 +44,8 @@ class ImportTexture2DRawDataBase(BinaryPayloadMessage, ABC):
 
 
 @json_model("importTexture2DRawData", Message)
-@dataclass(slots=True)
 class ImportTexture2DRawData(ImportTexture2DRawDataBase):
-    color_profile : str = json_property("colorProfile", str)
+    color_profile : str = json_element("colorProfile", str)
 
     @property
     def element_size(self) -> int:
@@ -53,7 +53,6 @@ class ImportTexture2DRawData(ImportTexture2DRawDataBase):
 
 
 @json_model("importTexture2DRawDataHDR", Message)
-@dataclass(slots=True)
 class ImportTexture2DRawDataHRD(ImportTexture2DRawDataBase):
     @property
     def element_size(self) -> int:
