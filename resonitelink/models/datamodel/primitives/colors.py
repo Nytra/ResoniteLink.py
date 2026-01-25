@@ -24,3 +24,4 @@ class ColorX():
     b : float = json_element("b", float)
     a : float = json_element("a", float)
     profile : str = json_element("profile", str)
+

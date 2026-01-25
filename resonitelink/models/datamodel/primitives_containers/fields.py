@@ -3,17 +3,14 @@
 #       >=============================================================================<
 from resonitelink.models.datamodel.primitives import *
 from resonitelink.models.datamodel import Member, Field
-from resonitelink.json.models import _json_property
-from resonitelink.json import json_model
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
 from decimal import Decimal
 from typing import Optional
 
 
 @json_model("bool", Member)
-@dataclass(slots=True)
 class Field_Bool(Field):
-    value : bool = _json_property("value", bool)
+    value : bool = json_element("value", bool)
     
     @property
     def value_type_name(self) -> str:
@@ -21,9 +18,8 @@ class Field_Bool(Field):
 
 
 @json_model("bool?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Bool(Field):
-    value : Optional[bool] = _json_property("value", bool)
+    value : Optional[bool] = json_element("value", bool)
     
     @property
     def value_type_name(self) -> str:
@@ -31,9 +27,8 @@ class Field_Nullable_Bool(Field):
 
 
 @json_model("byte", Member)
-@dataclass(slots=True)
 class Field_Byte(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -41,9 +36,8 @@ class Field_Byte(Field):
 
 
 @json_model("byte?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Byte(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -51,9 +45,8 @@ class Field_Nullable_Byte(Field):
 
 
 @json_model("sbyte", Member)
-@dataclass(slots=True)
 class Field_SByte(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -61,9 +54,8 @@ class Field_SByte(Field):
 
 
 @json_model("sbyte?", Member)
-@dataclass(slots=True)
 class Field_Nullable_SByte(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -71,9 +63,8 @@ class Field_Nullable_SByte(Field):
 
 
 @json_model("ushort", Member)
-@dataclass(slots=True)
 class Field_UShort(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -81,9 +72,8 @@ class Field_UShort(Field):
 
 
 @json_model("ushort?", Member)
-@dataclass(slots=True)
 class Field_Nullable_UShort(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -91,9 +81,8 @@ class Field_Nullable_UShort(Field):
 
 
 @json_model("short", Member)
-@dataclass(slots=True)
 class Field_Short(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -101,9 +90,8 @@ class Field_Short(Field):
 
 
 @json_model("short?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Short(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -111,9 +99,8 @@ class Field_Nullable_Short(Field):
 
 
 @json_model("uint", Member)
-@dataclass(slots=True)
 class Field_UInt(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -121,9 +108,8 @@ class Field_UInt(Field):
 
 
 @json_model("uint?", Member)
-@dataclass(slots=True)
 class Field_Nullable_UInt(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -131,9 +117,8 @@ class Field_Nullable_UInt(Field):
 
 
 @json_model("int", Member)
-@dataclass(slots=True)
 class Field_Int(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -141,9 +126,8 @@ class Field_Int(Field):
 
 
 @json_model("int?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Int(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -151,9 +135,8 @@ class Field_Nullable_Int(Field):
 
 
 @json_model("ulong", Member)
-@dataclass(slots=True)
 class Field_ULong(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -161,9 +144,8 @@ class Field_ULong(Field):
 
 
 @json_model("ulong?", Member)
-@dataclass(slots=True)
 class Field_Nullable_ULong(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -171,9 +153,8 @@ class Field_Nullable_ULong(Field):
 
 
 @json_model("long", Member)
-@dataclass(slots=True)
 class Field_Long(Field):
-    value : int = _json_property("value", int)
+    value : int = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -181,9 +162,8 @@ class Field_Long(Field):
 
 
 @json_model("long?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Long(Field):
-    value : Optional[int] = _json_property("value", int)
+    value : Optional[int] = json_element("value", int)
     
     @property
     def value_type_name(self) -> str:
@@ -191,9 +171,8 @@ class Field_Nullable_Long(Field):
 
 
 @json_model("float", Member)
-@dataclass(slots=True)
 class Field_Float(Field):
-    value : float = _json_property("value", float)
+    value : float = json_element("value", float)
     
     @property
     def value_type_name(self) -> str:
@@ -201,9 +180,8 @@ class Field_Float(Field):
 
 
 @json_model("float?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Float(Field):
-    value : Optional[float] = _json_property("value", float)
+    value : Optional[float] = json_element("value", float)
     
     @property
     def value_type_name(self) -> str:
@@ -211,9 +189,8 @@ class Field_Nullable_Float(Field):
 
 
 @json_model("double", Member)
-@dataclass(slots=True)
 class Field_Double(Field):
-    value : float = _json_property("value", float)
+    value : float = json_element("value", float)
     
     @property
     def value_type_name(self) -> str:
@@ -221,9 +198,8 @@ class Field_Double(Field):
 
 
 @json_model("double?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Double(Field):
-    value : Optional[float] = _json_property("value", float)
+    value : Optional[float] = json_element("value", float)
     
     @property
     def value_type_name(self) -> str:
@@ -231,9 +207,8 @@ class Field_Nullable_Double(Field):
 
 
 @json_model("decimal", Member)
-@dataclass(slots=True)
 class Field_Decimal(Field):
-    value : Decimal = _json_property("value", Decimal)
+    value : Decimal = json_element("value", Decimal)
     
     @property
     def value_type_name(self) -> str:
@@ -241,9 +216,8 @@ class Field_Decimal(Field):
 
 
 @json_model("decimal?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Decimal(Field):
-    value : Optional[Decimal] = _json_property("value", Decimal)
+    value : Optional[Decimal] = json_element("value", Decimal)
     
     @property
     def value_type_name(self) -> str:
@@ -251,9 +225,8 @@ class Field_Nullable_Decimal(Field):
 
 
 @json_model("char", Member)
-@dataclass(slots=True)
 class Field_Char(Field):
-    value : str = _json_property("value", str)
+    value : str = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -261,9 +234,8 @@ class Field_Char(Field):
 
 
 @json_model("char?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Char(Field):
-    value : Optional[str] = _json_property("value", str)
+    value : Optional[str] = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -271,9 +243,8 @@ class Field_Nullable_Char(Field):
 
 
 @json_model("string", Member)
-@dataclass(slots=True)
 class Field_String(Field):
-    value : str = _json_property("value", str)
+    value : str = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -283,9 +254,8 @@ class Field_String(Field):
 
 
 @json_model("Uri", Member)
-@dataclass(slots=True)
 class Field_Uri(Field):
-    value : str = _json_property("value", str)
+    value : str = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -295,9 +265,8 @@ class Field_Uri(Field):
 
 
 @json_model("DateTime", Member)
-@dataclass(slots=True)
 class Field_DateTime(Field):
-    value : str = _json_property("value", str)
+    value : str = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -305,9 +274,8 @@ class Field_DateTime(Field):
 
 
 @json_model("DateTime?", Member)
-@dataclass(slots=True)
 class Field_Nullable_DateTime(Field):
-    value : Optional[str] = _json_property("value", str)
+    value : Optional[str] = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -315,9 +283,8 @@ class Field_Nullable_DateTime(Field):
 
 
 @json_model("TimeSpan", Member)
-@dataclass(slots=True)
 class Field_TimeSpan(Field):
-    value : str = _json_property("value", str)
+    value : str = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -325,9 +292,8 @@ class Field_TimeSpan(Field):
 
 
 @json_model("TimeSpan?", Member)
-@dataclass(slots=True)
 class Field_Nullable_TimeSpan(Field):
-    value : Optional[str] = _json_property("value", str)
+    value : Optional[str] = json_element("value", str)
     
     @property
     def value_type_name(self) -> str:
@@ -335,9 +301,8 @@ class Field_Nullable_TimeSpan(Field):
 
 
 @json_model("color", Member)
-@dataclass(slots=True)
 class Field_Color(Field):
-    value : Color = _json_property("value", Color)
+    value : Color = json_element("value", Color)
     
     @property
     def value_type_name(self) -> str:
@@ -345,9 +310,8 @@ class Field_Color(Field):
 
 
 @json_model("color?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Color(Field):
-    value : Optional[Color] = _json_property("value", Color)
+    value : Optional[Color] = json_element("value", Color)
     
     @property
     def value_type_name(self) -> str:
@@ -355,9 +319,8 @@ class Field_Nullable_Color(Field):
 
 
 @json_model("colorX", Member)
-@dataclass(slots=True)
 class Field_ColorX(Field):
-    value : ColorX = _json_property("value", ColorX)
+    value : ColorX = json_element("value", ColorX)
     
     @property
     def value_type_name(self) -> str:
@@ -365,9 +328,8 @@ class Field_ColorX(Field):
 
 
 @json_model("colorX?", Member)
-@dataclass(slots=True)
 class Field_Nullable_ColorX(Field):
-    value : Optional[ColorX] = _json_property("value", ColorX)
+    value : Optional[ColorX] = json_element("value", ColorX)
     
     @property
     def value_type_name(self) -> str:
@@ -375,9 +337,8 @@ class Field_Nullable_ColorX(Field):
 
 
 @json_model("color32", Member)
-@dataclass(slots=True)
 class Field_Color32(Field):
-    value : Color32 = _json_property("value", Color32)
+    value : Color32 = json_element("value", Color32)
     
     @property
     def value_type_name(self) -> str:
@@ -385,9 +346,8 @@ class Field_Color32(Field):
 
 
 @json_model("color32?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Color32(Field):
-    value : Optional[Color32] = _json_property("value", Color32)
+    value : Optional[Color32] = json_element("value", Color32)
     
     @property
     def value_type_name(self) -> str:
@@ -395,9 +355,8 @@ class Field_Nullable_Color32(Field):
 
 
 @json_model("floatQ", Member)
-@dataclass(slots=True)
 class Field_FloatQ(Field):
-    value : FloatQ = _json_property("value", FloatQ)
+    value : FloatQ = json_element("value", FloatQ)
     
     @property
     def value_type_name(self) -> str:
@@ -405,9 +364,8 @@ class Field_FloatQ(Field):
 
 
 @json_model("floatQ?", Member)
-@dataclass(slots=True)
 class Field_Nullable_FloatQ(Field):
-    value : Optional[FloatQ] = _json_property("value", FloatQ)
+    value : Optional[FloatQ] = json_element("value", FloatQ)
     
     @property
     def value_type_name(self) -> str:
@@ -415,9 +373,8 @@ class Field_Nullable_FloatQ(Field):
 
 
 @json_model("doubleQ", Member)
-@dataclass(slots=True)
 class Field_DoubleQ(Field):
-    value : DoubleQ = _json_property("value", DoubleQ)
+    value : DoubleQ = json_element("value", DoubleQ)
     
     @property
     def value_type_name(self) -> str:
@@ -425,9 +382,8 @@ class Field_DoubleQ(Field):
 
 
 @json_model("doubleQ?", Member)
-@dataclass(slots=True)
 class Field_Nullable_DoubleQ(Field):
-    value : Optional[DoubleQ] = _json_property("value", DoubleQ)
+    value : Optional[DoubleQ] = json_element("value", DoubleQ)
     
     @property
     def value_type_name(self) -> str:
@@ -435,9 +391,8 @@ class Field_Nullable_DoubleQ(Field):
 
 
 @json_model("bool2", Member)
-@dataclass(slots=True)
 class Field_Bool2(Field):
-    value : Bool2 = _json_property("value", Bool2)
+    value : Bool2 = json_element("value", Bool2)
     
     @property
     def value_type_name(self) -> str:
@@ -445,9 +400,8 @@ class Field_Bool2(Field):
 
 
 @json_model("bool2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Bool2(Field):
-    value : Optional[Bool2] = _json_property("value", Bool2)
+    value : Optional[Bool2] = json_element("value", Bool2)
     
     @property
     def value_type_name(self) -> str:
@@ -455,9 +409,8 @@ class Field_Nullable_Bool2(Field):
 
 
 @json_model("bool3", Member)
-@dataclass(slots=True)
 class Field_Bool3(Field):
-    value : Bool3 = _json_property("value", Bool3)
+    value : Bool3 = json_element("value", Bool3)
     
     @property
     def value_type_name(self) -> str:
@@ -465,9 +418,8 @@ class Field_Bool3(Field):
 
 
 @json_model("bool3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Bool3(Field):
-    value : Optional[Bool3] = _json_property("value", Bool3)
+    value : Optional[Bool3] = json_element("value", Bool3)
     
     @property
     def value_type_name(self) -> str:
@@ -475,9 +427,8 @@ class Field_Nullable_Bool3(Field):
 
 
 @json_model("bool4", Member)
-@dataclass(slots=True)
 class Field_Bool4(Field):
-    value : Bool4 = _json_property("value", Bool4)
+    value : Bool4 = json_element("value", Bool4)
     
     @property
     def value_type_name(self) -> str:
@@ -485,9 +436,8 @@ class Field_Bool4(Field):
 
 
 @json_model("bool4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Bool4(Field):
-    value : Optional[Bool4] = _json_property("value", Bool4)
+    value : Optional[Bool4] = json_element("value", Bool4)
     
     @property
     def value_type_name(self) -> str:
@@ -495,9 +445,8 @@ class Field_Nullable_Bool4(Field):
 
 
 @json_model("byte2", Member)
-@dataclass(slots=True)
 class Field_Byte2(Field):
-    value : Byte2 = _json_property("value", Byte2)
+    value : Byte2 = json_element("value", Byte2)
     
     @property
     def value_type_name(self) -> str:
@@ -505,9 +454,8 @@ class Field_Byte2(Field):
 
 
 @json_model("byte2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Byte2(Field):
-    value : Optional[Byte2] = _json_property("value", Byte2)
+    value : Optional[Byte2] = json_element("value", Byte2)
     
     @property
     def value_type_name(self) -> str:
@@ -515,9 +463,8 @@ class Field_Nullable_Byte2(Field):
 
 
 @json_model("byte3", Member)
-@dataclass(slots=True)
 class Field_Byte3(Field):
-    value : Byte3 = _json_property("value", Byte3)
+    value : Byte3 = json_element("value", Byte3)
     
     @property
     def value_type_name(self) -> str:
@@ -525,9 +472,8 @@ class Field_Byte3(Field):
 
 
 @json_model("byte3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Byte3(Field):
-    value : Optional[Byte3] = _json_property("value", Byte3)
+    value : Optional[Byte3] = json_element("value", Byte3)
     
     @property
     def value_type_name(self) -> str:
@@ -535,9 +481,8 @@ class Field_Nullable_Byte3(Field):
 
 
 @json_model("byte4", Member)
-@dataclass(slots=True)
 class Field_Byte4(Field):
-    value : Byte4 = _json_property("value", Byte4)
+    value : Byte4 = json_element("value", Byte4)
     
     @property
     def value_type_name(self) -> str:
@@ -545,9 +490,8 @@ class Field_Byte4(Field):
 
 
 @json_model("byte4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Byte4(Field):
-    value : Optional[Byte4] = _json_property("value", Byte4)
+    value : Optional[Byte4] = json_element("value", Byte4)
     
     @property
     def value_type_name(self) -> str:
@@ -555,9 +499,8 @@ class Field_Nullable_Byte4(Field):
 
 
 @json_model("sbyte2", Member)
-@dataclass(slots=True)
 class Field_Sbyte2(Field):
-    value : SByte2 = _json_property("value", SByte2)
+    value : SByte2 = json_element("value", SByte2)
     
     @property
     def value_type_name(self) -> str:
@@ -565,9 +508,8 @@ class Field_Sbyte2(Field):
 
 
 @json_model("sbyte2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Sbyte2(Field):
-    value : Optional[SByte2] = _json_property("value", SByte2)
+    value : Optional[SByte2] = json_element("value", SByte2)
     
     @property
     def value_type_name(self) -> str:
@@ -575,9 +517,8 @@ class Field_Nullable_Sbyte2(Field):
 
 
 @json_model("sbyte3", Member)
-@dataclass(slots=True)
 class Field_Sbyte3(Field):
-    value : SByte3 = _json_property("value", SByte3)
+    value : SByte3 = json_element("value", SByte3)
     
     @property
     def value_type_name(self) -> str:
@@ -585,9 +526,8 @@ class Field_Sbyte3(Field):
 
 
 @json_model("sbyte3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Sbyte3(Field):
-    value : Optional[SByte3] = _json_property("value", SByte3)
+    value : Optional[SByte3] = json_element("value", SByte3)
     
     @property
     def value_type_name(self) -> str:
@@ -595,9 +535,8 @@ class Field_Nullable_Sbyte3(Field):
 
 
 @json_model("sbyte4", Member)
-@dataclass(slots=True)
 class Field_Sbyte4(Field):
-    value : SByte4 = _json_property("value", SByte4)
+    value : SByte4 = json_element("value", SByte4)
     
     @property
     def value_type_name(self) -> str:
@@ -605,9 +544,8 @@ class Field_Sbyte4(Field):
 
 
 @json_model("sbyte4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Sbyte4(Field):
-    value : Optional[SByte4] = _json_property("value", SByte4)
+    value : Optional[SByte4] = json_element("value", SByte4)
     
     @property
     def value_type_name(self) -> str:
@@ -615,9 +553,8 @@ class Field_Nullable_Sbyte4(Field):
 
 
 @json_model("ushort2", Member)
-@dataclass(slots=True)
 class Field_Ushort2(Field):
-    value : UShort2 = _json_property("value", UShort2)
+    value : UShort2 = json_element("value", UShort2)
     
     @property
     def value_type_name(self) -> str:
@@ -625,9 +562,8 @@ class Field_Ushort2(Field):
 
 
 @json_model("ushort2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Ushort2(Field):
-    value : Optional[UShort2] = _json_property("value", UShort2)
+    value : Optional[UShort2] = json_element("value", UShort2)
     
     @property
     def value_type_name(self) -> str:
@@ -635,9 +571,8 @@ class Field_Nullable_Ushort2(Field):
 
 
 @json_model("ushort3", Member)
-@dataclass(slots=True)
 class Field_Ushort3(Field):
-    value : UShort3 = _json_property("value", UShort3)
+    value : UShort3 = json_element("value", UShort3)
     
     @property
     def value_type_name(self) -> str:
@@ -645,9 +580,8 @@ class Field_Ushort3(Field):
 
 
 @json_model("ushort3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Ushort3(Field):
-    value : Optional[UShort3] = _json_property("value", UShort3)
+    value : Optional[UShort3] = json_element("value", UShort3)
     
     @property
     def value_type_name(self) -> str:
@@ -655,9 +589,8 @@ class Field_Nullable_Ushort3(Field):
 
 
 @json_model("ushort4", Member)
-@dataclass(slots=True)
 class Field_Ushort4(Field):
-    value : UShort4 = _json_property("value", UShort4)
+    value : UShort4 = json_element("value", UShort4)
     
     @property
     def value_type_name(self) -> str:
@@ -665,9 +598,8 @@ class Field_Ushort4(Field):
 
 
 @json_model("ushort4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Ushort4(Field):
-    value : Optional[UShort4] = _json_property("value", UShort4)
+    value : Optional[UShort4] = json_element("value", UShort4)
     
     @property
     def value_type_name(self) -> str:
@@ -675,9 +607,8 @@ class Field_Nullable_Ushort4(Field):
 
 
 @json_model("short2", Member)
-@dataclass(slots=True)
 class Field_Short2(Field):
-    value : Short2 = _json_property("value", Short2)
+    value : Short2 = json_element("value", Short2)
     
     @property
     def value_type_name(self) -> str:
@@ -685,9 +616,8 @@ class Field_Short2(Field):
 
 
 @json_model("short2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Short2(Field):
-    value : Optional[Short2] = _json_property("value", Short2)
+    value : Optional[Short2] = json_element("value", Short2)
     
     @property
     def value_type_name(self) -> str:
@@ -695,9 +625,8 @@ class Field_Nullable_Short2(Field):
 
 
 @json_model("short3", Member)
-@dataclass(slots=True)
 class Field_Short3(Field):
-    value : Short3 = _json_property("value", Short3)
+    value : Short3 = json_element("value", Short3)
     
     @property
     def value_type_name(self) -> str:
@@ -705,9 +634,8 @@ class Field_Short3(Field):
 
 
 @json_model("short3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Short3(Field):
-    value : Optional[Short3] = _json_property("value", Short3)
+    value : Optional[Short3] = json_element("value", Short3)
     
     @property
     def value_type_name(self) -> str:
@@ -715,9 +643,8 @@ class Field_Nullable_Short3(Field):
 
 
 @json_model("short4", Member)
-@dataclass(slots=True)
 class Field_Short4(Field):
-    value : Short4 = _json_property("value", Short4)
+    value : Short4 = json_element("value", Short4)
     
     @property
     def value_type_name(self) -> str:
@@ -725,9 +652,8 @@ class Field_Short4(Field):
 
 
 @json_model("short4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Short4(Field):
-    value : Optional[Short4] = _json_property("value", Short4)
+    value : Optional[Short4] = json_element("value", Short4)
     
     @property
     def value_type_name(self) -> str:
@@ -735,9 +661,8 @@ class Field_Nullable_Short4(Field):
 
 
 @json_model("uint2", Member)
-@dataclass(slots=True)
 class Field_Uint2(Field):
-    value : UInt2 = _json_property("value", UInt2)
+    value : UInt2 = json_element("value", UInt2)
     
     @property
     def value_type_name(self) -> str:
@@ -745,9 +670,8 @@ class Field_Uint2(Field):
 
 
 @json_model("uint2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Uint2(Field):
-    value : Optional[UInt2] = _json_property("value", UInt2)
+    value : Optional[UInt2] = json_element("value", UInt2)
     
     @property
     def value_type_name(self) -> str:
@@ -755,9 +679,8 @@ class Field_Nullable_Uint2(Field):
 
 
 @json_model("uint3", Member)
-@dataclass(slots=True)
 class Field_Uint3(Field):
-    value : UInt3 = _json_property("value", UInt3)
+    value : UInt3 = json_element("value", UInt3)
     
     @property
     def value_type_name(self) -> str:
@@ -765,9 +688,8 @@ class Field_Uint3(Field):
 
 
 @json_model("uint3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Uint3(Field):
-    value : Optional[UInt3] = _json_property("value", UInt3)
+    value : Optional[UInt3] = json_element("value", UInt3)
     
     @property
     def value_type_name(self) -> str:
@@ -775,9 +697,8 @@ class Field_Nullable_Uint3(Field):
 
 
 @json_model("uint4", Member)
-@dataclass(slots=True)
 class Field_Uint4(Field):
-    value : UInt4 = _json_property("value", UInt4)
+    value : UInt4 = json_element("value", UInt4)
     
     @property
     def value_type_name(self) -> str:
@@ -785,9 +706,8 @@ class Field_Uint4(Field):
 
 
 @json_model("uint4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Uint4(Field):
-    value : Optional[UInt4] = _json_property("value", UInt4)
+    value : Optional[UInt4] = json_element("value", UInt4)
     
     @property
     def value_type_name(self) -> str:
@@ -795,9 +715,8 @@ class Field_Nullable_Uint4(Field):
 
 
 @json_model("int2", Member)
-@dataclass(slots=True)
 class Field_Int2(Field):
-    value : Int2 = _json_property("value", Int2)
+    value : Int2 = json_element("value", Int2)
     
     @property
     def value_type_name(self) -> str:
@@ -805,9 +724,8 @@ class Field_Int2(Field):
 
 
 @json_model("int2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Int2(Field):
-    value : Optional[Int2] = _json_property("value", Int2)
+    value : Optional[Int2] = json_element("value", Int2)
     
     @property
     def value_type_name(self) -> str:
@@ -815,9 +733,8 @@ class Field_Nullable_Int2(Field):
 
 
 @json_model("int3", Member)
-@dataclass(slots=True)
 class Field_Int3(Field):
-    value : Int3 = _json_property("value", Int3)
+    value : Int3 = json_element("value", Int3)
     
     @property
     def value_type_name(self) -> str:
@@ -825,9 +742,8 @@ class Field_Int3(Field):
 
 
 @json_model("int3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Int3(Field):
-    value : Optional[Int3] = _json_property("value", Int3)
+    value : Optional[Int3] = json_element("value", Int3)
     
     @property
     def value_type_name(self) -> str:
@@ -835,9 +751,8 @@ class Field_Nullable_Int3(Field):
 
 
 @json_model("int4", Member)
-@dataclass(slots=True)
 class Field_Int4(Field):
-    value : Int4 = _json_property("value", Int4)
+    value : Int4 = json_element("value", Int4)
     
     @property
     def value_type_name(self) -> str:
@@ -845,9 +760,8 @@ class Field_Int4(Field):
 
 
 @json_model("int4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Int4(Field):
-    value : Optional[Int4] = _json_property("value", Int4)
+    value : Optional[Int4] = json_element("value", Int4)
     
     @property
     def value_type_name(self) -> str:
@@ -855,9 +769,8 @@ class Field_Nullable_Int4(Field):
 
 
 @json_model("ulong2", Member)
-@dataclass(slots=True)
 class Field_Ulong2(Field):
-    value : ULong2 = _json_property("value", ULong2)
+    value : ULong2 = json_element("value", ULong2)
     
     @property
     def value_type_name(self) -> str:
@@ -865,9 +778,8 @@ class Field_Ulong2(Field):
 
 
 @json_model("ulong2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Ulong2(Field):
-    value : Optional[ULong2] = _json_property("value", ULong2)
+    value : Optional[ULong2] = json_element("value", ULong2)
     
     @property
     def value_type_name(self) -> str:
@@ -875,9 +787,8 @@ class Field_Nullable_Ulong2(Field):
 
 
 @json_model("ulong3", Member)
-@dataclass(slots=True)
 class Field_Ulong3(Field):
-    value : ULong3 = _json_property("value", ULong3)
+    value : ULong3 = json_element("value", ULong3)
     
     @property
     def value_type_name(self) -> str:
@@ -885,9 +796,8 @@ class Field_Ulong3(Field):
 
 
 @json_model("ulong3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Ulong3(Field):
-    value : Optional[ULong3] = _json_property("value", ULong3)
+    value : Optional[ULong3] = json_element("value", ULong3)
     
     @property
     def value_type_name(self) -> str:
@@ -895,9 +805,8 @@ class Field_Nullable_Ulong3(Field):
 
 
 @json_model("ulong4", Member)
-@dataclass(slots=True)
 class Field_Ulong4(Field):
-    value : ULong4 = _json_property("value", ULong4)
+    value : ULong4 = json_element("value", ULong4)
     
     @property
     def value_type_name(self) -> str:
@@ -905,9 +814,8 @@ class Field_Ulong4(Field):
 
 
 @json_model("ulong4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Ulong4(Field):
-    value : Optional[ULong4] = _json_property("value", ULong4)
+    value : Optional[ULong4] = json_element("value", ULong4)
     
     @property
     def value_type_name(self) -> str:
@@ -915,9 +823,8 @@ class Field_Nullable_Ulong4(Field):
 
 
 @json_model("long2", Member)
-@dataclass(slots=True)
 class Field_Long2(Field):
-    value : Long2 = _json_property("value", Long2)
+    value : Long2 = json_element("value", Long2)
     
     @property
     def value_type_name(self) -> str:
@@ -925,9 +832,8 @@ class Field_Long2(Field):
 
 
 @json_model("long2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Long2(Field):
-    value : Optional[Long2] = _json_property("value", Long2)
+    value : Optional[Long2] = json_element("value", Long2)
     
     @property
     def value_type_name(self) -> str:
@@ -935,9 +841,8 @@ class Field_Nullable_Long2(Field):
 
 
 @json_model("long3", Member)
-@dataclass(slots=True)
 class Field_Long3(Field):
-    value : Long3 = _json_property("value", Long3)
+    value : Long3 = json_element("value", Long3)
     
     @property
     def value_type_name(self) -> str:
@@ -945,9 +850,8 @@ class Field_Long3(Field):
 
 
 @json_model("long3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Long3(Field):
-    value : Optional[Long3] = _json_property("value", Long3)
+    value : Optional[Long3] = json_element("value", Long3)
     
     @property
     def value_type_name(self) -> str:
@@ -955,9 +859,8 @@ class Field_Nullable_Long3(Field):
 
 
 @json_model("long4", Member)
-@dataclass(slots=True)
 class Field_Long4(Field):
-    value : Long4 = _json_property("value", Long4)
+    value : Long4 = json_element("value", Long4)
     
     @property
     def value_type_name(self) -> str:
@@ -965,9 +868,8 @@ class Field_Long4(Field):
 
 
 @json_model("long4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Long4(Field):
-    value : Optional[Long4] = _json_property("value", Long4)
+    value : Optional[Long4] = json_element("value", Long4)
     
     @property
     def value_type_name(self) -> str:
@@ -975,9 +877,8 @@ class Field_Nullable_Long4(Field):
 
 
 @json_model("float2", Member)
-@dataclass(slots=True)
 class Field_Float2(Field):
-    value : Float2 = _json_property("value", Float2)
+    value : Float2 = json_element("value", Float2)
     
     @property
     def value_type_name(self) -> str:
@@ -985,9 +886,8 @@ class Field_Float2(Field):
 
 
 @json_model("float2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Float2(Field):
-    value : Optional[Float2] = _json_property("value", Float2)
+    value : Optional[Float2] = json_element("value", Float2)
     
     @property
     def value_type_name(self) -> str:
@@ -995,9 +895,8 @@ class Field_Nullable_Float2(Field):
 
 
 @json_model("float3", Member)
-@dataclass(slots=True)
 class Field_Float3(Field):
-    value : Float3 = _json_property("value", Float3)
+    value : Float3 = json_element("value", Float3)
     
     @property
     def value_type_name(self) -> str:
@@ -1005,9 +904,8 @@ class Field_Float3(Field):
 
 
 @json_model("float3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Float3(Field):
-    value : Optional[Float3] = _json_property("value", Float3)
+    value : Optional[Float3] = json_element("value", Float3)
     
     @property
     def value_type_name(self) -> str:
@@ -1015,9 +913,8 @@ class Field_Nullable_Float3(Field):
 
 
 @json_model("float4", Member)
-@dataclass(slots=True)
 class Field_Float4(Field):
-    value : Float4 = _json_property("value", Float4)
+    value : Float4 = json_element("value", Float4)
     
     @property
     def value_type_name(self) -> str:
@@ -1025,9 +922,8 @@ class Field_Float4(Field):
 
 
 @json_model("float4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Float4(Field):
-    value : Optional[Float4] = _json_property("value", Float4)
+    value : Optional[Float4] = json_element("value", Float4)
     
     @property
     def value_type_name(self) -> str:
@@ -1035,9 +931,8 @@ class Field_Nullable_Float4(Field):
 
 
 @json_model("double2", Member)
-@dataclass(slots=True)
 class Field_Double2(Field):
-    value : Double2 = _json_property("value", Double2)
+    value : Double2 = json_element("value", Double2)
     
     @property
     def value_type_name(self) -> str:
@@ -1045,9 +940,8 @@ class Field_Double2(Field):
 
 
 @json_model("double2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Double2(Field):
-    value : Optional[Double2] = _json_property("value", Double2)
+    value : Optional[Double2] = json_element("value", Double2)
     
     @property
     def value_type_name(self) -> str:
@@ -1055,9 +949,8 @@ class Field_Nullable_Double2(Field):
 
 
 @json_model("double3", Member)
-@dataclass(slots=True)
 class Field_Double3(Field):
-    value : Double3 = _json_property("value", Double3)
+    value : Double3 = json_element("value", Double3)
     
     @property
     def value_type_name(self) -> str:
@@ -1065,9 +958,8 @@ class Field_Double3(Field):
 
 
 @json_model("double3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Double3(Field):
-    value : Optional[Double3] = _json_property("value", Double3)
+    value : Optional[Double3] = json_element("value", Double3)
     
     @property
     def value_type_name(self) -> str:
@@ -1075,9 +967,8 @@ class Field_Nullable_Double3(Field):
 
 
 @json_model("double4", Member)
-@dataclass(slots=True)
 class Field_Double4(Field):
-    value : Double4 = _json_property("value", Double4)
+    value : Double4 = json_element("value", Double4)
     
     @property
     def value_type_name(self) -> str:
@@ -1085,9 +976,8 @@ class Field_Double4(Field):
 
 
 @json_model("double4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Double4(Field):
-    value : Optional[Double4] = _json_property("value", Double4)
+    value : Optional[Double4] = json_element("value", Double4)
     
     @property
     def value_type_name(self) -> str:
@@ -1095,9 +985,8 @@ class Field_Nullable_Double4(Field):
 
 
 @json_model("float2x2", Member)
-@dataclass(slots=True)
 class Field_Float2x2(Field):
-    value : Float2x2 = _json_property("value", Float2x2)
+    value : Float2x2 = json_element("value", Float2x2)
     
     @property
     def value_type_name(self) -> str:
@@ -1105,9 +994,8 @@ class Field_Float2x2(Field):
 
 
 @json_model("float2x2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Float2x2(Field):
-    value : Optional[Float2x2] = _json_property("value", Float2x2)
+    value : Optional[Float2x2] = json_element("value", Float2x2)
     
     @property
     def value_type_name(self) -> str:
@@ -1115,9 +1003,8 @@ class Field_Nullable_Float2x2(Field):
 
 
 @json_model("float3x3", Member)
-@dataclass(slots=True)
 class Field_Float3x3(Field):
-    value : Float3x3 = _json_property("value", Float3x3)
+    value : Float3x3 = json_element("value", Float3x3)
     
     @property
     def value_type_name(self) -> str:
@@ -1125,9 +1012,8 @@ class Field_Float3x3(Field):
 
 
 @json_model("float3x3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Float3x3(Field):
-    value : Optional[Float3x3] = _json_property("value", Float3x3)
+    value : Optional[Float3x3] = json_element("value", Float3x3)
     
     @property
     def value_type_name(self) -> str:
@@ -1135,9 +1021,8 @@ class Field_Nullable_Float3x3(Field):
 
 
 @json_model("float4x4", Member)
-@dataclass(slots=True)
 class Field_Float4x4(Field):
-    value : Float4x4 = _json_property("value", Float4x4)
+    value : Float4x4 = json_element("value", Float4x4)
     
     @property
     def value_type_name(self) -> str:
@@ -1145,9 +1030,8 @@ class Field_Float4x4(Field):
 
 
 @json_model("float4x4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Float4x4(Field):
-    value : Optional[Float4x4] = _json_property("value", Float4x4)
+    value : Optional[Float4x4] = json_element("value", Float4x4)
     
     @property
     def value_type_name(self) -> str:
@@ -1155,9 +1039,8 @@ class Field_Nullable_Float4x4(Field):
 
 
 @json_model("double2x2", Member)
-@dataclass(slots=True)
 class Field_Double2x2(Field):
-    value : Double2x2 = _json_property("value", Double2x2)
+    value : Double2x2 = json_element("value", Double2x2)
     
     @property
     def value_type_name(self) -> str:
@@ -1165,9 +1048,8 @@ class Field_Double2x2(Field):
 
 
 @json_model("double2x2?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Double2x2(Field):
-    value : Optional[Double2x2] = _json_property("value", Double2x2)
+    value : Optional[Double2x2] = json_element("value", Double2x2)
     
     @property
     def value_type_name(self) -> str:
@@ -1175,9 +1057,8 @@ class Field_Nullable_Double2x2(Field):
 
 
 @json_model("double3x3", Member)
-@dataclass(slots=True)
 class Field_Double3x3(Field):
-    value : Double3x3 = _json_property("value", Double3x3)
+    value : Double3x3 = json_element("value", Double3x3)
     
     @property
     def value_type_name(self) -> str:
@@ -1185,9 +1066,8 @@ class Field_Double3x3(Field):
 
 
 @json_model("double3x3?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Double3x3(Field):
-    value : Optional[Double3x3] = _json_property("value", Double3x3)
+    value : Optional[Double3x3] = json_element("value", Double3x3)
     
     @property
     def value_type_name(self) -> str:
@@ -1195,9 +1075,8 @@ class Field_Nullable_Double3x3(Field):
 
 
 @json_model("double4x4", Member)
-@dataclass(slots=True)
 class Field_Double4x4(Field):
-    value : Double4x4 = _json_property("value", Double4x4)
+    value : Double4x4 = json_element("value", Double4x4)
     
     @property
     def value_type_name(self) -> str:
@@ -1205,9 +1084,8 @@ class Field_Double4x4(Field):
 
 
 @json_model("double4x4?", Member)
-@dataclass(slots=True)
 class Field_Nullable_Double4x4(Field):
-    value : Optional[Double4x4] = _json_property("value", Double4x4)
+    value : Optional[Double4x4] = json_element("value", Double4x4)
     
     @property
     def value_type_name(self) -> str:

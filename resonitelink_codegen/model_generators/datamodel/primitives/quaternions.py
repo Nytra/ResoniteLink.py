@@ -29,18 +29,16 @@ class QuaternionsGenerator(CodeGenerator):
         Generates the content of quaternions.py
 
         """
-        yield f"from resonitelink.json import json_model, json_property\n"
-        yield f"from dataclasses import dataclass\n"
+        yield f"from resonitelink.json import json_model, json_element\n"
         yield f"\n\n"
 
         def _generate_quaternion_class(model_name : str, class_name : str, element_type : Type):
-            yield f"@json_model(\"t_{model_name}\", type_name_is_internal=True)\n"
-            yield f"@dataclass(slots=True)\n"
+            yield f"@json_model(internal_type_name=\"t_{model_name}\")\n"
             yield f"class {class_name}():\n"
-            yield f"    x : {element_type.__name__} = json_property(\"x\", {element_type.__name__})\n"
-            yield f"    y : {element_type.__name__} = json_property(\"y\", {element_type.__name__})\n"
-            yield f"    z : {element_type.__name__} = json_property(\"z\", {element_type.__name__})\n"
-            yield f"    w : {element_type.__name__} = json_property(\"w\", {element_type.__name__})\n"
+            yield f"    x : {element_type.__name__} = json_element(\"x\", {element_type.__name__})\n"
+            yield f"    y : {element_type.__name__} = json_element(\"y\", {element_type.__name__})\n"
+            yield f"    z : {element_type.__name__} = json_element(\"z\", {element_type.__name__})\n"
+            yield f"    w : {element_type.__name__} = json_element(\"w\", {element_type.__name__})\n"
 
         for quaternion_type in quaternion_types:
             type_info = type_mappings[quaternion_type]

@@ -1,24 +1,20 @@
 #       >=============================================================================<
 # NOTE: !!! THIS FILE IS AUTO-GENERATED! DO NOT EDIT! MODIFY CODEGENERATOR INSTEAD! !!!
 #       >=============================================================================<
-from resonitelink.json.models import _json_property
-from resonitelink.json import json_model
-from dataclasses import dataclass
+from resonitelink.json import json_model, json_element
 
 
-@json_model("t_floatQ")
-@dataclass(slots=True)
+@json_model(internal_type_name="t_floatQ")
 class FloatQ():
-    x : float = _json_property("x", float)
-    y : float = _json_property("y", float)
-    z : float = _json_property("z", float)
-    w : float = _json_property("w", float)
+    x : float = json_element("x", float)
+    y : float = json_element("y", float)
+    z : float = json_element("z", float)
+    w : float = json_element("w", float)
 
 
-@json_model("t_doubleQ")
-@dataclass(slots=True)
+@json_model(internal_type_name="t_doubleQ")
 class DoubleQ():
-    x : float = _json_property("x", float)
-    y : float = _json_property("y", float)
-    z : float = _json_property("z", float)
-    w : float = _json_property("w", float)
+    x : float = json_element("x", float)
+    y : float = json_element("y", float)
+    z : float = json_element("z", float)
+    w : float = json_element("w", float)

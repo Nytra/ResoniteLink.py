@@ -9,6 +9,6 @@ class Response(ABC):
     error_info : str = json_element("errorInfo", str)
 
 
-@json_model("response", derived_from=Response)
+@json_model(type_name="response", derived_from=Response)
 class GenericResponse(Response):
     pass

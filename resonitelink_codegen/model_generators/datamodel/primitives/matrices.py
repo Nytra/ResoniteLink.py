@@ -29,16 +29,14 @@ class MatricesGenerator(CodeGenerator):
         Generates the content of matrices.py
 
         """
-        yield f"from resonitelink.json import json_model, json_property\n"
-        yield f"from dataclasses import dataclass\n"
+        yield f"from resonitelink.json import json_model, json_element\n"
         yield f"\n\n"
 
         def _generate_matrix_class(model_name : str, class_name : str, element_type : Type, element_names : List[str]):
-            yield f"@json_model(\"t_{model_name}\", type_name_is_internal=True)\n"
-            yield f"@dataclass(slots=True)\n"
+            yield f"@json_model(internal_type_name=\"t_{model_name}\")\n"
             yield f"class {class_name}():\n"
             for element_name in element_names:
-                yield f"    {element_name} : {element_type.__name__} = json_property(\"{element_name}\", {element_type.__name__})\n"
+                yield f"    {element_name} : {element_type.__name__} = json_element(\"{element_name}\", {element_type.__name__})\n"
 
         for matrix_type in matrix_types:
             type_info = type_mappings[matrix_type]

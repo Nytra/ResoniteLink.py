@@ -314,6 +314,9 @@ class JSONModel(Generic[D]):
                 raise KeyError(f"A different global model with type name '{self.type_name}' is already registered!")
             
             JSONModel._global_model_type_name_mapping[self.type_name] = self
+        
+        if self.internal_type_name:
+            JSONModel._internal_model_type_name_mappings[self.internal_type_name] = self
     
     @staticmethod
     def find_model(target_type : Optional[type] = None, target_type_name : Optional[str] = None) -> JSONModel:
@@ -401,7 +404,7 @@ class JSONModel(Generic[D]):
 # but we're also specifying our custon property functions as field specifiers. Otherwise, those would *not* get
 # recognized as dataclass field specifiers by type checkers, and those would produce incorrect type information.
 @dataclass_transform(field_specifiers=(field, _json_property, json_element, json_list, json_dict))
-def json_model(type_name : Optional[str] = None, derived_from : Optional[type] = None, internal_type_name : Optional[str] = None, slots=True):
+def json_model[T](type_name : Optional[str] = None, derived_from : Optional[type] = None, internal_type_name : Optional[str] = None, slots=True):
     """
     Class decorator to easily declare models from their data classes.
     The type will be wrapped into a dataclass.
@@ -411,37 +414,54 @@ def json_model(type_name : Optional[str] = None, derived_from : Optional[type] =
     type_name : str
         The model type name to associate the decorated data class with.
         (This will be used by JSON serializer / deserializer as the '$type' value.)
+    # TODO: Document the rest
+    slots : bool, default = True
+        Argument passed through to dataclass constructor.
+        Controls wether the dataclass should use `__slots__` for fields.
 
     """
-    def _model_decorator[T](data_class : Type[T]) -> Type[T]:
+    def _wrapper(cls : Type[T]) -> Type[T]:
+        # Wrap the decorated class wrapped into a dataclass
+        data_class = dataclass(cls, slots=slots)
+        
         # Creating a model instance automatically registers it
         model = JSONModel(data_class=data_class, type_name=type_name, derived_from=derived_from, internal_type_name=internal_type_name)
-
+        
         # Inject custom __repr__
         def _repr(self) -> str:
-            return f"<{data_class.__name__} (data class for JSONModel '{model.type_name}')>"
-        setattr(data_class, '__repr__', _repr)
+            return f"<{cls.__name__} (data class for JSONModel '{model.type_name}')>"
+        setattr(cls, '__repr__', _repr)
 
-        # Return decorated class wrapped into a dataclass
-        return dataclass(data_class, slots=slots)
+        # Return the now registered dataclass
+        return data_class
 
-    return _model_decorator
+    return _wrapper
 
 
+# Same as above, but for abstract base classes of JSON models.
 @dataclass_transform(field_specifiers=(field, _json_property, json_element, json_list, json_dict))
 def abstract_json_model(slots=True):
     """
     Class decorator to easily declare abstract models from their (also abstract) data classes.
     This will NOT register a JSON model, but wrap the type into dataclass.
 
+    Parameters
+    ----------
+    slots : bool, default = True
+        Argument passed through to dataclass constructor.
+        Controls wether the dataclass should use `__slots__` for fields.
+
     """
-    def _abstract_model_decorator[T](abstract_data_class : Type[T]) -> Type[T]:
+    def _wrapper[T](cls : Type[T]) -> Type[T]:
+        # Wrap the decorated class wrapped into a dataclass
+        data_class = dataclass(cls, slots=slots)
+
         # Inject custom __repr__
         def _repr(self) -> str:
-            return f"<{abstract_data_class.__name__} (abstract data class for JSONModels)>"
-        setattr(abstract_data_class, '__repr__', _repr)
+            return f"<{cls.__name__} (abstract data class for JSONModels)>"
+        setattr(cls, '__repr__', _repr)
 
-        # Return decorated class wrapped into a dataclass
-        return dataclass(abstract_data_class, slots=slots)
+        # Return the dataclass
+        return data_class
     
-    return _abstract_model_decorator
+    return _wrapper
