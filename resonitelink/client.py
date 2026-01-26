@@ -361,7 +361,7 @@ class ResoniteLinkClient(ABC):
         self, 
         container_slot : Union[str, Slot, SlotProxy, Reference],
         component_type : str,
-        members : Dict[str, Member] = MISSING
+        **members : Member
     ) -> ComponentProxy:
         """
         Creates a new component on a slot.
@@ -387,7 +387,7 @@ class ResoniteLinkClient(ABC):
             data=Component(
                 id=component_id,
                 component_type=component_type,
-                members=members
+                members=members if members else MISSING
             )
         )
         await self.send_message(msg)

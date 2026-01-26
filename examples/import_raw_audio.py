@@ -70,14 +70,14 @@ async def on_client_started(client : ResoniteLinkClient):
     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
     slot = await client.add_slot(name="Imported Audio Clip", position=Float3(0, 1.5, 0))
     
-    # Attaches a legacy audio clip player to the slot. The component sets up everything required on attach.
+    # Attaches a LegacyAudioPlayer component to the slot. The component sets up everything required on attach.
     audio_player = await client.add_component(slot, component_type="[FrooxEngine]FrooxEngine.LegacyAudioPlayer")
     
     # Find the StaticAudioClip components that was set up by the LegacyAudioPlayer. 
     audio_player_data = await audio_player.fetch_data()
     audio_clip = ComponentProxy.from_reference(client, audio_player_data.get_member(Reference, "AudioClip"))
 
-    # Assign the AssetURI
+    # Assign the URI of the imported asset to the StaticAudioClip component.
     await audio_clip.update_members(URL=Field_Uri(asset_url))
 
 
