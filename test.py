@@ -1,3 +1,5 @@
+
+
 # from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient
 # from resonitelink.json import ResoniteLinkJSONEncoder, ResoniteLinkJSONDecoder, format_object_structure
 # from resonitelink.models.datamodel import Slot, Component, Reference, Field, Field_String
@@ -70,66 +72,12 @@
 
 
 
-from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String, UpdateComponent
-import asyncio
-import logging
-
-# Creates a new client that connects to ResoniteLink via websocket.
-client = ResoniteLinkWebsocketClient()
-
-@client.on_started
-async def on_client_started(client : ResoniteLinkClient):
-    """
-    This async function is called by the client at the end of its startup sequence.
-    You can use it to execute code once the client is up and running!
-
-    """
-    # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
-    slot = await client.add_slot(name="Hello World Slot", position=Float3(0, 1.5, 0))
-    
-    # Adds a TextRenderer component to the newly created slot.
-    text_renderer = await client.add_component(slot, "[FrooxEngine]FrooxEngine.TextRenderer", {
-        # Sets the initial value of the string field 'Text' on the component.
-        'Text': Field_String(value="Hello, world! ")
-    })
-
-    while True:
-        await asyncio.sleep(0.1)
-        
-        # First get the current component state
-        text_renderer_data = await client.get_component(text_renderer)
-        text_field : Field_String = text_renderer_data.members["Text"] # type: ignore
-        text_field.value = text_field.value[1:] + text_field.value[0]
-
-        logging.info(f"Updating text: {text_field.value}")
-
-        # Then update the component state
-        await client.update_component(text_renderer, {
-            'Text': text_field
-        })
-
-# Asks for the current port ResoniteLink is running on.
-# port = int(input("ResoniteLink Port: "))
-port = 49155
-
-# Start the client on the specified port.
-asyncio.run(client.start(port))
-
-
-
-
-
-
-
-# from math import sin, cos, pi
-
-# from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ImportAudioClipRawData
+# from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String, UpdateComponent
 # import asyncio
 # import logging
-# from array import array
 
 # # Creates a new client that connects to ResoniteLink via websocket.
-# client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
+# client = ResoniteLinkWebsocketClient()
 
 # @client.on_started
 # async def on_client_started(client : ResoniteLinkClient):
@@ -138,60 +86,119 @@ asyncio.run(client.start(port))
 #     You can use it to execute code once the client is up and running!
 
 #     """
-#     def calc_signal(t : float, freq : float) -> float:
-#         """
-#         Produces a simple sin-wave tone at the specified frequency.
-
-#         Parameters
-#         ----------
-#         t : float
-#             The time at which the sample is taken.
-#         freq : float
-#             The frequency of the tone to generate.
-
-#         Returns
-#         -------
-#         The value of the signal at the specified sample time.
-
-#         """
-#         return sin(2 * pi * freq * t)
-
-#     def calc_amplitude(t, exp : float = 2.0) -> float:
-#         """
-#         Uses a simple shaping function to modulate the amplitude over time.
-
-#         Parameters
-#         ----------
-#         t : float
-#             The time at which the sample is taken.
-#         exp : float
-#             Exponent for shaping function.
-        
-#         Returns
-#         -------
-#         The value of the shaping function at the specified sample time.
-
-#         """
-#         t = t * 2 - 1 # 0 ..  1 -> -1 ... 1
-#         return cos( pi * t / 2 ) ** exp
-
-#     freq = 440.0
-#     sample_rate=44100
-#     sample_count=88200
-
-#     # Compute audio samples
-#     samples = [ calc_signal(x / sample_rate, freq) * calc_amplitude(x / sample_rate) for x in range(sample_count) ]
-
-#     msg = ImportAudioClipRawData(sample_rate=sample_rate, sample_count=sample_count, channel_count=1)
-#     data = array("f", samples).tobytes()
-#     msg.raw_binary_payload = data
-    
-#     await client.send_message(msg)
-
 #     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
-#     # slot = await client.add_slot(name="Audio Data Slot", position=Float3(0, 1.5, 0))
+#     slot = await client.add_slot(name="Hello World Slot", position=Float3(0, 1.5, 0))
+    
+#     # Adds a TextRenderer component to the newly created slot.
+#     text_renderer = await client.add_component(slot, "[FrooxEngine]FrooxEngine.TextRenderer", {
+#         # Sets the initial value of the string field 'Text' on the component.
+#         'Text': Field_String(value="Hello, world! ")
+#     })
+
+#     while True:
+#         await asyncio.sleep(0.1)
+        
+#         # First get the current component state
+#         text_renderer_data = await client.get_component(text_renderer)
+#         text_field : Field_String = text_renderer_data.members["Text"] # type: ignore
+#         text_field.value = text_field.value[1:] + text_field.value[0]
+
+#         logging.info(f"Updating text: {text_field.value}")
+
+#         # Then update the component state
+#         await client.update_component(text_renderer, {
+#             'Text': text_field
+#         })
+
+# # Asks for the current port ResoniteLink is running on.
+# # port = int(input("ResoniteLink Port: "))
+# port = 48395
+
+# # Start the client on the specified port.
+# asyncio.run(client.start(port))
 
 
+
+
+
+
+
+from math import sin, cos, pi
+
+from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ImportAudioClipRawData, Component
+import asyncio
+import logging
+from array import array
+
+# Creates a new client that connects to ResoniteLink via websocket.
+client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
+
+@client.on_started
+async def on_client_started(client : ResoniteLinkClient):
+    """
+    This async function is called by the client at the end of its startup sequence.
+    You can use it to execute code once the client is up and running!
+
+    """
+    def calc_signal(t : float, freq : float) -> float:
+        """
+        Produces a simple sin-wave tone at the specified frequency.
+
+        Parameters
+        ----------
+        t : float
+            The time at which the sample is taken.
+        freq : float
+            The frequency of the tone to generate.
+
+        Returns
+        -------
+        The value of the signal at the specified sample time.
+
+        """
+        return sin(2 * pi * freq * t)
+
+    def calc_amplitude(t, exp : float = 2.0) -> float:
+        """
+        Uses a simple shaping function to modulate the amplitude over time.
+
+        Parameters
+        ----------
+        t : float
+            The time at which the sample is taken.
+        exp : float
+            Exponent for shaping function.
+        
+        Returns
+        -------
+        The value of the shaping function at the specified sample time.
+
+        """
+        t = t * 2 - 1 # 0 ..  1 -> -1 ... 1
+        return cos( pi * t / 2 ) ** exp
+
+    freq = 440.0
+    sample_rate=44100
+    sample_count=88200
+
+    # Compute audio samples
+    samples = [ calc_signal(x / sample_rate, freq) * calc_amplitude(x / sample_rate) for x in range(sample_count) ]
+
+    msg = ImportAudioClipRawData(sample_rate=sample_rate, sample_count=sample_count, channel_count=1, init_samples=samples)
+
+    
+    
+    await client.send_message(msg)
+
+    # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
+    # slot = await client.add_slot(name="Audio Data Slot", position=Float3(0, 1.5, 0))
+
+# Asks for the current port ResoniteLink is running on.
+# port = int(input("ResoniteLink Port: "))
+port = 48395
+
+# Start the client on the specified port.
+asyncio.run(client.start(port))
 
 
 

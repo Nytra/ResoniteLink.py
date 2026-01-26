@@ -117,47 +117,70 @@ class JSONProperty():
         return f"<JSONProperty name='{self.json_name}', element_type={self.element_type}, property_type={self.property_type}{' (abstract)' if self._abstract else ''}>"
 
 
-def _json_property(json_name : str, element_type : type, property_type : _JSONPropertyType = _JSONPropertyType.ELEMENT, abstract = False, init = True):
+# TODO: Signature changed, now need to define default=MISSING for EVERY model...
+# TODO: Once that is done, REMOVE the '= MISSING' from these - They cannot have a default value.
+def _json_property(json_name : str, element_type : type, *, default : Any = MISSING, init = True, property_type : _JSONPropertyType = _JSONPropertyType.ELEMENT, abstract = False):
     """
     Utility function for easily defining fields in a dataclass as JSON-Properties.
     Returns a field for use in dataclass.
 
-    Note
-    ----
-    This doesn't provide proper static type hinting, as it returns 'Any'.
-    For static type hinting, use json_element, json_list or json_dict respectively.
+    Notes
+    -----
+    - The function signature is REQUIRED to be compatible with `dateclasses.type()`, as type checkers assume so. 
+      - Because of this, the `default` argument HAS to be kw-only, and it CANNOT have a default value.
+      - Because of this, the `init` argument HAS to default to `True`
+    - This doesn't provide proper static type hinting, as it returns 'Any'.
+    - For static type hinting, use json_element, json_list or json_dict respectively.
 
     """
     json_prop = JSONProperty(json_name=json_name, element_type=element_type, property_type=property_type, abstract=abstract)
 
-    return field(default=MISSING, init=init, metadata={'JSONProperty': json_prop})
+    return field(default=default, init=init, metadata={'JSONProperty': json_prop})
 
 
-def json_element[T](json_name : str, element_type : Type[T], abstract = False, init = True) -> T:
+def json_element[T](json_name : str, element_type : Type[T], *, default : Any = MISSING, init = True, abstract = False) -> T:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Element-Properties.
     Returns a field for use in dataclass.
 
+    Notes
+    -----
+    - The function signature is REQUIRED to be compatible with `dateclasses.type()`, as type checkers assume so. 
+      - Because of this, the `default` argument HAS to be kw-only, and it CANNOT have a default value.
+      - Because of this, the `init` argument HAS to default to `True`
+
     """
-    return _json_property(json_name=json_name, element_type=element_type, property_type=_JSONPropertyType.ELEMENT, abstract=abstract, init=init)
+    return _json_property(json_name=json_name, element_type=element_type, default=default, init=init, property_type=_JSONPropertyType.ELEMENT, abstract=abstract)
 
 
-def json_list[T](json_name : str, element_type : Type[T], abstract = False, init = True) -> List[T]:
+def json_list[T](json_name : str, element_type : Type[T], *, default : Any = MISSING, init = True, abstract = False) -> List[T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-List-Properties.
     Returns a field for use in dataclass.
 
+    Notes
+    -----
+    - The function signature is REQUIRED to be compatible with `dateclasses.type()`, as type checkers assume so. 
+      - Because of this, the `default` argument HAS to be kw-only, and it CANNOT have a default value.
+      - Because of this, the `init` argument HAS to default to `True`
+
     """
-    return _json_property(json_name=json_name, element_type=element_type, property_type=_JSONPropertyType.LIST, abstract=abstract, init=init)
+    return _json_property(json_name=json_name, element_type=element_type, default=default, init=init, property_type=_JSONPropertyType.LIST, abstract=abstract)
 
 
-def json_dict[T](json_name : str, element_type : Type[T], abstract = False, init = True) -> Dict[str, T]:
+def json_dict[T](json_name : str, element_type : Type[T], *, default : Any = MISSING, init = True, abstract = False) -> Dict[str, T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Dict-Properties.
     Returns a field for use in dataclass.
 
+    Notes
+    -----
+    - The function signature is REQUIRED to be compatible with `dateclasses.type()`, as type checkers assume so. 
+      - Because of this, the `default` argument HAS to be kw-only, and it CANNOT have a default value.
+      - Because of this, the `init` argument HAS to default to `True`
+
     """
-    return _json_property(json_name=json_name, element_type=element_type, property_type=_JSONPropertyType.DICT, abstract=abstract, init=init)
+    return _json_property(json_name=json_name, element_type=element_type, default=default, init=init, property_type=_JSONPropertyType.DICT, abstract=abstract)
 
 
 D = TypeVar('D', bound=Type)

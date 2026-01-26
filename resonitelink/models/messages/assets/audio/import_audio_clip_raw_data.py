@@ -1,6 +1,7 @@
 from resonitelink.json import json_model, json_element
-from dataclasses import field
-from typing import Optional
+from dataclasses import field, InitVar
+from typing import Optional, List
+from array import array
 
 from ...messages import Message, BinaryPayloadMessage
 
@@ -20,7 +21,14 @@ class ImportAudioClipRawData(BinaryPayloadMessage):
     # It's your responsibility to make sure that Resonite supports given audio channel count.
     # The actual audio sample data is interleaved in the buffer.
     channel_count : int = json_element("channelCount", int)
-    
+
+    # Initializes the audio samples.
+    init_samples : InitVar[Optional[List[float]]] = None
+
+    def __post_init__(self, init_samples : Optional[List[float]]):
+        if init_samples:
+            self.samples = init_samples
+
     @property
     def duration(self) -> float:
         """
@@ -50,6 +58,23 @@ class ImportAudioClipRawData(BinaryPayloadMessage):
             raise ValueError("You must set sample_rate before setting duration.")
         
         self.sample_count = int(value * self.sample_rate)
+    
+    @property
+    def samples(self) -> List[float]:
+        """
+        Retrieves the `raw_binary_data` as list of floats.
+
+        """
+        arr = array("f")
+        arr.frombytes(self.raw_binary_payload)
+        return arr.tolist()
+    
+    @samples.setter
+    def samples(self, samples : List[float]):
+        """
+        Sets the `raw_binary_data` from list of floats.
+        """
+        self.raw_binary_payload = array("f", samples).tobytes()
     
     @property
     def raw_binary_payload(self) -> bytes:

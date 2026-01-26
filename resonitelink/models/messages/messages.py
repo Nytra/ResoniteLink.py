@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 @abstract_json_model()
 class Message(ABC):
-    message_id : str = json_element("messageId", str)
+    message_id : str = json_element("messageId", str, init=False)
 
 
 @abstract_json_model()
