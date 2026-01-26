@@ -1,4 +1,4 @@
-from resonitelink.json import json_model, json_list
+from resonitelink.json import MISSING, json_model, json_list
 from typing import List
 
 from ....datamodel.assets.mesh import Vertex, Submesh, Bone, Blendshape
@@ -15,17 +15,17 @@ class ImportMeshJSON(Message):
 
     """
     #  Vertices of this mesh. These are shared across sub-meshes.
-    vertices : List[Vertex] = json_list("vertices", Vertex)
+    vertices : List[Vertex] = json_list("vertices", Vertex, default=MISSING)
     
     # List of submeshes (points, triangles...) representing this mesh.
     # Meshes will typically have at least one submesh.
     # Each submesh uses indicies of the vertices for its primitives.
-    submeshes : List[Submesh] = json_list("submeshes", Submesh)
+    submeshes : List[Submesh] = json_list("submeshes", Submesh, default=MISSING)
 
     # Bones of the mesh when data represents a skinned mesh.
     # These will be referred to by their index from vertex data.
-    bones : List[Bone] = json_list("bones", Bone)
+    bones : List[Bone] = json_list("bones", Bone, default=MISSING)
 
     # Blendshapes of this mesh.
     # These allow modifying the vertex positions, normals & tangents for animations such as facial expressions.
-    blendshapes : List[Blendshape] = json_list("blendshapes", Blendshape)
+    blendshapes : List[Blendshape] = json_list("blendshapes", Blendshape, default=MISSING)

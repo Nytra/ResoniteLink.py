@@ -1,4 +1,4 @@
-from resonitelink.json import json_model, json_element
+from resonitelink.json import MISSING, json_model, json_element
 
 from ...messages import Message
 
@@ -12,4 +12,4 @@ class ImportTexture2DFile(Message):
     
     """
     # Path of the texture file to import.
-    file_path : str = json_element("filePath", str)
+    file_path : str = json_element("filePath", str, default=MISSING)

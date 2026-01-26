@@ -16,14 +16,14 @@ class VectorsGenerator(CodeGenerator):
         Generates the content of vectors.py
 
         """
-        yield f"from resonitelink.json import json_model, json_element\n"
+        yield f"from resonitelink.json import MISSING, json_model, json_element\n"
         yield f"\n\n"
 
         def _generate_vector_class(model_name : str, class_name : str, element_type : Type, element_names : List[str]):
             yield f"@json_model(internal_type_name=\"t_{model_name}\")\n"
             yield f"class {class_name}():\n"
             for element_name in element_names:
-                yield f"    {element_name} : {element_type.__name__} = json_element(\"{element_name}\", {element_type.__name__})\n"
+                yield f"    {element_name} : {element_type.__name__} = json_element(\"{element_name}\", {element_type.__name__}, default=MISSING)\n"
 
         for vector_type in vector_types:
             type_info = type_mappings[vector_type]

@@ -1,10 +1,10 @@
-from resonitelink.json import abstract_json_model, json_element
+from resonitelink.json import MISSING, abstract_json_model, json_element
 from abc import ABC, abstractmethod
 
 
 @abstract_json_model()
 class Message(ABC):
-    message_id : str = json_element("messageId", str, init=False)
+    message_id : str = json_element("messageId", str, default=MISSING, init=False)
 
 
 @abstract_json_model()

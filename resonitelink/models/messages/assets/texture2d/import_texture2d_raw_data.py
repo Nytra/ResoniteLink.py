@@ -1,4 +1,4 @@
-from resonitelink.json import abstract_json_model, json_model, json_element
+from resonitelink.json import MISSING, abstract_json_model, json_model, json_element
 from dataclasses import field
 from typing import Optional
 from abc import ABC, abstractmethod
@@ -11,10 +11,10 @@ class ImportTexture2DRawDataBase(BinaryPayloadMessage, ABC):
     _data : Optional[bytes] = field(default=None, init=False)
     
     # Width of the texture.
-    width : int = json_element("width", int)
+    width : int = json_element("width", int, default=MISSING)
     
     # Height of the texture.
-    height : int = json_element("height", int)
+    height : int = json_element("height", int, default=MISSING)
 
     @property
     @abstractmethod
@@ -45,7 +45,7 @@ class ImportTexture2DRawDataBase(BinaryPayloadMessage, ABC):
 
 @json_model("importTexture2DRawData", Message)
 class ImportTexture2DRawData(ImportTexture2DRawDataBase):
-    color_profile : str = json_element("colorProfile", str)
+    color_profile : str = json_element("colorProfile", str, default=MISSING)
 
     @property
     def element_size(self) -> int:

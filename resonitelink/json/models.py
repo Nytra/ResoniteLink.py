@@ -117,9 +117,7 @@ class JSONProperty():
         return f"<JSONProperty name='{self.json_name}', element_type={self.element_type}, property_type={self.property_type}{' (abstract)' if self._abstract else ''}>"
 
 
-# TODO: Signature changed, now need to define default=MISSING for EVERY model...
-# TODO: Once that is done, REMOVE the '= MISSING' from these - They cannot have a default value.
-def _json_property(json_name : str, element_type : type, *, default : Any = MISSING, init = True, property_type : _JSONPropertyType = _JSONPropertyType.ELEMENT, abstract = False):
+def _json_property(json_name : str, element_type : type, *, default : Any, init = True, property_type : _JSONPropertyType = _JSONPropertyType.ELEMENT, abstract = False):
     """
     Utility function for easily defining fields in a dataclass as JSON-Properties.
     Returns a field for use in dataclass.
@@ -138,7 +136,7 @@ def _json_property(json_name : str, element_type : type, *, default : Any = MISS
     return field(default=default, init=init, metadata={'JSONProperty': json_prop})
 
 
-def json_element[T](json_name : str, element_type : Type[T], *, default : Any = MISSING, init = True, abstract = False) -> T:
+def json_element[T](json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> T:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Element-Properties.
     Returns a field for use in dataclass.
@@ -153,7 +151,7 @@ def json_element[T](json_name : str, element_type : Type[T], *, default : Any = 
     return _json_property(json_name=json_name, element_type=element_type, default=default, init=init, property_type=_JSONPropertyType.ELEMENT, abstract=abstract)
 
 
-def json_list[T](json_name : str, element_type : Type[T], *, default : Any = MISSING, init = True, abstract = False) -> List[T]:
+def json_list[T](json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> List[T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-List-Properties.
     Returns a field for use in dataclass.
@@ -168,7 +166,7 @@ def json_list[T](json_name : str, element_type : Type[T], *, default : Any = MIS
     return _json_property(json_name=json_name, element_type=element_type, default=default, init=init, property_type=_JSONPropertyType.LIST, abstract=abstract)
 
 
-def json_dict[T](json_name : str, element_type : Type[T], *, default : Any = MISSING, init = True, abstract = False) -> Dict[str, T]:
+def json_dict[T](json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> Dict[str, T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Dict-Properties.
     Returns a field for use in dataclass.

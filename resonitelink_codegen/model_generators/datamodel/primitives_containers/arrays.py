@@ -18,7 +18,7 @@ class ArraysGenerator(CodeGenerator):
         """
         yield f"from resonitelink.models.datamodel.primitives import *\n"
         yield f"from resonitelink.models.datamodel import Member, SyncArray\n"
-        yield f"from resonitelink.json import json_model, json_list\n"
+        yield f"from resonitelink.json import MISSING, json_model, json_list\n"
         yield f"from decimal import Decimal\n"
         yield f"from typing import List\n"
         yield f"\n\n"
@@ -26,7 +26,7 @@ class ArraysGenerator(CodeGenerator):
         def _generate_array_class(model_name : str, class_name : str, value_type : Type, value_type_name : str):
             yield f"@json_model(\"{model_name}\", Member)\n"
             yield f"class {class_name}(SyncArray):\n"
-            yield f"    values : List[{value_type.__name__}] = json_list(\"values\", {value_type.__name__})\n"
+            yield f"    values : List[{value_type.__name__}] = json_list(\"values\", {value_type.__name__}, default=MISSING)\n"
             yield f"    \n"
             yield f"    @property\n"
             yield f"    def element_type(self) -> str:\n"

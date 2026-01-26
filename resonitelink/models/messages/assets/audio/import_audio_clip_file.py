@@ -1,5 +1,5 @@
 from resonitelink.models.messages import Message
-from resonitelink.json import json_model, json_element
+from resonitelink.json import MISSING, json_model, json_element
 
 
 @json_model("importAudioClipFile", Message)
@@ -12,4 +12,4 @@ class ImportAudioClipFile(Message):
     
     """
     # Path of the audio clip file to import.
-    file_path : str = json_element("filePath", str)
+    file_path : str = json_element("filePath", str, default=MISSING)

@@ -1,4 +1,4 @@
-from resonitelink.json import json_model, json_list
+from resonitelink.json import MISSING, json_model, json_list
 from typing import List
 
 from .triangle import Triangle
@@ -12,7 +12,7 @@ class TriangleSubmesh(Submesh):
     
     """
     # All the triangles that form this submesh.
-    triangles : List[Triangle] = json_list("triangles", Triangle)
+    triangles : List[Triangle] = json_list("triangles", Triangle, default=MISSING)
 
 
 @json_model("trianglesFlat", Submesh)
@@ -26,4 +26,4 @@ class TriangleSubmeshFlat(Submesh):
     """
     # Indexes of vertices representing triangles of this mesh.
     # Note that each triangle needs three consecutive indicies in this list.
-    vertex_indices : List[int] = json_list("vertexIndices", int)
+    vertex_indices : List[int] = json_list("vertexIndices", int, default=MISSING)

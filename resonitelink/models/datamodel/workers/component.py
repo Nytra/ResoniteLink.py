@@ -1,4 +1,4 @@
-from resonitelink.json import json_model, json_element, json_dict, MISSING
+from resonitelink.json import MISSING, json_model, json_element, json_dict
 from typing import Dict
 
 from ..worker import Worker

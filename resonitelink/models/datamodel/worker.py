@@ -1,4 +1,4 @@
-from resonitelink.json import abstract_json_model, json_element, MISSING
+from resonitelink.json import MISSING, abstract_json_model, json_element
 from abc import ABC
 
 
