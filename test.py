@@ -1,10 +1,23 @@
-from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String
+from resonitelink.utils.slot_hierarchy import SlotHierarchy
+from resonitelink.models.datamodel import Member, SyncObject, SyncList
+from resonitelink.json import json_model, json_element
+from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ImportAudioClipRawData, Float3, Member, Array_Float, Array_Float3, Field_Float
+from dataclasses import dataclass
+from typing import List
 import asyncio
-
+import logging
+from array import array
 
 # Creates a new client that connects to ResoniteLink via websocket.
-client = ResoniteLinkWebsocketClient()
+client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
 
+
+# @json_model("[FrooxEngine]FrooxEngine.MultiLineMesh+Line", Member)
+# @dataclass(slots=True)
+# class MultiLineMesh_Line(Member):
+#     pass
+
+from math import pi, sin
 
 @client.on_started
 async def on_client_started(client : ResoniteLinkClient):
@@ -14,24 +27,60 @@ async def on_client_started(client : ResoniteLinkClient):
 
     """
     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
-    slot = await client.add_slot(name="Hello World Slot", position=Float3(0, 1.5, 0))
+    slot = await client.add_slot(name="Test Line Mesh Slot", position=Float3(0, 1.5, 0))
+
+    positions : List[Float3] = []
+    scales : List[float] = []
+
+    resolution = 100
+    for i in range(resolution):
+        x = i / resolution
+        y = sin(2 * pi * x)
+
+        positions += [ Float3(x, 0, y) ]
+        scales += [ 0.01 ]
     
-    # Adds a TextRenderer component to the newly created slot.
-    await client.add_component(slot, "[FrooxEngine]FrooxEngine.TextRenderer",
-        # Sets the initial value of the string field 'Text' on the component.
-        Text=Field_String(value="Hello, world!")
+    print(len(positions))
+
+    multi_line_mesh = await client.add_component(
+        slot, 
+        component_type="[FrooxEngine]FrooxEngine.MultiLineMesh",
+        Lines=SyncList(
+            SyncObject(
+                Scale=Field_Float(value=0.2),
+                Positions=Array_Float3(values=positions),
+                Scales=Array_Float(values=scales)
+            )
+        )
     )
     
-    # Stops the client manually. Without this, the client will run forever, which might be desired for some use-cases.
-    await client.stop()
+    line_update_data = SyncObject(
+        Scale=Field_Float(value=0.2),
+        Positions=Array_Float3(values=positions),
+        Scales=Array_Float(values=scales)
+    )
+
+    await client.update_component(multi_line_mesh, Lines=SyncList(line_update_data))
+
+    # root_slot = await client.get_slot("Root", -1, False)
+    # root_hierarchy = SlotHierarchy.from_slot(root_slot)
+    # target_hierarchy = next(root_hierarchy.find(lambda h: h.slot.name.value == 'MultiLineMeshTest'))
+
+    # await client.get_slot(target_hierarchy.slot, -1, True)
 
 
 # Asks for the current port ResoniteLink is running on.
-port = int(input("ResoniteLink Port: "))
-
+# port = int(input("ResoniteLink Port: "))
+port = 8627
 
 # Start the client on the specified port.
 asyncio.run(client.start(port))
+
+
+
+
+
+
 
 
 # from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient
@@ -61,48 +110,6 @@ asyncio.run(client.start(port))
     
 #     return bytes(data)
 
-
-# client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
-
-# @client.on_started
-# async def on_client_started(client : ResoniteLinkClient):
-#     # msg = RequestSessionData()
-#     # await client.send_message(msg)
-
-#     # slot = await client.add_slot()
-#     # await slot.set_name("Renamed!")
-
-#     # logger.info(f"Received proxy: {slot}")
-
-    
-#     slot1 = await client.add_slot(name="Test Slot")
-#     slot2 = await client.add_slot(name="Test Child Slot", parent=slot1)
-#     slot_data = await client.get_slot(slot1)
-
-#     # component = await client.add_component(slot, "[FrooxEngine]FrooxEngine.ValueField<bool>")
-#     # component
-
-#     # logger.info(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
-
-#     # for component_type in [ 
-#     #     "[FrooxEngine]FrooxEngine.ValueField<bool>", 
-#     #     # "[FrooxEngine]FrooxEngine.ValueField<int>", 
-#     #     # "[FrooxEngine]FrooxEngine.ValueField<string>" 
-#     # ]:
-#     #     msg = AddComponent(container_slot_id=new_slot_id, data=Component(component_type=component_type))
-#     #     await client.send_message(msg)
-    
-#     # msg = AddSlot(data=Slot(parent=Reference(target_type="[FrooxEngine]FrooxEngine.Slot", target_id=new_slot_id), name=Field_String(value="Child")))
-#     # await client.send_message(msg)
-
-#     # msg = GetSlot(slot_id=new_slot_id, include_component_data=True)
-#     # await client.send_message(msg)
-
-#     # msg = ImportTexture2DRawData(width=16, height=16)
-#     # msg.raw_binary_payload = test_generate_image_bytes()
-#     # await client.send_message(msg)
-
-# asyncio.run(client.start(port))
 
 
 
@@ -154,75 +161,3 @@ asyncio.run(client.start(port))
 
 
 
-# from resonitelink.utils.slot_hierarchy import SlotHierarchy
-# from resonitelink.models.datamodel import Member, SyncObject, SyncList
-# from resonitelink.json import json_model, json_element
-# from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ImportAudioClipRawData, Float3, Member, Array_Float, Array_Float3, Field_Float
-# from dataclasses import dataclass
-# import asyncio
-# import logging
-# from array import array
-
-# # Creates a new client that connects to ResoniteLink via websocket.
-# client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
-
-
-# # @json_model("[FrooxEngine]FrooxEngine.MultiLineMesh+Line", Member)
-# # @dataclass(slots=True)
-# # class MultiLineMesh_Line(Member):
-# #     pass
-
-# from math import pi, sin
-
-# @client.on_started
-# async def on_client_started(client : ResoniteLinkClient):
-#     """
-#     This async function is called by the client at the end of its startup sequence.
-#     You can use it to execute code once the client is up and running!
-
-#     """
-#     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
-#     slot = await client.add_slot(name="Test Line Mesh Slot", position=Float3(0, 1.5, 0))
-
-#     positions : List[Float3] = []
-#     scales : List[float] = []
-
-#     resolution = 100
-#     for i in range(resolution):
-#         x = i / resolution
-#         y = sin(2 * pi * x)
-
-#         positions += [ Float3(x, 0, y) ]
-#         scales += [ 0.01 ]
-    
-#     print(len(positions))
-
-#     multi_line_mesh = await client.add_component(slot, component_type="[FrooxEngine]FrooxEngine.MultiLineMesh", members={ 
-#         'Lines': SyncList(elements=[ SyncObject(members={ 
-#             'Scale': Field_Float(value=0.2),
-#             'Positions': Array_Float3(values=positions), 
-#             'Scales': Array_Float(values=scales) 
-#         }) ])
-#     })
-    
-#     line_update_data = SyncObject(members={ 
-#         'Scale': Field_Float(value=0.2),
-#         'Positions': Array_Float3(values=positions), 
-#         'Scales': Array_Float(values=scales) 
-#     })
-
-#     await client.update_component(multi_line_mesh, members={ 'Lines': SyncList(elements=[ line_update_data ]) })
-
-#     # root_slot = await client.get_slot("Root", -1, False)
-#     # root_hierarchy = SlotHierarchy.from_slot(root_slot)
-#     # target_hierarchy = next(root_hierarchy.find(lambda h: h.slot.name.value == 'MultiLineMeshTest'))
-
-#     # await client.get_slot(target_hierarchy.slot, -1, True)
-
-
-# # Asks for the current port ResoniteLink is running on.
-# # port = int(input("ResoniteLink Port: "))
-# port = 48395
-
-# # Start the client on the specified port.
-# asyncio.run(client.start(port))
