@@ -1,6 +1,6 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from resonitelink.models.responses import Response, SessionData, SlotData, ComponentData
+from resonitelink.models.responses import Response, SessionData, SlotData, ComponentData, AssetData
 from resonitelink.models.datamodel import \
     Member, Reference, Slot, Component, \
     Float3, FloatQ, \
@@ -8,7 +8,8 @@ from resonitelink.models.datamodel import \
 from resonitelink.models.messages import \
     Message, BinaryPayloadMessage, RequestSessionData, \
     GetSlot, AddSlot, UpdateSlot, RemoveSlot, \
-    GetComponent, AddComponent, UpdateComponent, RemoveComponent
+    GetComponent, AddComponent, UpdateComponent, RemoveComponent, \
+    ImportAudioClipFile, ImportAudioClipRawData
 from resonitelink.exceptions import ResoniteLinkException
 from resonitelink.proxies import SlotProxy, ComponentProxy
 from websockets.exceptions import ConnectionClosed as WebSocketConnectionClosed
@@ -395,7 +396,7 @@ class ResoniteLinkClient(ABC):
     async def update_component(
         self, 
         component : Union[str, Component, ComponentProxy, Reference],
-        members : Dict[str, Member]
+        **members : Member
     ):
         """
         Updates an existng component.
@@ -432,6 +433,68 @@ class ResoniteLinkClient(ABC):
             component_id=component_id
         )
         await self.send_message(msg)
+    
+    async def import_audio_clip_file(self, file_path : str) -> str:
+        """
+        Imports an audio clip from a file.
+
+        Parameters
+        ----------
+        file_path : str
+            The path to the audio file to import.
+        
+        Returns
+        -------
+        Asset URL of the imported audio clip.
+
+        """
+        msg = ImportAudioClipFile(file_path=file_path)
+        response = await self.send_message(msg)
+        if not isinstance(response, AssetData):
+            raise RuntimeError(f"Unexpected response type for message `ImportAudioClipFile`: `{type(response)}` (Expected: `AssetData`)")
+        
+        return response.asset_url
+
+    async def import_audio_clip_raw_data(
+        self,
+        sample_count : int,
+        sample_rate : int,
+        channel_count : int,
+        samples : List[float]
+    ):
+        """
+        Imports an audio clip from raw data.
+
+        Parameters
+        ----------
+        sample_count : int
+            Number of audio samples in this audio clip. This does NOT account for channel count and will be the same
+            regardless of mono/stereo/5.1 etc.
+        sample_rate : int
+            Sample rate of the audio data.
+        channel_count : int
+            Number of audio channels. 1 mono, 2 stereo, 6 is 5.1 surround.
+            It's your responsibility to make sure that Resonite supports given audio channel count.
+            The actual audio sample data is interleaved in the buffer.
+        samples : List[float]
+            Raw samples of the audio data.
+        
+        Returns
+        -------
+        Asset URL of the imported audio clip.
+
+        """
+        msg = ImportAudioClipRawData(
+            sample_count=sample_count,
+            sample_rate=sample_rate,
+            channel_count=channel_count,
+            init_samples=samples
+        )
+        response = await self.send_message(msg)
+        if not isinstance(response, AssetData):
+            raise RuntimeError(f"Unexpected response type for message `ImportAudioClipRawData`: `{type(response)}` (Expected: `AssetData`)")
+        
+        return response.asset_url
     
     async def send_message(self, message : Message) -> Response:
         """

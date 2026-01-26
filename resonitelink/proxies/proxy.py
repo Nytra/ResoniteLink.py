@@ -3,8 +3,9 @@ if TYPE_CHECKING:
     # Only for type hints, prevents circular import
     from resonitelink import ResoniteLinkClient
 
-from resonitelink.models.datamodel import Member, Worker
+from resonitelink.models.datamodel import Member, Worker, Reference
 from typing import TypeVar, Generic, Union, Optional
+from typing import Type
 from abc import ABC, abstractmethod
 
 
@@ -71,3 +72,11 @@ class Proxy(Generic[TData], ABC):
     @abstractmethod
     async def fetch_data(self) -> TData:
         raise NotImplementedError()
+    
+    @classmethod
+    def from_reference[T : Proxy](cls : Type[T], client : ResoniteLinkClient, reference : Reference) -> T:
+        """
+        Creates a proxy-element for the **target** of a reference.
+
+        """
+        return cls(client, reference.target_id)
