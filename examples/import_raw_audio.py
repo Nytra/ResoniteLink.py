@@ -5,7 +5,7 @@ import logging
 
 
 # Creates a new client that connects to ResoniteLink via websocket.
-client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
+client = ResoniteLinkWebsocketClient()
 
 
 @client.on_started
