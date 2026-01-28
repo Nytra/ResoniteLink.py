@@ -678,7 +678,7 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
         """
         await self._on_started.wait() # Wait for client to fully start before sending messages
 
-        if not text and isinstance(message, bytes):
+        if not text and (isinstance(message, bytes) or isinstance(message, bytearray)):
             self._logger.debug(f"Sending non-text message with {len(message)} bytes.")
         else:
             self._logger.debug(f"Sending text message: {message}")

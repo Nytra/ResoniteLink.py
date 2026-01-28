@@ -6,7 +6,7 @@ from .uv_coordinate import UV_Coordinate
 from .bone_weight import BoneWeight
 
 
-@json_model("vertex")
+@json_model()
 class Vertex():
     """
     Defines a single vertex of a mesh. Position is mandatory field, but all other properties are optional.

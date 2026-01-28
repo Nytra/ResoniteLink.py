@@ -62,7 +62,7 @@ class ImportAudioClipRawData(BinaryPayloadMessage):
     @property
     def samples(self) -> List[float]:
         """
-        Retrieves the `raw_binary_data` as list of floats.
+        Retrieves the `raw_binary_payload` as list of floats.
 
         """
         arr = array("f")
@@ -72,7 +72,8 @@ class ImportAudioClipRawData(BinaryPayloadMessage):
     @samples.setter
     def samples(self, samples : List[float]):
         """
-        Sets the `raw_binary_data` from list of floats.
+        Sets the `raw_binary_payload` from list of floats.
+
         """
         self.raw_binary_payload = array("f", samples).tobytes()
     

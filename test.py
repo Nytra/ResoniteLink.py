@@ -1,23 +1,16 @@
-from resonitelink.utils.slot_hierarchy import SlotHierarchy
-from resonitelink.models.datamodel import Member, SyncObject, SyncList
-from resonitelink.json import json_model, json_element
-from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ImportAudioClipRawData, Float3, Member, Array_Float, Array_Float3, Field_Float
-from dataclasses import dataclass
-from typing import List
+from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String, UpdateComponent, ImportMeshJSON, Vertex, TriangleSubmeshFlat, AssetData, Field_Uri, Field_Float, Reference, SyncList, Triangle, TriangleSubmesh, \
+    ImportMeshRawData, TriangleSubmeshRawData, Color
+# from resonitelink.models.messages.assets.meshes import *
+# from resonitelink.models.datamodel.assets.mesh import * 
+from typing import Tuple, List, Generator, Any
+from math import sin, cos
 import asyncio
 import logging
-from array import array
+
 
 # Creates a new client that connects to ResoniteLink via websocket.
 client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
 
-
-# @json_model("[FrooxEngine]FrooxEngine.MultiLineMesh+Line", Member)
-# @dataclass(slots=True)
-# class MultiLineMesh_Line(Member):
-#     pass
-
-from math import pi, sin
 
 @client.on_started
 async def on_client_started(client : ResoniteLinkClient):
@@ -26,55 +19,175 @@ async def on_client_started(client : ResoniteLinkClient):
     You can use it to execute code once the client is up and running!
 
     """
+    def generate_wave_grid_points(grid_size : Tuple[int, int], wave_scale : Tuple[float, float] = (1.0, 1.0)) -> List[Float3]:
+        def _generate() -> Generator[Float3, Any, Any]:
+            for x in range(grid_size[0]):
+                for z in range(grid_size[1]):
+                    y = sin(x * wave_scale[0]) * cos(z * wave_scale[1])
+                    yield Float3(x, y, z)
+        
+        return list(_generate())
+
+    def generate_grid_colors(grid_size : Tuple[int, int]) -> List[Color]:
+        def _generate() -> Generator[Color, Any, Any]:
+            for x in  range(grid_size[0]):
+                for y in range(grid_size[1]):
+                    r = x / (grid_size[0] - 1)
+                    g = y / (grid_size[1] - 1)
+                    b = 0.0
+                    a = 1.0
+                    yield Color(r, g, b, a)
+        
+        return list(_generate())
+
+    def triangulate_grid(grid_size : Tuple[int, int], points : List[Float3]) -> List[int]:
+        if len(points) != grid_size[0] * grid_size[1]:
+            raise ValueError("Invalid point count for grid size!")
+        
+        def _generate() -> Generator[int, Any, Any]:
+            for x in range(grid_size[0] - 1):
+                for y in range(grid_size[1] - 1):
+                    # for each quad
+                    idx_0 = (x)     + (y)     * grid_size[0]
+                    idx_1 = (x + 1) + (y)     * grid_size[0]
+                    idx_2 = (x)     + (y + 1) * grid_size[0]
+                    idx_3 = (x + 1) + (y + 1) * grid_size[0]
+
+                    yield idx_0
+                    yield idx_1
+                    yield idx_2
+
+                    yield idx_2
+                    yield idx_1
+                    yield idx_3
+
+        return list(_generate())
+
     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
-    slot = await client.add_slot(name="Test Line Mesh Slot", position=Float3(0, 1.5, 0))
-
-    positions : List[Float3] = []
-    scales : List[float] = []
-
-    resolution = 100
-    for i in range(resolution):
-        x = i / resolution
-        y = sin(2 * pi * x)
-
-        positions += [ Float3(x, 0, y) ]
-        scales += [ 0.01 ]
+    slot = await client.add_slot(name="Mesh Slot", position=Float3(0, 1.5, 0))
     
-    print(len(positions))
+    grid_size = (64, 64)
+    wave_scale = (0.33, 0.33)
+    points = generate_wave_grid_points(grid_size, wave_scale)
+    colors = generate_grid_colors(grid_size)
+    triangle_indices = triangulate_grid(grid_size, points)
+    triangle_count = int(len(triangle_indices) / 3)
 
-    multi_line_mesh = await client.add_component(
+    msg = ImportMeshRawData(
+        init_positions=points,
+        init_colors=colors,
+        submeshes=[ TriangleSubmeshRawData(triangle_count, triangle_indices) ]
+    )
+
+    response : AssetData = await client.send_message(msg) # type: ignore
+
+    static_mesh = await client.add_component(slot, "[FrooxEngine]FrooxEngine.StaticMesh", URL=Field_Uri(response.asset_url))
+    material = await client.add_component(slot, "[FrooxEngine]FrooxEngine.PBS_VertexColorMetallic", Smoothness=Field_Float(0.0))
+
+    mesh_renderer = await client.add_component(
         slot, 
-        component_type="[FrooxEngine]FrooxEngine.MultiLineMesh",
-        Lines=SyncList(
-            SyncObject(
-                Scale=Field_Float(value=0.2),
-                Positions=Array_Float3(values=positions),
-                Scales=Array_Float(values=scales)
-            )
-        )
+        "[FrooxEngine]FrooxEngine.MeshRenderer", 
+        Mesh=Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Mesh>", target_id=static_mesh.id),
+        Materials=SyncList(Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>", target_id=material.id))
     )
-    
-    line_update_data = SyncObject(
-        Scale=Field_Float(value=0.2),
-        Positions=Array_Float3(values=positions),
-        Scales=Array_Float(values=scales)
-    )
+    await mesh_renderer.update_members(Materials=SyncList(Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>", target_id=material.id)))
 
-    await client.update_component(multi_line_mesh, Lines=SyncList(line_update_data))
-
-    # root_slot = await client.get_slot("Root", -1, False)
-    # root_hierarchy = SlotHierarchy.from_slot(root_slot)
-    # target_hierarchy = next(root_hierarchy.find(lambda h: h.slot.name.value == 'MultiLineMeshTest'))
-
-    # await client.get_slot(target_hierarchy.slot, -1, True)
+    await client.add_component(slot, "[FrooxEngine]FrooxEngine.MeshCollider")
+    await client.add_component(slot, "[FrooxEngine]FrooxEngine.Grabbable")
 
 
 # Asks for the current port ResoniteLink is running on.
 # port = int(input("ResoniteLink Port: "))
-port = 8627
+port = 4347
+
 
 # Start the client on the specified port.
 asyncio.run(client.start(port))
+
+
+
+
+
+
+
+
+# from resonitelink.utils.slot_hierarchy import SlotHierarchy
+# from resonitelink.models.datamodel import Member, SyncObject, SyncList
+# from resonitelink.json import json_model, json_element, format_object_structure
+# from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, ImportAudioClipRawData, Float3, Member, Array_Float, Array_Float3, Field_Float
+# from dataclasses import dataclass
+# from typing import List
+# from math import pi, sin
+# import asyncio
+# import logging
+# from array import array
+
+
+# # Creates a new client that connects to ResoniteLink via websocket.
+# client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
+
+
+# @client.on_started
+# async def on_client_started(client : ResoniteLinkClient):
+#     """
+#     This async function is called by the client at the end of its startup sequence.
+#     You can use it to execute code once the client is up and running!
+
+#     """
+#     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
+#     # slot = await client.add_slot(name="Test Ref Slot", position=Float3(0, 1.5, 0))
+
+#     # ref_slot_id = 'RLPY_47AB_01_0'
+#     # ref_slot = await client.get_slot(ref_slot_id, -1, True)
+#     # format_object_structure(ref_slot)
+
+#     slot = await client.add_slot(name="", position=Float3(0, 1.5, 0))
+
+#     positions : List[Float3] = []
+#     scales : List[float] = []
+
+#     resolution = 100
+#     for i in range(resolution):
+#         x = i / resolution
+#         y = sin(2 * pi * x)
+
+#         positions += [ Float3(x, 0, y) ]
+#         scales += [ 0.01 ]
+
+#     multi_line_mesh = await client.add_component(
+#         slot, 
+#         component_type="[FrooxEngine]FrooxEngine.MultiLineMesh",
+#         Lines=SyncList(
+#             SyncObject(
+#                 Scale=Field_Float(value=0.2),
+#                 Positions=Array_Float3(values=positions),
+#                 Scales=Array_Float(values=scales)
+#             )
+#         )
+#     )
+    
+#     line_update_data = SyncObject(
+#         Scale=Field_Float(value=0.2),
+#         Positions=Array_Float3(values=positions),
+#         Scales=Array_Float(values=scales)
+#     )
+
+#     await client.update_component(multi_line_mesh, Lines=SyncList(line_update_data))
+
+#     root_slot = await client.get_slot("Root", -1, False)
+#     root_hierarchy = SlotHierarchy.from_slot(root_slot)
+#     target_hierarchy = next(root_hierarchy.find(lambda h: h.slot.name.value == 'MultiLineMeshTest'))
+
+#     await client.get_slot(target_hierarchy.slot, -1, True)
+
+
+# # Asks for the current port ResoniteLink is running on.
+# # port = int(input("ResoniteLink Port: "))
+# port = 41634
+
+
+# # Start the client on the specified port.
+# asyncio.run(client.start(port))
 
 
 
