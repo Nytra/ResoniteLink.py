@@ -1,55 +1,11 @@
-from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String, UpdateComponent, ImportMeshJSON, Vertex, TriangleSubmeshFlat, AssetData, Field_Uri, Field_Float, Reference, SyncList, Triangle, TriangleSubmesh, \
-    ImportMeshRawData, TriangleSubmeshRawData, Color
-# from resonitelink.models.messages.assets.meshes import *
-# from resonitelink.models.datamodel.assets.mesh import * 
-from typing import Tuple, List, Generator, Any
-from math import sin, cos, sqrt
+from resonitelink.models.datamodel import Reference, Float3, Field_Uri, Field_Enum, Field_Bool, SyncList
+from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient
+from typing import List, Generator
 import asyncio
-import logging
 
 
 # Creates a new client that connects to ResoniteLink via websocket.
-client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
-
-
-def sub_vector3(a : Float3, b : Float3):
-    return Float3(
-        a.x - b.x, 
-        a.y - b.y, 
-        a.z - b.z
-    )
-
-def mul_vector3(a : Float3, b : Float3):
-    return Float3(
-        a.x * b.x,
-        a.y * b.y,
-        a.z * b.z
-    )
-
-def cross_vector3(a : Float3, b : Float3):
-    return Float3(
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    )
-
-def magnitude_vector3(vector : Float3):
-    return sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 3)
-
-def normalize_vector3(vector : Float3):
-    l = magnitude_vector3(vector)
-    return Float3(
-        vector.x / l,
-        vector.y / l, 
-        vector.z / l
-    )
-
-def avg_vector3(*vectors : Float3):
-    return Float3(
-        sum( [v.x for v in vectors] ) / float(len(vectors)),
-        sum( [v.y for v in vectors] ) / float(len(vectors)),
-        sum( [v.z for v in vectors] ) / float(len(vectors))
-    )
+client = ResoniteLinkWebsocketClient()
 
 
 @client.on_started
@@ -59,141 +15,290 @@ async def on_client_started(client : ResoniteLinkClient):
     You can use it to execute code once the client is up and running!
 
     """
-    def generate_wave_grid_points(grid_size : Tuple[int, int], wave_scale : Tuple[float, float] = (1.0, 1.0), wave_offset : Tuple[float, float] = (0.0, 0.0)) -> List[Float3]:
-        def _generate() -> Generator[Float3, Any, Any]:
-            for x in range(grid_size[0]):
-                for z in range(grid_size[1]):
-                    y = sin(x * wave_scale[0] + wave_offset[0]) * cos(z * wave_scale[1] + wave_offset[1])
-                    yield Float3(x, y, z)
-        
-        return list(_generate())
+    def calc_uv_colors(width : int, height : int) -> List[int]:
+        """
+        Generates color data for a simple UV texture (X and Y coordinates mapped to R and G).
 
-    def generate_grid_colors(grid_size : Tuple[int, int]) -> List[Color]:
-        def _generate() -> Generator[Color, Any, Any]:
-            for x in  range(grid_size[0]):
-                for y in range(grid_size[1]):
-                    r = x / (grid_size[0] - 1)
-                    g = y / (grid_size[1] - 1)
-                    b = 0.0
-                    a = 1.0
-                    yield Color(r, g, b, a)
-        
-        return list(_generate())
+        Parameters
+        ----------
+        width : int
+            Width of the texture.
+        height : int
+            Height of the texture.
 
-    def triangulate_grid(grid_size : Tuple[int, int], points : List[Float3]) -> List[int]:
-        if len(points) != grid_size[0] * grid_size[1]:
-            raise ValueError("Invalid point count for grid size!")
-        
-        def _generate() -> Generator[int, Any, Any]:
-            for x in range(grid_size[0] - 1):
-                for y in range(grid_size[1] - 1):
-                    # for each quad
-                    idx_0 = (x)     + (y)     * grid_size[0]
-                    idx_1 = (x + 1) + (y)     * grid_size[0]
-                    idx_2 = (x)     + (y + 1) * grid_size[0]
-                    idx_3 = (x + 1) + (y + 1) * grid_size[0]
+        Returns
+        -------
+        List of RGBA integer values between 0 and 255 (`byte`).
 
-                    yield idx_0
-                    yield idx_1
-                    yield idx_2
-
-                    yield idx_2
-                    yield idx_1
-                    yield idx_3
+        """
+        def _generate() -> Generator[int]:
+            for x in range(width):
+                for y in range(height):
+                    yield int(x / width * 255)
+                    yield int(y / height * 255)
+                    yield 0
+                    yield 255
 
         return list(_generate())
     
-    def compute_normals(points : List[Float3], triangle_indices : List[int]) -> List[Float3]:
-        if len(triangle_indices) % 3 != 0:
-            raise ValueError("Length of triangles list must be a multiple of 3!")
-        
-        # Lists of normals of connected faces for each point
-        connecting_face_normals : List[List[Float3]] = [ list() for point in points ]
-
-        for i in range(0, len(triangle_indices), 3):
-            idx0 = triangle_indices[i]
-            idx1 = triangle_indices[i + 1]
-            idx2 = triangle_indices[i + 2]
-            
-            p0 = points[idx0]
-            p1 = points[idx1]
-            p2 = points[idx2]
-
-            a = sub_vector3(p1, p0)
-            b = sub_vector3(p2, p0)
-
-            n = cross_vector3(a, b)
-
-            connecting_face_normals[idx0].append(n)
-            connecting_face_normals[idx1].append(n)
-            connecting_face_normals[idx2].append(n)
-        
-        return [ normalize_vector3(avg_vector3(*normals)) for normals in connecting_face_normals ]
+    # Imports the color data as a texture.
+    texture_uri = await client.import_texture_2d_raw_data(
+        width=1024,
+        height=1024,
+        data=calc_uv_colors(1024, 1024)
+    )
 
     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
-    slot = await client.add_slot(name="Mesh Slot", position=Float3(0, 1.5, 0))
-    
-    grid_size = (64, 64)
-    wave_scale = (0.33, 0.33)
-    wave_offset = (0.0, 0.0)
-    points = generate_wave_grid_points(grid_size, wave_scale, wave_offset)
-    colors = generate_grid_colors(grid_size)
-    triangle_indices = triangulate_grid(grid_size, points)
-    normals = compute_normals(points, triangle_indices)
-    triangle_count = int(len(triangle_indices) / 3)
+    slot = await client.add_slot(name="Imported Texture", position=Float3(0, 1.5, 0))
 
-    msg = ImportMeshRawData(
-        init_positions=points,
-        init_normals=normals,
-        init_colors=colors,
-        submeshes=[ TriangleSubmeshRawData(triangle_count, triangle_indices) ]
+    # Adds a Texture2DComponent, assigns a reference to the imported texture, and sets up some configuration.
+    static_texture_2d = await slot.add_component(
+        "[FrooxEngine]FrooxEngine.StaticTexture2D", 
+        URL=Field_Uri(texture_uri),
+        WrapModeU=Field_Enum("Clamp", "[FrooxEngine]FrooxEngine.TextureWrapMode"),
+        WrapModeV=Field_Enum("Clamp", "[FrooxEngine]FrooxEngine.TextureWrapMode"),
+        CrunchCompressed=Field_Bool(False),
+        MipMaps=Field_Bool(False)
     )
-    response : AssetData = await client.send_message(msg) # type: ignore
-
-    static_mesh = await client.add_component(slot, "[FrooxEngine]FrooxEngine.StaticMesh", URL=Field_Uri(response.asset_url))
-    material = await client.add_component(slot, "[FrooxEngine]FrooxEngine.PBS_VertexColorMetallic", Smoothness=Field_Float(0.0))
-
-    mesh_renderer = await client.add_component(
-        slot, 
+    
+    # Adds an UnlitMaterial and assigns the texture.
+    material = await slot.add_component(
+        "[FrooxEngine]FrooxEngine.UnlitMaterial",
+        Texture=Reference(static_texture_2d.id, "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>"),
+        Sidedness=Field_Enum("Double", "[FrooxEngine]FrooxEngine.Sideness")
+    )
+    
+    # Adds a quad mesh to render the texture on.
+    quad_mesh = await slot.add_component("[FrooxEngine]FrooxEngine.QuadMesh")
+    
+    # Creates a mesh renderer for the mesh and material.
+    mesh_renderer = await slot.add_component(
         "[FrooxEngine]FrooxEngine.MeshRenderer", 
-        Mesh=Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Mesh>", target_id=static_mesh.id),
+        Mesh=Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Mesh>", target_id=quad_mesh.id),
         Materials=SyncList(Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>", target_id=material.id))
     )
+
+    # Little hack to fix issue with Materials not being set currently, should be obsolete once SyncList bugs are fixed in ResoniteLink.
     await mesh_renderer.update_members(Materials=SyncList(Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>", target_id=material.id)))
 
-    await client.add_component(slot, "[FrooxEngine]FrooxEngine.MeshCollider")
-    await client.add_component(slot, "[FrooxEngine]FrooxEngine.Grabbable")
-
-    # while True:
-    #     await asyncio.sleep(0.1)
-    #     wave_offset = (wave_offset[0] + 0.1, wave_offset[1] - 0.1)
-
-    #     points = generate_wave_grid_points(grid_size, wave_scale, wave_offset)
-    #     colors = generate_grid_colors(grid_size)
-    #     triangle_indices = triangulate_grid(grid_size, points)
-    #     normals = compute_normals(points, triangle_indices)
-
-    #     msg = ImportMeshRawData(
-    #         init_positions=points,
-    #         init_normals=normals,
-    #         init_colors=colors,
-    #         submeshes=[ TriangleSubmeshRawData(triangle_count, triangle_indices) ]
-    #     )
-    #     response : AssetData = await client.send_message(msg) # type: ignore
-
-    #     await client.update_component(
-    #         static_mesh, 
-    #         URL=Field_Uri(response.asset_url)
-    #     )
-
+    # Adds MeshCollider component.
+    await slot.add_component("[FrooxEngine]FrooxEngine.MeshCollider")
+    
+    # Adds Grabbable component and makes it scalable.
+    await slot.add_component(
+        "[FrooxEngine]FrooxEngine.Grabbable", 
+        Scalable=Field_Bool(True)
+    )
 
 # Asks for the current port ResoniteLink is running on.
 # port = int(input("ResoniteLink Port: "))
 port = 5258
 
-
 # Start the client on the specified port.
 asyncio.run(client.start(port))
+
+
+
+
+
+
+
+# from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String, UpdateComponent, ImportMeshJSON, Vertex, TriangleSubmeshFlat, AssetData, Field_Uri, Field_Float, Reference, SyncList, Triangle, TriangleSubmesh, \
+#     ImportMeshRawData, TriangleSubmeshRawData, Color
+# # from resonitelink.models.messages.assets.meshes import *
+# # from resonitelink.models.datamodel.assets.mesh import * 
+# from typing import Tuple, List, Generator, Any
+# from math import sin, cos, sqrt
+# import asyncio
+# import logging
+
+
+# # Creates a new client that connects to ResoniteLink via websocket.
+# client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
+
+
+# def sub_vector3(a : Float3, b : Float3):
+#     return Float3(
+#         a.x - b.x, 
+#         a.y - b.y, 
+#         a.z - b.z
+#     )
+
+# def mul_vector3(a : Float3, b : Float3):
+#     return Float3(
+#         a.x * b.x,
+#         a.y * b.y,
+#         a.z * b.z
+#     )
+
+# def cross_vector3(a : Float3, b : Float3):
+#     return Float3(
+#         a.y * b.z - a.z * b.y,
+#         a.z * b.x - a.x * b.z,
+#         a.x * b.y - a.y * b.x
+#     )
+
+# def magnitude_vector3(vector : Float3):
+#     return sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 3)
+
+# def normalize_vector3(vector : Float3):
+#     l = magnitude_vector3(vector)
+#     return Float3(
+#         vector.x / l,
+#         vector.y / l, 
+#         vector.z / l
+#     )
+
+# def avg_vector3(*vectors : Float3):
+#     return Float3(
+#         sum( [v.x for v in vectors] ) / float(len(vectors)),
+#         sum( [v.y for v in vectors] ) / float(len(vectors)),
+#         sum( [v.z for v in vectors] ) / float(len(vectors))
+#     )
+
+
+# @client.on_started
+# async def on_client_started(client : ResoniteLinkClient):
+#     """
+#     This async function is called by the client at the end of its startup sequence.
+#     You can use it to execute code once the client is up and running!
+
+#     """
+#     def generate_wave_grid_points(grid_size : Tuple[int, int], wave_scale : Tuple[float, float] = (1.0, 1.0), wave_offset : Tuple[float, float] = (0.0, 0.0)) -> List[Float3]:
+#         def _generate() -> Generator[Float3, Any, Any]:
+#             for x in range(grid_size[0]):
+#                 for z in range(grid_size[1]):
+#                     y = sin(x * wave_scale[0] + wave_offset[0]) * cos(z * wave_scale[1] + wave_offset[1])
+#                     yield Float3(x, y, z)
+        
+#         return list(_generate())
+
+#     def generate_grid_colors(grid_size : Tuple[int, int]) -> List[Color]:
+#         def _generate() -> Generator[Color, Any, Any]:
+#             for x in  range(grid_size[0]):
+#                 for y in range(grid_size[1]):
+#                     r = x / (grid_size[0] - 1)
+#                     g = y / (grid_size[1] - 1)
+#                     b = 0.0
+#                     a = 1.0
+#                     yield Color(r, g, b, a)
+        
+#         return list(_generate())
+
+#     def triangulate_grid(grid_size : Tuple[int, int], points : List[Float3]) -> List[int]:
+#         if len(points) != grid_size[0] * grid_size[1]:
+#             raise ValueError("Invalid point count for grid size!")
+        
+#         def _generate() -> Generator[int, Any, Any]:
+#             for x in range(grid_size[0] - 1):
+#                 for y in range(grid_size[1] - 1):
+#                     # for each quad
+#                     idx_0 = (x)     + (y)     * grid_size[0]
+#                     idx_1 = (x + 1) + (y)     * grid_size[0]
+#                     idx_2 = (x)     + (y + 1) * grid_size[0]
+#                     idx_3 = (x + 1) + (y + 1) * grid_size[0]
+
+#                     yield idx_0
+#                     yield idx_1
+#                     yield idx_2
+
+#                     yield idx_2
+#                     yield idx_1
+#                     yield idx_3
+
+#         return list(_generate())
+    
+#     def compute_normals(points : List[Float3], triangle_indices : List[int]) -> List[Float3]:
+#         if len(triangle_indices) % 3 != 0:
+#             raise ValueError("Length of triangles list must be a multiple of 3!")
+        
+#         # Lists of normals of connected faces for each point
+#         connecting_face_normals : List[List[Float3]] = [ list() for point in points ]
+
+#         for i in range(0, len(triangle_indices), 3):
+#             idx0 = triangle_indices[i]
+#             idx1 = triangle_indices[i + 1]
+#             idx2 = triangle_indices[i + 2]
+            
+#             p0 = points[idx0]
+#             p1 = points[idx1]
+#             p2 = points[idx2]
+
+#             a = sub_vector3(p1, p0)
+#             b = sub_vector3(p2, p0)
+
+#             n = cross_vector3(a, b)
+
+#             connecting_face_normals[idx0].append(n)
+#             connecting_face_normals[idx1].append(n)
+#             connecting_face_normals[idx2].append(n)
+        
+#         return [ normalize_vector3(avg_vector3(*normals)) for normals in connecting_face_normals ]
+
+#     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
+#     slot = await client.add_slot(name="Mesh Slot", position=Float3(0, 1.5, 0))
+    
+#     grid_size = (64, 64)
+#     wave_scale = (0.33, 0.33)
+#     wave_offset = (0.0, 0.0)
+#     points = generate_wave_grid_points(grid_size, wave_scale, wave_offset)
+#     colors = generate_grid_colors(grid_size)
+#     triangle_indices = triangulate_grid(grid_size, points)
+#     normals = compute_normals(points, triangle_indices)
+#     triangle_count = int(len(triangle_indices) / 3)
+
+#     msg = ImportMeshRawData(
+#         init_positions=points,
+#         init_normals=normals,
+#         init_colors=colors,
+#         submeshes=[ TriangleSubmeshRawData(triangle_count, triangle_indices) ]
+#     )
+#     response : AssetData = await client.send_message(msg) # type: ignore
+
+#     static_mesh = await client.add_component(slot, "[FrooxEngine]FrooxEngine.StaticMesh", URL=Field_Uri(response.asset_url))
+#     material = await client.add_component(slot, "[FrooxEngine]FrooxEngine.PBS_VertexColorMetallic", Smoothness=Field_Float(0.0))
+
+#     mesh_renderer = await client.add_component(
+#         slot, 
+#         "[FrooxEngine]FrooxEngine.MeshRenderer", 
+#         Mesh=Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Mesh>", target_id=static_mesh.id),
+#         Materials=SyncList(Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>", target_id=material.id))
+#     )
+#     await mesh_renderer.update_members(Materials=SyncList(Reference(target_type="[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>", target_id=material.id)))
+
+#     await client.add_component(slot, "[FrooxEngine]FrooxEngine.MeshCollider")
+#     await client.add_component(slot, "[FrooxEngine]FrooxEngine.Grabbable")
+
+#     # while True:
+#     #     await asyncio.sleep(0.1)
+#     #     wave_offset = (wave_offset[0] + 0.1, wave_offset[1] - 0.1)
+
+#     #     points = generate_wave_grid_points(grid_size, wave_scale, wave_offset)
+#     #     colors = generate_grid_colors(grid_size)
+#     #     triangle_indices = triangulate_grid(grid_size, points)
+#     #     normals = compute_normals(points, triangle_indices)
+
+#     #     msg = ImportMeshRawData(
+#     #         init_positions=points,
+#     #         init_normals=normals,
+#     #         init_colors=colors,
+#     #         submeshes=[ TriangleSubmeshRawData(triangle_count, triangle_indices) ]
+#     #     )
+#     #     response : AssetData = await client.send_message(msg) # type: ignore
+
+#     #     await client.update_component(
+#     #         static_mesh, 
+#     #         URL=Field_Uri(response.asset_url)
+#     #     )
+
+
+# # Asks for the current port ResoniteLink is running on.
+# # port = int(input("ResoniteLink Port: "))
+# port = 5258
+
+
+# # Start the client on the specified port.
+# asyncio.run(client.start(port))
 
 
 

@@ -9,7 +9,8 @@ from resonitelink.models.messages import \
     Message, BinaryPayloadMessage, RequestSessionData, \
     GetSlot, AddSlot, UpdateSlot, RemoveSlot, \
     GetComponent, AddComponent, UpdateComponent, RemoveComponent, \
-    ImportAudioClipFile, ImportAudioClipRawData
+    ImportAudioClipFile, ImportAudioClipRawData, \
+    ImportTexture2DFile, ImportTexture2DRawData, ImportTexture2DRawDataHDR
 from resonitelink.exceptions import ResoniteLinkException
 from resonitelink.proxies import SlotProxy, ComponentProxy
 from websockets.exceptions import ConnectionClosed as WebSocketConnectionClosed
@@ -493,6 +494,102 @@ class ResoniteLinkClient(ABC):
         response = await self.send_message(msg)
         if not isinstance(response, AssetData):
             raise RuntimeError(f"Unexpected response type for message `ImportAudioClipRawData`: `{type(response)}` (Expected: `AssetData`)")
+        
+        return response.asset_url
+    
+    async def import_texture_2d_file(self, file_path : str) -> str:
+        """
+        Imports a 2D texture from a file.
+
+        Parameters
+        ----------
+        file_path : str
+            The path to the texture file to import.
+        
+        Returns
+        -------
+        Asset URL of the imported texture.
+
+        """
+        msg = ImportTexture2DFile(file_path=file_path)
+        response = await self.send_message(msg)
+        if not isinstance(response, AssetData):
+            raise RuntimeError(f"Unexpected response type for message `ImportTexture2DFile`: `{type(response)}` (Expected: `AssetData`)")
+        
+        return response.asset_url
+    
+    async def import_texture_2d_raw_data(
+        self,
+        width : int,
+        height : int,
+        data : List[int],
+        color_profile : str = 'sRGB'
+    ):
+        """
+        Imports a 2D texture from raw data.
+
+        Parameters
+        ----------
+        width : int
+            Width of the texture in pixels.
+        height : int
+            Height of the texture in pixels.
+        data : List[int]
+            The pixel data. List of RGBA values between `0` and `255` (`byte`).
+            Data must have a length of `width * height * 4`.
+        color_profile : str, default = 'sRGB'
+            The color profile of the texture data.
+        
+        Returns
+        -------
+        Asset URL of the imported texture.
+
+        """
+        msg = ImportTexture2DRawData(
+            width=width,
+            height=height,
+            init_data=data,
+            color_profile=color_profile
+        )
+        response = await self.send_message(msg)
+        if not isinstance(response, AssetData):
+            raise RuntimeError(f"Unexpected response type for message `ImportTexture2DRawData`: `{type(response)}` (Expected: `AssetData`)")
+        
+        return response.asset_url
+    
+    async def import_texture_2d_raw_data_hdr(
+        self,
+        width : int,
+        height : int,
+        data : List[float]
+    ):
+        """
+        Imports a 2D texture from raw data.
+
+        Parameters
+        ----------
+        width : int
+            Width of the texture in pixels.
+        height : int
+            Height of the texture in pixels.
+        data : List[float]
+            The pixel data. List of RGBA floating point values (`float`).
+            Data must have a length of `width * height * 4`.
+            Color space is always linear.
+        
+        Returns
+        -------
+        Asset URL of the imported texture.
+
+        """
+        msg = ImportTexture2DRawDataHDR(
+            width=width,
+            height=height,
+            init_data=data
+        )
+        response = await self.send_message(msg)
+        if not isinstance(response, AssetData):
+            raise RuntimeError(f"Unexpected response type for message `ImportTexture2DRawDataHDR`: `{type(response)}` (Expected: `AssetData`)")
         
         return response.asset_url
     

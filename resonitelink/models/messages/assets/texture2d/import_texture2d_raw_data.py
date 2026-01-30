@@ -1,6 +1,7 @@
 from resonitelink.json import MISSING, abstract_json_model, json_model, json_element
-from dataclasses import field
-from typing import Optional
+from dataclasses import InitVar, field
+from typing import Optional, List
+from array import array
 from abc import ABC, abstractmethod
 
 from ...messages import Message, BinaryPayloadMessage
@@ -45,7 +46,25 @@ class ImportTexture2DRawDataBase(BinaryPayloadMessage, ABC):
 
 @json_model("importTexture2DRawData", Message)
 class ImportTexture2DRawData(ImportTexture2DRawDataBase):
+    # Initializes the image data.
+    init_data : InitVar[Optional[List[int]]] = None
+    
+    # Color profile of the image data.
     color_profile : str = json_element("colorProfile", str, default=MISSING)
+
+    def __post_init__(self, init_data : Optional[List[int]]):
+        if init_data:
+            self.data = init_data
+
+    @property
+    def data(self) -> List[int]:
+        arr = array("B")
+        arr.frombytes(self.raw_binary_payload)
+        return arr.tolist()
+
+    @data.setter
+    def data(self, data : List[int]):
+        self.raw_binary_payload = array("B", data).tobytes()
 
     @property
     def element_size(self) -> int:
@@ -53,7 +72,24 @@ class ImportTexture2DRawData(ImportTexture2DRawDataBase):
 
 
 @json_model("importTexture2DRawDataHDR", Message)
-class ImportTexture2DRawDataHRD(ImportTexture2DRawDataBase):
+class ImportTexture2DRawDataHDR(ImportTexture2DRawDataBase):
+    # Initializes the image data.
+    init_data : InitVar[Optional[List[float]]] = None
+
+    def __post_init__(self, init_data : Optional[List[float]]):
+        if init_data:
+            self.data = init_data
+
+    @property
+    def data(self) -> List[float]:
+        arr = array("f")
+        arr.frombytes(self.raw_binary_payload)
+        return arr.tolist()
+
+    @data.setter
+    def data(self, data : List[float]):
+        self.raw_binary_payload = array("f", data).tobytes()
+
     @property
     def element_size(self) -> int:
         return 4 * 4 # color: 4 * float (4 bytes)

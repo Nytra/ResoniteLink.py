@@ -17,7 +17,7 @@ async def on_client_started(client : ResoniteLinkClient):
     slot = await client.add_slot(name="Hello World Slot", position=Float3(0, 1.5, 0))
     
     # Adds a TextRenderer component to the newly created slot.
-    await client.add_component(slot, "[FrooxEngine]FrooxEngine.TextRenderer",
+    await slot.add_component("[FrooxEngine]FrooxEngine.TextRenderer",
         # Sets the initial value of the string field 'Text' on the component.
         Text=Field_String(value="Hello, world!")
     )

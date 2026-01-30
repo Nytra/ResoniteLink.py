@@ -71,7 +71,7 @@ async def on_client_started(client : ResoniteLinkClient):
     slot = await client.add_slot(name="Imported Audio Clip", position=Float3(0, 1.5, 0))
     
     # Attaches a LegacyAudioPlayer component to the slot. The component sets up everything required on attach.
-    audio_player = await client.add_component(slot, component_type="[FrooxEngine]FrooxEngine.LegacyAudioPlayer")
+    audio_player = await slot.add_component(component_type="[FrooxEngine]FrooxEngine.LegacyAudioPlayer")
     
     # Find the StaticAudioClip components that was set up by the LegacyAudioPlayer. 
     audio_player_data = await audio_player.fetch_data()
@@ -79,6 +79,9 @@ async def on_client_started(client : ResoniteLinkClient):
 
     # Assign the URI of the imported asset to the StaticAudioClip component.
     await audio_clip.update_members(URL=Field_Uri(asset_url))
+
+    # Stops the client manually. Without this, the client will run forever, which might be desired for some use-cases.
+    await client.stop()
 
 
 # Asks for the current port ResoniteLink is running on.

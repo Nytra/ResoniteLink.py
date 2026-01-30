@@ -1,5 +1,5 @@
-from resonitelink.models.datamodel import Slot, Reference, Float3, FloatQ
-from resonitelink.proxies import Proxy
+from resonitelink.models.datamodel import Member, Slot, Reference, Float3, FloatQ
+from resonitelink.proxies import Proxy, ComponentProxy
 from typing import Union
 
 class SlotProxy(Proxy[Slot]):
@@ -42,3 +42,16 @@ class SlotProxy(Proxy[Slot]):
     async def set_order_offset(self, order_offset : int):
         await self.client.update_slot(slot=self.id, order_offset=order_offset)
         self.invalidate_data()
+    
+    async def add_component(
+        self,
+        component_type : str,
+        **members : Member
+    ) -> ComponentProxy:
+        component = await self.client.add_component(
+            container_slot=self.id,
+            component_type=component_type,
+            **members
+        )
+        self.invalidate_data()
+        return component
