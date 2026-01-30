@@ -1,7 +1,6 @@
 from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Reference, Float3, Field_Uri, ComponentProxy
 from math import sin, cos, pi
 import asyncio
-import logging
 
 
 # Creates a new client that connects to ResoniteLink via websocket.

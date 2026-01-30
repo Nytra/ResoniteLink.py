@@ -93,8 +93,10 @@ async def on_client_started(client : ResoniteLinkClient):
     # Stops the client manually. Without this, the client will run forever, which might be desired for some use-cases.
     await client.stop()
 
+
 # Asks for the current port ResoniteLink is running on.
 port = int(input("ResoniteLink Port: "))
+
 
 # Start the client on the specified port.
 asyncio.run(client.start(port))
