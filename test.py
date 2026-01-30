@@ -3,13 +3,53 @@ from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3
 # from resonitelink.models.messages.assets.meshes import *
 # from resonitelink.models.datamodel.assets.mesh import * 
 from typing import Tuple, List, Generator, Any
-from math import sin, cos
+from math import sin, cos, sqrt
 import asyncio
 import logging
 
 
 # Creates a new client that connects to ResoniteLink via websocket.
 client = ResoniteLinkWebsocketClient(log_level=logging.DEBUG)
+
+
+def sub_vector3(a : Float3, b : Float3):
+    return Float3(
+        a.x - b.x, 
+        a.y - b.y, 
+        a.z - b.z
+    )
+
+def mul_vector3(a : Float3, b : Float3):
+    return Float3(
+        a.x * b.x,
+        a.y * b.y,
+        a.z * b.z
+    )
+
+def cross_vector3(a : Float3, b : Float3):
+    return Float3(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    )
+
+def magnitude_vector3(vector : Float3):
+    return sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 3)
+
+def normalize_vector3(vector : Float3):
+    l = magnitude_vector3(vector)
+    return Float3(
+        vector.x / l,
+        vector.y / l, 
+        vector.z / l
+    )
+
+def avg_vector3(*vectors : Float3):
+    return Float3(
+        sum( [v.x for v in vectors] ) / float(len(vectors)),
+        sum( [v.y for v in vectors] ) / float(len(vectors)),
+        sum( [v.z for v in vectors] ) / float(len(vectors))
+    )
 
 
 @client.on_started
@@ -19,11 +59,11 @@ async def on_client_started(client : ResoniteLinkClient):
     You can use it to execute code once the client is up and running!
 
     """
-    def generate_wave_grid_points(grid_size : Tuple[int, int], wave_scale : Tuple[float, float] = (1.0, 1.0)) -> List[Float3]:
+    def generate_wave_grid_points(grid_size : Tuple[int, int], wave_scale : Tuple[float, float] = (1.0, 1.0), wave_offset : Tuple[float, float] = (0.0, 0.0)) -> List[Float3]:
         def _generate() -> Generator[Float3, Any, Any]:
             for x in range(grid_size[0]):
                 for z in range(grid_size[1]):
-                    y = sin(x * wave_scale[0]) * cos(z * wave_scale[1])
+                    y = sin(x * wave_scale[0] + wave_offset[0]) * cos(z * wave_scale[1] + wave_offset[1])
                     yield Float3(x, y, z)
         
         return list(_generate())
@@ -62,23 +102,52 @@ async def on_client_started(client : ResoniteLinkClient):
                     yield idx_3
 
         return list(_generate())
+    
+    def compute_normals(points : List[Float3], triangle_indices : List[int]) -> List[Float3]:
+        if len(triangle_indices) % 3 != 0:
+            raise ValueError("Length of triangles list must be a multiple of 3!")
+        
+        # Lists of normals of connected faces for each point
+        connecting_face_normals : List[List[Float3]] = [ list() for point in points ]
+
+        for i in range(0, len(triangle_indices), 3):
+            idx0 = triangle_indices[i]
+            idx1 = triangle_indices[i + 1]
+            idx2 = triangle_indices[i + 2]
+            
+            p0 = points[idx0]
+            p1 = points[idx1]
+            p2 = points[idx2]
+
+            a = sub_vector3(p1, p0)
+            b = sub_vector3(p2, p0)
+
+            n = cross_vector3(a, b)
+
+            connecting_face_normals[idx0].append(n)
+            connecting_face_normals[idx1].append(n)
+            connecting_face_normals[idx2].append(n)
+        
+        return [ normalize_vector3(avg_vector3(*normals)) for normals in connecting_face_normals ]
 
     # Adds a new slot. Since no parent was specified, it will be added to the world root by default.
     slot = await client.add_slot(name="Mesh Slot", position=Float3(0, 1.5, 0))
     
     grid_size = (64, 64)
     wave_scale = (0.33, 0.33)
-    points = generate_wave_grid_points(grid_size, wave_scale)
+    wave_offset = (0.0, 0.0)
+    points = generate_wave_grid_points(grid_size, wave_scale, wave_offset)
     colors = generate_grid_colors(grid_size)
     triangle_indices = triangulate_grid(grid_size, points)
+    normals = compute_normals(points, triangle_indices)
     triangle_count = int(len(triangle_indices) / 3)
 
     msg = ImportMeshRawData(
         init_positions=points,
+        init_normals=normals,
         init_colors=colors,
         submeshes=[ TriangleSubmeshRawData(triangle_count, triangle_indices) ]
     )
-
     response : AssetData = await client.send_message(msg) # type: ignore
 
     static_mesh = await client.add_component(slot, "[FrooxEngine]FrooxEngine.StaticMesh", URL=Field_Uri(response.asset_url))
@@ -95,10 +164,32 @@ async def on_client_started(client : ResoniteLinkClient):
     await client.add_component(slot, "[FrooxEngine]FrooxEngine.MeshCollider")
     await client.add_component(slot, "[FrooxEngine]FrooxEngine.Grabbable")
 
+    # while True:
+    #     await asyncio.sleep(0.1)
+    #     wave_offset = (wave_offset[0] + 0.1, wave_offset[1] - 0.1)
+
+    #     points = generate_wave_grid_points(grid_size, wave_scale, wave_offset)
+    #     colors = generate_grid_colors(grid_size)
+    #     triangle_indices = triangulate_grid(grid_size, points)
+    #     normals = compute_normals(points, triangle_indices)
+
+    #     msg = ImportMeshRawData(
+    #         init_positions=points,
+    #         init_normals=normals,
+    #         init_colors=colors,
+    #         submeshes=[ TriangleSubmeshRawData(triangle_count, triangle_indices) ]
+    #     )
+    #     response : AssetData = await client.send_message(msg) # type: ignore
+
+    #     await client.update_component(
+    #         static_mesh, 
+    #         URL=Field_Uri(response.asset_url)
+    #     )
+
 
 # Asks for the current port ResoniteLink is running on.
 # port = int(input("ResoniteLink Port: "))
-port = 4347
+port = 5258
 
 
 # Start the client on the specified port.

@@ -1,7 +1,7 @@
 from typing import Generator
 from typing import Any, Iterator
 
-from resonitelink.models.datamodel import Float3, Color
+from resonitelink.models.datamodel import Float3, Float4, Color
 
 
 def pack_vectors_float3(elements : Iterator[float]) -> Generator[Float3, Any, Any]:
@@ -27,6 +27,34 @@ def unpack_vectors_float3(vectors : Iterator[Float3]) -> Generator[float, Any, A
             yield vector.x
             yield vector.y
             yield vector.z
+
+    except StopIteration:
+        pass
+
+def pack_vectors_float4(elements : Iterator[float]) -> Generator[Float4, Any, Any]:
+    """
+    Yields Float3s from an iterator of floats.
+
+    """
+    try:
+        while True:
+            yield Float4(next(elements), next(elements), next(elements))
+    
+    except StopIteration:
+        pass
+
+def unpack_vectors_float4(vectors : Iterator[Float4]) -> Generator[float, Any, Any]:
+    """
+    Yields floats for iterator of Float3s.
+    
+    """
+    try:
+        while True:
+            vector = next(vectors)
+            yield vector.x
+            yield vector.y
+            yield vector.z
+            yield vector.w
 
     except StopIteration:
         pass

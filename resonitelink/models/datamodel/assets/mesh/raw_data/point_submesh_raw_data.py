@@ -1,7 +1,6 @@
 from dataclasses import InitVar
 from typing import Optional, List
 
-
 from resonitelink.json import MISSING, json_model, json_element
 from .submesh_raw_data import SubmeshRawData
 
