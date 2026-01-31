@@ -2,6 +2,7 @@ from .models import MISSING, JSONModel, JSONProperty
 from typing import Any
 from json import JSONEncoder
 
+
 __all__ = ( 
     'ResoniteLinkJSONEncoder',
 )
@@ -18,8 +19,8 @@ class ResoniteLinkJSONEncoder(JSONEncoder):
         
         If the object to encode is a registered JSONModel:
         - The model's `type_name` is encoded as the `$type` argument in the resuling JSON object.
-        - Only fields annoated with JSONProperty will be carried over into the resulting JSON object.
-        - JSONProperty annotated fields will use their `name` as the key in the resultng JSON object.
+        - Only fields associated with a JSONProperty will be carried over into the resulting JSON object.
+        - Fields associated with a JSONProperty will use their `name` as the key in the resulting JSON object.
 
         Any other object will be passed to the `default` method of the base class (`json.JSONEncoder`).
         This naturally supports encoding nested models due to how JSONEncoder is implemented.

@@ -1,6 +1,7 @@
 from .models import MISSING, JSONModel, _JSONPropertyType
 from typing import Any, List, Callable
 
+
 __all__ = (
     'optional',
     'format_object_structure',

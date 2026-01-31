@@ -5,6 +5,7 @@ from typing import Optional, Any, Type, Tuple, List, Dict, Generator, TypeVar, G
 from enum import Enum
 import logging
 
+
 __all__ = (
     'MISSING',
     'SELF',
@@ -16,6 +17,7 @@ __all__ = (
     'json_model',
     'abstract_json_model'
 )
+
 
 logger = logging.getLogger("ResoniteLinkModels")
 logger.setLevel(logging.DEBUG)
@@ -57,15 +59,17 @@ class _JSONPropertyType(Enum):
 
 class JSONProperty():
     """
-    TODO: Documentation needs to be updated once rework is done!
-
     Denotes a JSON property of a model data class that will be picked up by the serializer / deserializer.
-    This should be added as an annotation to the members that should be JSON serialized / deserialized:
-        
-        @json_model("example")
+
+    Usually this isn't instantiated directly, instead, `json_element`, `json_list` or `json_dict` are used to denote a field as a JSONProperty. 
+    
+    Example
+    -------
+        @json_model(type_name="example")
         def ExampleModel():
-            example_str : typing.Annotated[str, JsonProperty("exampleStr")]
-            example_int : typing.Annotated[int, JsonProperty("exampleInt")]
+            example_element : int = json_element("exampleElement", int, default=MISSING)
+            example_list : List[int] = json_list("exampleList", int, default=MISSING)
+            example_dict : Dict[str, int] = json_dict("exampleDict", int, default=MISSING)
     
     """
     _json_name : str
@@ -95,17 +99,16 @@ class JSONProperty():
 
         Parameters
         ----------
-        name : str
-            The name of this property in JSON objects.
-        model_type_name : str (optional)
-            The child model's `type_name` if this property can hold a different JSON model's data. This is used to 
-            identify 'anonymous' model objects during decoding of JSON data, those models don't specify an explit `$type` 
-            parameter, since their type is implicitly defined through the type of their field in the parent object.
-        abstract : bool (default=False)
+        json_name : str
+            The name of this property in the containing JSON object.
+        element_type : type
+            The type of the target element of this property.
+            NOTE: For lists, this is the type of the element in the list. For dicts, this is the value of the dict (dict key is always of type `str`).
+        property_type : _JSONPropertyType
+            The type of this property (Element, List, or Dict).
+        abstract : bool
             Whether this property is "abstract" and needs to be overridden by a implementing class. If a `JSONModel` with
             an abstract `JSONProperty` is created, a `TypeError` will be raised.
-        property_type : JSONPropertyType
-            The type of this property (Element, List, or Dict)
 
         """
         self._json_name = json_name
@@ -184,25 +187,24 @@ def json_dict[T](json_name : str, element_type : Type[T], *, default : Any, init
 D = TypeVar('D', bound=Type)
 class JSONModel(Generic[D]):
     """
-    TODO: Documentation needs to be updated once rework is done!
+    Denotes a JSON serializable model class that can have JSON serializable properties.
+    Models are associated with data classes, which hold the actual data when deserialized.
+    JSON models support polymorphism, where multiple instances of the same base class are identified via a '$type' parameter in the JSON objects.
 
-    Descriptor class for JSON serializable "models" with "properties".
-    A model is associated with a unique type name, which in JSON is represented in the "$type" parameter.
-    A model is also backed by a data class, which is the class that holds the actual data of the model in the program.
+    Usually this isn't instantiated directly, instead, `json_model` is used as a decorator on the model's data class. 
     
     """
-    _model_data_class_mapping : Dict[Type, JSONModel] = {} # Mapping from data class to model
+    _model_data_class_mapping : Dict[Type, JSONModel] = {} # Mapping from data class to model.
     _global_model_type_name_mapping : Dict[str, JSONModel] = {} # Mappings of model type names for all non-derived (global) models.
-    _derived_model_type_name_mappings : Dict[Type, Dict[str, JSONModel]] = {} # Mapping from base type to all 
-    _internal_model_type_name_mappings : Dict[str, JSONModel] = {} # Mappings for internal type names only
+    _derived_model_type_name_mappings : Dict[Type, Dict[str, JSONModel]] = {} # Mapping from base type to all .
+    _internal_model_type_name_mappings : Dict[str, JSONModel] = {} # Mappings for internal type names only.
 
     _data_class : D
     _type_name : Optional[str]
     _derived_from : Optional[type]
-    _internal_type_name : Optional[str] # Can be used as an unique internal identifier for types, but has no impact on JSON serialization / deserialization
+    _internal_type_name : Optional[str] # Can be used as an unique internal identifier for types, but has no impact on JSON serialization / deserialization.
     _properties : Dict[str, JSONProperty]
     _property_name_mapping : Dict[str, str]
-    
     
     @property
     def data_class(self) -> D:
@@ -282,6 +284,11 @@ class JSONModel(Generic[D]):
         """
         Produces key-value pair mappings for each property to associate every JSONProperty's (unique) name with the
         name of the corresponding annotated field in the model's data class.
+
+        Parameters
+        ----------
+        properties : Dict[str, JSONProperty]
+            Properties to generate JSON name mappings for.
 
         Returns
         -------
@@ -435,7 +442,13 @@ def json_model[T](type_name : Optional[str] = None, derived_from : Optional[type
     type_name : str
         The model type name to associate the decorated data class with.
         (This will be used by JSON serializer / deserializer as the '$type' value.)
-    # TODO: Document the rest
+    derive_from : type, optional
+        Used to represent polymorphic relationship to a base model.
+        The data class should also inherit the specified base model's data class.
+    internal_type_name : str, optional
+        Globally unique internal type name. This has no impact on JSON serialization / deserializing.
+        This can be used if you need to find models by name in your code, but need the identifier to be separate from the actual
+        JSON type name.
     slots : bool, default = True
         Argument passed through to dataclass constructor.
         Controls wether the dataclass should use `__slots__` for fields.

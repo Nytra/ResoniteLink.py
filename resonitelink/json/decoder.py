@@ -3,9 +3,11 @@ from typing import Any, Dict
 from json import JSONDecoder
 import logging
 
+
 __all__ = (
     'ResoniteLinkJSONDecoder',
 )
+
 
 logger = logging.getLogger("ResoniteLinkJSONDecoder")
 logger.setLevel(logging.DEBUG)
