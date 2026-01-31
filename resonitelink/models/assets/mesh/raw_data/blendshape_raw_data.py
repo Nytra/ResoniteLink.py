@@ -3,7 +3,7 @@ if TYPE_CHECKING:
     from resonitelink.models.messages import ImportMeshRawData
     from typing import List
 
-from resonitelink.models.datamodel.assets.mesh.raw_data import BlendshapeFrameRawData
+from resonitelink.models.assets.mesh.raw_data import BlendshapeFrameRawData
 from resonitelink.json import MISSING, json_model, json_element, json_list
 
 

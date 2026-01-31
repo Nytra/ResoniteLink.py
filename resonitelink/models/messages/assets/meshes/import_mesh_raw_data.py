@@ -4,10 +4,10 @@ from typing import Optional, Iterator, List, Tuple
 from array import array
 import struct
 
-from ....datamodel.assets.mesh import SubmeshRawData, BlendshapeRawData, Bone, BoneWeightRawData
-from ....datamodel.primitives import Float3, Float4, Color
-from ...messages import Message, BinaryPayloadMessage
+from resonitelink.models.datamodel.primitives import Float3, Float4, Color
 from resonitelink.utils.vector_tools import pack_vectors_float3, unpack_vectors_float3, pack_vectors_float4, unpack_vectors_float4, pack_vectors_color, unpack_vectors_color
+from resonitelink.models.assets.mesh import SubmeshRawData, BlendshapeRawData, Bone, BoneWeightRawData
+from resonitelink.models.messages import Message, BinaryPayloadMessage
 
 
 import logging
@@ -24,25 +24,25 @@ class ImportMeshRawData(BinaryPayloadMessage):
     # Number of vertices in this mesh.
     vertex_count : int = json_element("vertexCount", int, default=MISSING, init=False)
 
-    # Initializes the positions.
+    # Initializes the positions of the mesh.
     init_positions : InitVar[Optional[List[Float3]]] = None
     
     # Do vertices have normals?
     has_normals : bool = json_element("hasNormals", bool, default=MISSING, init=False)
 
-    # Initializes the normals.
+    # Initializes the vertex normals of the mesh.
     init_normals : InitVar[Optional[List[Float3]]] = None
     
     # Do vertices have tangents?
     has_tangents : bool = json_element("hasTangents", bool, default=MISSING, init=False)
 
-    # Initializes the tangents.
+    # Initializes the vertex tangents of the mesh.
     init_tangents : InitVar[Optional[List[Float4]]] = None
     
     # Do vertices have colors?
     has_colors : bool = json_element("hasColors", bool, default=MISSING, init=False)
     
-    # Initializes the colors.
+    # Initializes the vertex colors of the mesh.
     init_colors : InitVar[Optional[List[Color]]] = None
 
     # Configuration of UV channels for this mesh.
@@ -50,7 +50,7 @@ class ImportMeshRawData(BinaryPayloadMessage):
     # Number indicates number of UV dimensions. This must be between 2 and 4 (inclusive).
     uv_channel_dimensions : List[int] = json_list("uvChannelDimensions", int, default=MISSING)
 
-    # Initializes the UVs.
+    # Initializes the UVs of the mesh.
     init_uvs : InitVar[Optional[List[List[float]]]] = None
 
     # How many bone weights does each vertex have.

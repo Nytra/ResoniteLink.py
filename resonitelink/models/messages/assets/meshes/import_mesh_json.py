@@ -1,8 +1,8 @@
 from resonitelink.json import MISSING, json_model, json_list
 from typing import List
 
-from ....datamodel.assets.mesh import Vertex, Submesh, Bone, Blendshape
-from ...messages import Message
+from resonitelink.models.assets.mesh import Vertex, Submesh, Bone, Blendshape
+from resonitelink.models.messages import Message
 
 
 @json_model("importMeshJSON", Message)
@@ -14,7 +14,7 @@ class ImportMeshJSON(Message):
     If possible, it's recommended to use ImportMeshRawData for better efficiency.
 
     """
-    #  Vertices of this mesh. These are shared across sub-meshes.
+    # Vertices of this mesh. These are shared across sub-meshes.
     vertices : List[Vertex] = json_list("vertices", Vertex, default=MISSING)
     
     # List of submeshes (points, triangles...) representing this mesh.

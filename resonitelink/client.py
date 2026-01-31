@@ -1,22 +1,6 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from resonitelink.models.responses import Response, SessionData, SlotData, ComponentData, AssetData
-from resonitelink.models.datamodel import \
-    Member, Reference, Slot, Component, \
-    Float3, FloatQ, \
-    Field_Bool, Field_Long, Field_Float3, Field_FloatQ, Field_String
-from resonitelink.models.messages import \
-    Message, BinaryPayloadMessage, RequestSessionData, \
-    GetSlot, AddSlot, UpdateSlot, RemoveSlot, \
-    GetComponent, AddComponent, UpdateComponent, RemoveComponent, \
-    ImportAudioClipFile, ImportAudioClipRawData, \
-    ImportTexture2DFile, ImportTexture2DRawData, ImportTexture2DRawDataHDR
-from resonitelink.exceptions import ResoniteLinkException
-from resonitelink.proxies import SlotProxy, ComponentProxy
 from websockets.exceptions import ConnectionClosed as WebSocketConnectionClosed
-from resonitelink.utils.id_registry import IDRegistry
-from resonitelink.utils import get_slot_id, get_component_id, optional_slot_reference, optional_field
-from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
 from websockets import connect as websocket_connect, ClientConnection as WebSocketClientConnection
 from asyncio import Event, Future, get_running_loop, wait_for, gather
 from typing import Optional, Union, List, Dict, Callable, Coroutine
@@ -24,6 +8,29 @@ from enum import Enum
 from abc import ABC, abstractmethod
 import logging
 import json
+
+from resonitelink.models.assets.mesh import \
+    Vertex, Submesh, Blendshape, Bone, \
+    SubmeshRawData, BlendshapeRawData, BoneWeightRawData
+from resonitelink.models.responses import Response, SessionData, SlotData, ComponentData, AssetData
+from resonitelink.models.datamodel import \
+    Member, Reference, Slot, Component, \
+    Float3, Float4, FloatQ, Color, \
+    Field_Bool, Field_Long, Field_Float3, Field_FloatQ, Field_String
+from resonitelink.models.messages import \
+    Message, BinaryPayloadMessage, RequestSessionData, \
+    GetSlot, AddSlot, UpdateSlot, RemoveSlot, \
+    GetComponent, AddComponent, UpdateComponent, RemoveComponent, \
+    ImportAudioClipFile, ImportAudioClipRawData, \
+    ImportMeshJSON, ImportMeshRawData, \
+    ImportTexture2DFile, ImportTexture2DRawData, ImportTexture2DRawDataHDR
+
+from resonitelink.utils.id_registry import IDRegistry
+from resonitelink.exceptions import ResoniteLinkException
+from resonitelink.proxies import SlotProxy, ComponentProxy
+from resonitelink.utils import get_slot_id, get_component_id, optional_slot_reference, optional_field
+from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
+
 
 __all__ = (
     'ResoniteLinkClient',
@@ -462,7 +469,7 @@ class ResoniteLinkClient(ABC):
         sample_rate : int,
         channel_count : int,
         samples : List[float]
-    ):
+    ) -> str:
         """
         Imports an audio clip from raw data.
 
@@ -496,6 +503,116 @@ class ResoniteLinkClient(ABC):
             raise RuntimeError(f"Unexpected response type for message `ImportAudioClipRawData`: `{type(response)}` (Expected: `AssetData`)")
         
         return response.asset_url
+
+    async def import_mesh_json(
+        self,
+        vertices : List[Vertex],
+        submeshes : List[Submesh] = MISSING,
+        bones : List[Bone] = MISSING,
+        blendshapes : List[Blendshape] = MISSING
+    ) -> str:
+        """
+        Imports a mesh from JSON data.
+        NOTE: This is mostly provided for completeness. You should generally always use `import_mesh_raw_data`, as it is much more efficient.
+
+        Parameters
+        ----------
+        vertices : List[Vertex]
+            Vertices of this mesh. These are shared across sub-meshes.
+        submeshes : List[Submesh], optional
+            List of submeshes (points, triangles...) representing this mesh.
+            Meshes will typically have at least one submesh.
+            Each submesh uses indicies of the vertices for its primitives.
+        bones : List[Bone], optional
+            Bones of the mesh when data represents a skinned mesh.
+            These will be referred to by their index from vertex data.
+        blendshapes : List[Blendshape], optional
+            Blendshapes of this mesh.
+            These allow modifying the vertex positions, normals & tangents for animations such as facial expressions.
+        
+        Returns
+        -------
+        Asset URL of the imported mesh.
+
+        """
+        msg = ImportMeshJSON(
+            vertices=vertices,
+            submeshes=submeshes,
+            bones=bones,
+            blendshapes=blendshapes
+        )
+        response = await self.send_message(msg)
+        if not isinstance(response, AssetData):
+            raise RuntimeError(f"Unexpected response type for message `ImportMeshJSON`: `{type(response)}` (Expected: `AssetData`)")
+        
+        return response.asset_url
+    
+    async def import_mesh_raw_data(
+        self,
+        positions : List[Float3],
+        normals : Optional[List[Float3]] = None,
+        tangents : Optional[List[Float4]] = None,
+        colors : Optional[List[Color]] = None,
+        uv_channel_dimensions : List[int] = [],
+        uvs : Optional[List[List[float]]] = None,
+        bone_weights : Optional[List[BoneWeightRawData]] = None,
+        submeshes : List[SubmeshRawData] = MISSING,
+        blendshapes : List[BlendshapeRawData] = MISSING,
+        bones : List[Bone] = MISSING
+    ) -> str:
+        """
+        Imports a mesh from raw data.
+
+        Parameters
+        ----------
+        positions : List[Float3]
+            Positions of the mesh.
+        normals : List[Float3], optional
+            Vertex normals of the mesh.
+        tangents : List[Float4], optional
+            Vertex tangents of the mesh.
+        colors : List[Color], optional
+            Vertex colors of the mesh.
+        uv_channel_dimensions : List[int], optional
+            Configuration of UV channels for this mesh.
+            Each entry represents one UV channel of the mesh.
+            Number indicates number of UV dimensions. This must be between 2 and 4 (inclusive).
+        uvs : List[List[float]], optional
+            UVs of the mesh.
+        bone_weights : List[BoneWeightRawData], optional
+            How many bone weights does each vertex have.
+            If some vertices have fewer bone weights, use weight of 0 for remainder bindings.
+        submeshes : List[SubmeshRawData] = MISSING
+            Submeshes that form this mesh. Meshes will typically have at least one submesh.
+        blendshapes : List[BlendshapeRawData] = MISSING
+            Blendshapes of this mesh.
+            These allow modifying the vertex positions, normals & tangents for animations such as facial expressions.
+        bones : List[Bone] = MISSING
+            Bones of the mesh when data represents a skinned mesh.
+            These will be referred to by their index from vertex data.
+        
+        Returns
+        -------
+        Asset URL of the imported mesh.
+
+        """
+        msg = ImportMeshRawData(
+            init_positions=positions,
+            init_normals=normals,
+            init_tangents=tangents,
+            init_colors=colors,
+            uv_channel_dimensions=uv_channel_dimensions,
+            init_uvs=uvs,
+            init_bone_weights=bone_weights,
+            submeshes=submeshes,
+            blendshapes=blendshapes,
+            bones=bones
+        )
+        response = await self.send_message(msg)
+        if not isinstance(response, AssetData):
+            raise RuntimeError(f"Unexpected response type for message `ImportMeshRawData`: `{type(response)}` (Expected: `AssetData`)")
+        
+        return response.asset_url
     
     async def import_texture_2d_file(self, file_path : str) -> str:
         """
@@ -524,7 +641,7 @@ class ResoniteLinkClient(ABC):
         height : int,
         data : List[int],
         color_profile : str = 'sRGB'
-    ):
+    ) -> str:
         """
         Imports a 2D texture from raw data.
 
@@ -562,7 +679,7 @@ class ResoniteLinkClient(ABC):
         width : int,
         height : int,
         data : List[float]
-    ):
+    ) -> str:
         """
         Imports a 2D texture from raw data.
 

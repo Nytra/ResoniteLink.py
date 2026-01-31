@@ -1,4 +1,5 @@
-from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Float3, Field_String
+from resonitelink.models.datamodel import Float3, Field_String
+from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient
 import asyncio
 
 

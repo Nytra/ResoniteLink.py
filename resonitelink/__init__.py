@@ -25,6 +25,7 @@ setup_logging()
 
 from .exceptions import *
 from .json import *
+from .models.assets.mesh import *
 from .models.datamodel import *
 from .models.messages import *
 from .models.responses import *

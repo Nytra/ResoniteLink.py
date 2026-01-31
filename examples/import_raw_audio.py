@@ -1,4 +1,6 @@
-from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient, Reference, Float3, Field_Uri, ComponentProxy
+from resonitelink.models.datamodel import Reference, Float3, Field_Uri
+from resonitelink.proxies import ComponentProxy
+from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient
 from math import sin, cos, pi
 import asyncio
 
@@ -55,10 +57,10 @@ async def on_client_started(client : ResoniteLinkClient):
     sample_rate=44100
     sample_count=sample_rate * 2
 
-    # Compute the audio samples
+    # Compute the audio samples.
     samples = [ calc_signal(x / sample_rate, freq) * calc_amplitude(x / sample_rate) for x in range(sample_count) ]
 
-    # Import the audio clip data into Resonite
+    # Import the audio clip data into Resonite.
     asset_url = await client.import_audio_clip_raw_data(
         sample_rate=sample_rate, 
         sample_count=sample_count, 
