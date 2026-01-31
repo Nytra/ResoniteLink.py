@@ -2,6 +2,11 @@ from typing import TypeVar, Generic, Dict
 from random import randint
 
 
+__all__ = (
+    'IDRegistry',
+)
+
+
 ValueT = TypeVar("ValueT")
 class IDRegistry(Generic[ValueT]):
     """

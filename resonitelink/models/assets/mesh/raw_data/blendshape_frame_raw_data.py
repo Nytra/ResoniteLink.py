@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from resonitelink.models.datamodel.assets.mesh.raw_data import BlendshapeRawData
-    from resonitelink.models.messages import ImportMeshRawData
+    from resonitelink.models.assets.mesh.raw_data import BlendshapeRawData
     from resonitelink.models.datamodel import Float3
+    from resonitelink.models.messages import ImportMeshRawData
     from typing import Optional, List
 
 from dataclasses import InitVar, field
@@ -10,6 +10,11 @@ from array import array
 
 from resonitelink.utils.vector_tools import unpack_vectors_float3, pack_vectors_float3
 from resonitelink.json import MISSING, json_model, json_element
+
+
+__all__ = (
+    'BlendshapeFrameRawData',
+)
 
 
 @json_model()

@@ -1,6 +1,11 @@
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'Triangle',
+)
+
+
 @json_model()
 class Triangle():
     """

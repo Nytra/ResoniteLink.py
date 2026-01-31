@@ -1,6 +1,5 @@
-from resonitelink.json import MISSING, json_model, json_element, json_list
 from dataclasses import InitVar, field
-from typing import Optional, Iterator, List, Tuple
+from typing import Optional, List
 from array import array
 import struct
 
@@ -8,9 +7,13 @@ from resonitelink.models.datamodel.primitives import Float3, Float4, Color
 from resonitelink.utils.vector_tools import pack_vectors_float3, unpack_vectors_float3, pack_vectors_float4, unpack_vectors_float4, pack_vectors_color, unpack_vectors_color
 from resonitelink.models.assets.mesh import SubmeshRawData, BlendshapeRawData, Bone, BoneWeightRawData
 from resonitelink.models.messages import Message, BinaryPayloadMessage
+from resonitelink.json import MISSING, json_model, json_element, json_list
 
 
-import logging
+__all__ = (
+    'ImportMeshRawData',
+)
+
 
 @json_model("importMeshRawData", Message)
 class ImportMeshRawData(BinaryPayloadMessage):

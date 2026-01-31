@@ -1,7 +1,12 @@
-from resonitelink.json import MISSING, json_model, json_list
 from typing import List
 
-from .member import Member
+from resonitelink.models.datamodel.member import Member
+from resonitelink.json import MISSING, json_model, json_list
+
+
+__all__ = (
+    'SyncList',
+)
 
 
 @json_model("list", Member)

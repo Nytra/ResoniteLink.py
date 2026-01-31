@@ -2,6 +2,11 @@ from resonitelink.models.messages import Message
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'ImportAudioClipFile',
+)
+
+
 @json_model("importAudioClipFile", Message)
 class ImportAudioClipFile(Message):
     """

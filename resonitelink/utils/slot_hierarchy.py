@@ -1,5 +1,11 @@
-from resonitelink import Slot
 from typing import Any, List, Callable, Generator, Optional
+
+from resonitelink.models.datamodel import Slot
+
+
+__all__ = (
+    'SlotHierarchy',
+)
 
 
 class SlotHierarchy():

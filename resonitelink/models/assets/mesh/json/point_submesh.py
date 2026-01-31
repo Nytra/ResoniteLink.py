@@ -1,7 +1,12 @@
-from resonitelink.json import MISSING, json_model, json_list
 from typing import List
 
-from .submesh import Submesh
+from resonitelink.models.assets.mesh.json import Submesh
+from resonitelink.json import MISSING, json_model, json_list
+
+
+__all__ = (
+    'PointSubmesh',
+)
 
 
 @json_model("points", Submesh)

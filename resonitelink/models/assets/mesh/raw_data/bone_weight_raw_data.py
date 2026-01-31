@@ -1,6 +1,11 @@
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'BoneWeightRawData',
+)
+
+
 @json_model()
 class BoneWeightRawData():
     """

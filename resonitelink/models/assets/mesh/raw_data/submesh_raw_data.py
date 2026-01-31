@@ -10,6 +10,11 @@ from abc import ABC, abstractmethod
 from resonitelink.json import abstract_json_model
 
 
+__all__ = (
+    'SubmeshRawData',
+)
+
+
 @abstract_json_model()
 class SubmeshRawData(ABC):
     # NOTE: Initializers for indices are in the extending classes!

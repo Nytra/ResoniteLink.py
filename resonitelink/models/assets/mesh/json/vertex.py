@@ -1,9 +1,13 @@
-from resonitelink.models.datamodel import Float3, Color
-from resonitelink.json import MISSING, json_model, json_element, json_list
 from typing import List
 
-from .uv_coordinate import UV_Coordinate
-from .bone_weight import BoneWeight
+from resonitelink.models.assets.mesh.json import UV_Coordinate, BoneWeight
+from resonitelink.models.datamodel import Float3, Color
+from resonitelink.json import MISSING, json_model, json_element, json_list
+
+
+__all__ = (
+    'Vertex',
+)
 
 
 @json_model()

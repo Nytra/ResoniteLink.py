@@ -3,6 +3,14 @@ from resonitelink.models.messages import Message
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'GetSlot',
+    'AddSlot',
+    'UpdateSlot',
+    'RemoveSlot',
+)
+
+
 @json_model("getSlot", Message)
 class GetSlot(Message):
     slot_id : str = json_element("slotId", str, default=MISSING)

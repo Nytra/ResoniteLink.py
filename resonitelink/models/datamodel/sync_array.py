@@ -1,8 +1,13 @@
-from resonitelink.json import MISSING, abstract_json_model, json_list
 from typing import List, Any
 from abc import ABC, abstractmethod
 
-from .member import Member
+from resonitelink.json import MISSING, abstract_json_model, json_list
+from resonitelink.models.datamodel import Member
+
+
+__all__ = (
+    'SyncArray',
+)
 
 
 @abstract_json_model()

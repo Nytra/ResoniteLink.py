@@ -1,7 +1,11 @@
 from resonitelink.json import MISSING, json_model, json_element
 
-from ..member import Member
+from resonitelink.models.datamodel import Member
 
+
+__all__ = (
+    'Reference',
+)
 
 @json_model("reference", Member)
 class Reference(Member):

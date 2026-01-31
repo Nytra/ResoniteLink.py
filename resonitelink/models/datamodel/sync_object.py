@@ -1,7 +1,12 @@
-from resonitelink.json import MISSING, json_model, json_dict
 from typing import Dict
 
-from .member import Member
+from resonitelink.models.datamodel import Member
+from resonitelink.json import MISSING, json_model, json_dict
+
+
+__all__ = (
+    'SyncObject',
+)
 
 
 @json_model("syncObject", Member)

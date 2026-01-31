@@ -1,6 +1,13 @@
+from typing import Union
+
 from resonitelink.models.datamodel import Member, Slot, Reference, Float3, FloatQ
 from resonitelink.proxies import Proxy, ComponentProxy
-from typing import Union
+
+
+__all__ = (
+    'SlotProxy',
+)
+
 
 class SlotProxy(Proxy[Slot]):
     

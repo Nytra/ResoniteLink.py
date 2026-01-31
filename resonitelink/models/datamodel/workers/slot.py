@@ -1,12 +1,17 @@
 from __future__ import annotations # Delayed evaluation of type hints (PEP 563)
 
-from resonitelink.json import MISSING, SELF, json_model, json_element, json_list
 from typing import List
 
-from ..worker import Worker
-from ..members import Reference
-from ..primitives_containers import Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
-from .component import Component
+from resonitelink.models.datamodel.primitives_containers import Field_Float3, Field_FloatQ, Field_Bool, Field_String, Field_Long
+from resonitelink.models.datamodel.members import Reference
+from resonitelink.models.datamodel.workers import Component
+from resonitelink.models.datamodel import Worker
+from resonitelink.json import MISSING, SELF, json_model, json_element, json_list
+
+
+__all__ = (
+    'Slot',
+)
 
 
 @json_model() # NOT derived from Worker, it's the same in the reference C# implementation.

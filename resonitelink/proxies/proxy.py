@@ -3,10 +3,15 @@ if TYPE_CHECKING:
     # Only for type hints, prevents circular import
     from resonitelink import ResoniteLinkClient
 
-from resonitelink.models.datamodel import Member, Worker, Reference
-from typing import TypeVar, Generic, Union, Optional
-from typing import Type
+from typing import Type, TypeVar, Generic, Union, Optional
 from abc import ABC, abstractmethod
+
+from resonitelink.models.datamodel import Member, Worker, Reference
+
+
+__all__ = (
+    'Proxy',
+)
 
 
 TData = TypeVar("TData", bound=Union[Member, Worker])

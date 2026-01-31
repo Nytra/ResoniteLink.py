@@ -1,7 +1,13 @@
+from resonitelink.models.datamodel import Slot, Component
+from resonitelink.models.responses import Response
 from resonitelink.json import MISSING, json_model, json_element
 
-from ...datamodel import Slot, Component
-from ..response import Response
+
+__all__ = (
+    'SlotData',
+    'ComponentData',
+    'AssetData',
+)
 
 
 @json_model("slotData", Response)

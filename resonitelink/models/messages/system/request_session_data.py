@@ -1,6 +1,10 @@
+from resonitelink.models.messages import Message
 from resonitelink.json import json_model
 
-from ...messages import Message
+
+__all__ = (
+    'RequestSessionData',
+)
 
 
 @json_model("requestSessionData", Message)

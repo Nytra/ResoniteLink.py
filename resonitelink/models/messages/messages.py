@@ -1,5 +1,12 @@
-from resonitelink.json import MISSING, abstract_json_model, json_element
 from abc import ABC, abstractmethod
+
+from resonitelink.json import MISSING, abstract_json_model, json_element
+
+
+__all__ = (
+    'Message',
+    'BinaryPayloadMessage',
+)
 
 
 @abstract_json_model()

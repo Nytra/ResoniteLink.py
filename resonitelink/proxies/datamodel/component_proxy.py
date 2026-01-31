@@ -2,6 +2,11 @@ from resonitelink.models.datamodel import Component, Member
 from resonitelink.proxies import Proxy
 
 
+__all__ = (
+    'ComponentProxy',
+)
+
+
 class ComponentProxy(Proxy[Component]):
     
     async def fetch_data(self) -> Component:

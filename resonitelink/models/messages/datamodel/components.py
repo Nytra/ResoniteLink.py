@@ -1,7 +1,14 @@
+from resonitelink.models.datamodel import Component
+from resonitelink.models.messages import Message
 from resonitelink.json import MISSING, json_model, json_element
 
-from ...datamodel import Component
-from ...messages import Message
+
+__all__ = (
+    'GetComponent',
+    'AddComponent',
+    'UpdateComponent',
+    'RemoveComponent',
+)
 
 
 @json_model("getComponent", Message)

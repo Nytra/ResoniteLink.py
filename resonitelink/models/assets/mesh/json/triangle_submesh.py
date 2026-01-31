@@ -1,8 +1,13 @@
-from resonitelink.json import MISSING, json_model, json_list
 from typing import List
 
-from .triangle import Triangle
-from .submesh import Submesh
+from resonitelink.models.assets.mesh.json import Triangle, Submesh
+from resonitelink.json import MISSING, json_model, json_list
+
+
+__all__ = (
+    'TriangleSubmesh',
+    'TriangleSubmeshFlat',
+)
 
 
 @json_model("triangles", Submesh)

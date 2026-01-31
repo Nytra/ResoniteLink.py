@@ -1,4 +1,4 @@
-from .blendshape_frame import BlendshapeFrame
+from .blendshape_frame import *
 from .blendshape import *
 from .bone_weight import *
 from .triangle import *

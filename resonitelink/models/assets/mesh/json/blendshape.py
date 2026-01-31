@@ -1,6 +1,12 @@
-from .blendshape_frame import BlendshapeFrame
-from resonitelink.json import MISSING, json_model, json_element, json_list
 from typing import List
+
+from resonitelink.models.assets.mesh.json import BlendshapeFrame
+from resonitelink.json import MISSING, json_model, json_element, json_list
+
+
+__all__ = (
+    'Blendshape',
+)
 
 
 @json_model()

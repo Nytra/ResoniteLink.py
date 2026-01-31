@@ -1,8 +1,12 @@
-from resonitelink.json import MISSING, json_model, json_element, json_dict
 from typing import Type, Dict
 
-from ..worker import Worker
-from ..member import Member
+from resonitelink.models.datamodel import Worker, Member
+from resonitelink.json import MISSING, json_model, json_element, json_dict
+
+
+__all__ = (
+    'Component',
+)
 
 
 @json_model() # NOT derived from Worker, it's the same in the reference C# implementation.

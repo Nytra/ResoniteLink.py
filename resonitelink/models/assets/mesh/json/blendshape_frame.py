@@ -1,6 +1,12 @@
+from typing import List
+
 from resonitelink.models.datamodel import Float3
 from resonitelink.json import MISSING, json_model, json_element, json_list
-from typing import List
+
+
+__all__ = (
+    'BlendshapeFrame',
+)
 
 
 @json_model()

@@ -1,8 +1,13 @@
-from resonitelink.json import MISSING, abstract_json_model, json_element
 from typing import Any
 from abc import ABC, abstractmethod
 
-from .member import Member
+from resonitelink.models.datamodel import Member
+from resonitelink.json import MISSING, abstract_json_model, json_element
+
+
+__all__ = (
+    'Field',
+)
 
 
 @abstract_json_model()

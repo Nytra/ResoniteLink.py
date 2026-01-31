@@ -2,6 +2,11 @@ from resonitelink.models.datamodel import Float4x4
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'Bone',
+)
+
+
 @json_model()
 class Bone():
     """

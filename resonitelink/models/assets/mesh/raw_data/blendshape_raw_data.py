@@ -7,6 +7,11 @@ from resonitelink.models.assets.mesh.raw_data import BlendshapeFrameRawData
 from resonitelink.json import MISSING, json_model, json_element, json_list
 
 
+__all__ = (
+    'BlendshapeRawData',
+)
+
+
 @json_model()
 class BlendshapeRawData():
     # Name of the blendshape.

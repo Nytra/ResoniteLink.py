@@ -1,7 +1,12 @@
 from resonitelink.json import MISSING, json_model, json_element
 
-from ..member import Member
-from ..field import Field
+from resonitelink.models.datamodel import Member, Field
+
+
+__all__ = (
+    'Field_Enum',
+    'Field_Nullable_Enum',
+)
 
 
 @json_model("enum", Member)

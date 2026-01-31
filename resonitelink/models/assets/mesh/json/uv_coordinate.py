@@ -1,6 +1,15 @@
+from abc import ABC
+
 from resonitelink.models.datamodel import Float2, Float3, Float4
 from resonitelink.json import MISSING, abstract_json_model, json_model, json_element
-from abc import ABC
+
+
+__all__ = (
+    'UV_Coordinate',
+    'UV2D_Coordinate',
+    'UV3D_Coordinate',
+    'UV4D_Coordinate'
+)
 
 
 @abstract_json_model()

@@ -1,6 +1,10 @@
+from resonitelink.models.messages import Message
 from resonitelink.json import MISSING, json_model, json_element
 
-from ...messages import Message
+
+__all__ = (
+    'ImportTexture2DFile',
+)
 
 
 @json_model("importTexture2DFile", Message)

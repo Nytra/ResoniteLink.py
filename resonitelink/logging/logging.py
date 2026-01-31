@@ -3,6 +3,7 @@ import logging
 import sys
 import os
 
+
 __all__ = (
     'CustomFormatter',
     'CustomColourFormatter',

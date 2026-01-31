@@ -1,6 +1,11 @@
 from resonitelink.json import json_model
 
-from ..member import Member
+from resonitelink.models.datamodel import Member
+
+
+__all__ = (
+    'EmptyElement',
+)
 
 
 @json_model("empty", Member)

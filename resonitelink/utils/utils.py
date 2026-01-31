@@ -1,8 +1,17 @@
+from typing import Union, Type, Any
+
 from resonitelink.models.datamodel import Slot, Component, Reference, Field
-from resonitelink.json.models import JSONModel
 from resonitelink.json.utils import optional
 from resonitelink.proxies import SlotProxy, ComponentProxy
-from typing import Union, Type, Any
+
+
+__all__ = (
+    'make_first_char_uppercase',
+    'get_slot_id',
+    'get_component_id',
+    'optional_slot_reference',
+    'optional_field'
+)
 
 
 def make_first_char_uppercase(value : str) -> str:

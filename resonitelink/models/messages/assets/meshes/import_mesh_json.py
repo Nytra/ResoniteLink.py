@@ -1,8 +1,13 @@
-from resonitelink.json import MISSING, json_model, json_list
 from typing import List
 
 from resonitelink.models.assets.mesh import Vertex, Submesh, Bone, Blendshape
 from resonitelink.models.messages import Message
+from resonitelink.json import MISSING, json_model, json_list
+
+
+__all__ = (
+    'ImportMeshJSON',
+)
 
 
 @json_model("importMeshJSON", Message)

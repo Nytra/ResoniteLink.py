@@ -1,9 +1,14 @@
-from resonitelink.json import MISSING, json_model, json_element
 from dataclasses import field, InitVar
 from typing import Optional, List
 from array import array
 
-from ...messages import Message, BinaryPayloadMessage
+from resonitelink.models.messages import Message, BinaryPayloadMessage
+from resonitelink.json import MISSING, json_model, json_element
+
+
+__all__ = (
+    'ImportAudioClipRawData',
+)
 
 
 @json_model("importAudioClipRawData", Message)

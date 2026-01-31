@@ -267,7 +267,7 @@ async def on_client_started(client : ResoniteLinkClient):
 
 # Asks for the current port ResoniteLink is running on.
 # port = int(input("ResoniteLink Port: "))
-port = 48792
+port = 42012
 
 
 # Start the client on the specified port.
