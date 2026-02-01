@@ -730,12 +730,15 @@ class ResoniteLinkClient(ABC):
 
         # Encodes the message object and sends it as text.
         raw_message = json.dumps(message, cls=ResoniteLinkJSONEncoder)
-        
+
         await self._send_raw_message(raw_message, text=True)
 
         if isinstance(message, BinaryPayloadMessage):
             # The message also has a binary payload that we need to send.
             await self._send_raw_message(message.raw_binary_payload, text=False)
+        
+        # Log send message
+        self._log(logging.INFO, lambda: f"SENT: Resonite ←🗅 {type(message).__name__} (Message-ID: {message_id})")
         
         # Invoke message sent event BEFORE waiting for message's future
         await self._invoke_event_handlers(_ResoniteLinkClientEvent.MESSAGE_SENT, message)
@@ -763,6 +766,8 @@ class ResoniteLinkClient(ABC):
         # We're only expecting responses that we sent, so they should always have a `source_message_id`!
         if not response.source_message_id:
             raise RuntimeError(f"Received response did not include a `source_message_id`!")
+
+        self._log(logging.INFO, lambda: f"RECV: Resonite 🗅→ {type(response).__name__} (Message-ID: {response.source_message_id})")
 
         try:
             source_message_future = self._message_ids.pop_id_value(response.source_message_id)

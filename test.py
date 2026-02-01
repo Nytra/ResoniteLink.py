@@ -1,28 +1,10 @@
-from resonitelink.models.assets.mesh import TriangleSubmeshRawData 
-from resonitelink.models.datamodel import Float3, Color, Reference, SyncList, Field_Enum, Field_Float, Field_Uri
 from resonitelink import ResoniteLinkClient, ResoniteLinkWebsocketClient
-from typing import Tuple, List, Generator, Any
-from math import sin, cos, sqrt
 import asyncio
 import logging
 
 
-import time
-
-def timeit(f):
-
-    def timed(*args, **kw):
-        ts = time.time()
-        result = f(*args, **kw)
-        
-        return result
-
-    return timed
-
-
 # Creates a new client that connects to ResoniteLink via websocket.
 client = ResoniteLinkWebsocketClient(log_level=logging.INFO)
-
 
 
 @client.on_started
@@ -32,25 +14,24 @@ async def on_client_started(client : ResoniteLinkClient):
     You can use it to execute code once the client is up and running!
 
     """
-    ts = time.time()
-
     parent = await client.add_slot("Root", name="Lib Perf Test")
+    count = 1000
 
-    for i in range(1000):
-        child = await client.add_slot(parent, name=f"Child {i}")
-        component = await child.add_component("[FrooxEngine]FrooxEngine.ValueField<bool>")
-        await client.get_component(component)
+    # Test 1: Sequential
+    for i in range(count):
+        await client.add_slot(parent, name=f"Child {i}")
 
-    te = time.time()
-
-    logging.warning(f"Operation took {(te - ts)}s")
+    # Test 2: Parallel
+    # tasks = [ client.add_slot(parent, name=f"Child {i}") for i in range(count) ]
+    # await asyncio.gather(*tasks)
 
     # Stops the client manually. Without this, the client will run forever, which might be desired for some use-cases.
     await client.stop()
 
+
 # Asks for the current port ResoniteLink is running on.
 # port = int(input("ResoniteLink Port: "))
-port = 11960
+port = 44645
 
 
 # Start the client on the specified port.
