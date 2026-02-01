@@ -1,6 +1,11 @@
 from resonitelink.models.responses import Response
 
 
+__all__ = (
+    'ResoniteLinkException',
+)
+
+
 class ResoniteLinkException(Exception):
     """
     Base class for all exceptions that result on the ResoniteLink server-side and are received as error messages. 
