@@ -23,6 +23,15 @@ class ArraysGenerator(CodeGenerator):
         yield f"from typing import List\n"
         yield f"\n\n"
 
+        yield f"__all__ = (\n"
+        for vector_type in primitive_types:
+            type_info = type_mappings[vector_type]
+
+            yield f"    'Array_{type_info.type_name}',\n"
+            
+        yield f")\n"
+        yield f"\n\n"
+
         def _generate_array_class(model_name : str, class_name : str, value_type : Type, value_type_name : str):
             yield f"@json_model(\"{model_name}\", Member)\n"
             yield f"class {class_name}(SyncArray):\n"

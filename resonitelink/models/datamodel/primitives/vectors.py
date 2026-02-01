@@ -4,6 +4,43 @@
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'Bool2',
+    'Bool3',
+    'Bool4',
+    'Byte2',
+    'Byte3',
+    'Byte4',
+    'SByte2',
+    'SByte3',
+    'SByte4',
+    'UShort2',
+    'UShort3',
+    'UShort4',
+    'Short2',
+    'Short3',
+    'Short4',
+    'UInt2',
+    'UInt3',
+    'UInt4',
+    'Int2',
+    'Int3',
+    'Int4',
+    'ULong2',
+    'ULong3',
+    'ULong4',
+    'Long2',
+    'Long3',
+    'Long4',
+    'Float2',
+    'Float3',
+    'Float4',
+    'Double2',
+    'Double3',
+    'Double4',
+)
+
+
 @json_model(internal_type_name="t_bool2")
 class Bool2():
     x : bool = json_element("x", bool, default=MISSING)

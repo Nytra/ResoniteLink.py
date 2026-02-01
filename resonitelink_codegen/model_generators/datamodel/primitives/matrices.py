@@ -3,6 +3,8 @@ from resonitelink.utils.types import type_mappings, matrix_types
 from typing import Type, List, Generator
 
 
+# TODO: __all__ for all generators!
+
 class MatricesGenerator(CodeGenerator):
     """
     Generator for the matrices.py model file.
@@ -17,6 +19,17 @@ class MatricesGenerator(CodeGenerator):
 
         """
         yield f"from resonitelink.json import MISSING, json_model, json_element\n"
+        yield f"\n\n"
+
+        yield f"__all__ = (\n"
+        for matrix_type in matrix_types:
+            type_info = type_mappings[matrix_type]
+
+            yield f"    '{type_info.type_name}2x2',\n"
+            yield f"    '{type_info.type_name}3x3',\n"
+            yield f"    '{type_info.type_name}4x4',\n"
+            
+        yield f")\n"
         yield f"\n\n"
 
         def _generate_matrix_class(model_name : str, class_name : str, element_type : Type, element_names : List[str]):

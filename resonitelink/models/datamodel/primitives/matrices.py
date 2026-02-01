@@ -4,6 +4,16 @@
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'Float2x2',
+    'Float3x3',
+    'Float4x4',
+    'Double2x2',
+    'Double3x3',
+    'Double4x4',
+)
+
+
 @json_model(internal_type_name="t_float2x2")
 class Float2x2():
     m00 : float = json_element("m00", float, default=MISSING)

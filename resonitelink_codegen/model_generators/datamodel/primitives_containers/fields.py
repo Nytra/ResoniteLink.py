@@ -23,6 +23,17 @@ class FieldsGenerator(CodeGenerator):
         yield f"from typing import Optional\n"
         yield f"\n\n"
 
+        yield f"__all__ = (\n"
+        for primitive_type in primitive_types:
+            type_info = type_mappings[primitive_type]
+
+            yield f"    'Field_{type_info.type_name}',\n"
+            if primitive_type not in non_nullable_types:
+                yield f"    'Field_Nullable_{type_info.type_name}',\n"
+            
+        yield f")\n"
+        yield f"\n\n"
+
         def _generate_field_class(model_name : str, class_name : str, value_type : Type, value_type_name : str, nullable : bool):
             yield f"@json_model(\"{model_name}\", Member)\n"
             yield f"class {class_name}(Field):\n"

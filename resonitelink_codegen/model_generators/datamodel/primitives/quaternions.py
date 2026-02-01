@@ -19,6 +19,15 @@ class QuaternionsGenerator(CodeGenerator):
         yield f"from resonitelink.json import MISSING, json_model, json_element\n"
         yield f"\n\n"
 
+        yield f"__all__ = (\n"
+        for quaternion_type in quaternion_types:
+            type_info = type_mappings[quaternion_type]
+
+            yield f"    '{type_info.type_name}Q',\n"
+            
+        yield f")\n"
+        yield f"\n\n"
+
         def _generate_quaternion_class(model_name : str, class_name : str, element_type : Type):
             yield f"@json_model(internal_type_name=\"t_{model_name}\")\n"
             yield f"class {class_name}():\n"

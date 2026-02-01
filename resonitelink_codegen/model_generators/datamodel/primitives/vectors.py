@@ -1,6 +1,7 @@
-from resonitelink_codegen import CodeGenerator
-from resonitelink.utils.types import type_mappings, vector_types
 from typing import Type, List, Generator
+
+from resonitelink.utils.types import type_mappings, vector_types
+from resonitelink_codegen import CodeGenerator
 
 
 class VectorsGenerator(CodeGenerator):
@@ -17,6 +18,17 @@ class VectorsGenerator(CodeGenerator):
 
         """
         yield f"from resonitelink.json import MISSING, json_model, json_element\n"
+        yield f"\n\n"
+
+        yield f"__all__ = (\n"
+        for vector_type in vector_types:
+            type_info = type_mappings[vector_type]
+
+            yield f"    '{type_info.type_name}2',\n"
+            yield f"    '{type_info.type_name}3',\n"
+            yield f"    '{type_info.type_name}4',\n"
+            
+        yield f")\n"
         yield f"\n\n"
 
         def _generate_vector_class(model_name : str, class_name : str, element_type : Type, element_names : List[str]):

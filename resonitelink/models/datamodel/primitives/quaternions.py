@@ -4,6 +4,12 @@
 from resonitelink.json import MISSING, json_model, json_element
 
 
+__all__ = (
+    'FloatQ',
+    'DoubleQ',
+)
+
+
 @json_model(internal_type_name="t_floatQ")
 class FloatQ():
     x : float = json_element("x", float, default=MISSING)
