@@ -89,6 +89,14 @@ class ResoniteLinkClient(ABC):
         self._message_ids = IDRegistry()
         self._datamodel_ids = IDRegistry()
     
+    def _log(self, log_level : int, msg_fn : Callable[..., str], *args, **kwargs):
+        """
+        Internal log function that doesn't evaluate the msg function when it wouldn't get logged.
+
+        """
+        if self._logger.isEnabledFor(log_level):
+            self._logger.log(log_level, msg_fn(*args, **kwargs))
+
     async def stop(self):
         """
         Disconnects this ResoniteLinkClient and stops processing messages. This cannot be undone!
@@ -152,7 +160,7 @@ class ResoniteLinkClient(ABC):
         """
         handlers = self._event_handlers.setdefault(event, [ ])
         handlers.append(handler)
-        self._logger.debug(f"Updated event handlers: {self._event_handlers}")
+        self._log(logging.DEBUG, lambda: f"Updated event handlers: {self._event_handlers}")
     
     async def _invoke_event_handlers(self, event : _ResoniteLinkClientEvent, *args, **kwargs):
         """
@@ -160,7 +168,7 @@ class ResoniteLinkClient(ABC):
 
         """
         handlers = self._event_handlers.setdefault(event, [ ])
-        self._logger.debug(f"Invoking {len(handlers)} event handlers for event {event}")
+        self._log(logging.DEBUG, lambda: f"Invoking {len(handlers)} event handlers for event {event}")
         await gather(*[ handler(self, *args, **kwargs) for handler in handlers ])
     
     async def request_session_data(self) -> SessionData:
@@ -261,7 +269,7 @@ class ResoniteLinkClient(ABC):
         """
         slot_id = self._datamodel_ids.generate_id()
         parent_slot_id = get_slot_id(parent)
-        self._logger.debug(f"Parent slot: {parent}, parent slot id: {parent_slot_id}")
+        self._log(logging.DEBUG, lambda: f"Parent slot: {parent}, parent slot id: {parent_slot_id}")
         msg = AddSlot(data=Slot(
             id = slot_id, 
             parent = Reference(target_id=parent_slot_id, target_type="[FrooxEngine]FrooxEngine.Slot"),
@@ -722,6 +730,7 @@ class ResoniteLinkClient(ABC):
 
         # Encodes the message object and sends it as text.
         raw_message = json.dumps(message, cls=ResoniteLinkJSONEncoder)
+        
         await self._send_raw_message(raw_message, text=True)
 
         if isinstance(message, BinaryPayloadMessage):
@@ -744,11 +753,12 @@ class ResoniteLinkClient(ABC):
             The received message to process
 
         """
-        self._logger.debug(f"Received raw message: {message_bytes.decode('utf-8')}")
+        self._log(logging.DEBUG, lambda: f"Received raw message: {message_bytes.decode('utf-8')}")
         
         # Decode message into object
         response : Response = json.loads(message_bytes, cls=ResoniteLinkJSONDecoder, root_model_type=Response)
-        self._logger.debug(f"Received response:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
+        
+        self._log(logging.DEBUG, lambda: f"Response data:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
 
         # We're only expecting responses that we sent, so they should always have a `source_message_id`!
         if not response.source_message_id:
@@ -827,7 +837,7 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
         if self._on_starting.is_set(): 
             raise Exception("Client is already starting!")
         
-        self._logger.debug(f"Starting client on port {port}...")
+        self._log(logging.DEBUG, lambda: f"Starting client on port {port}...")
         self._on_starting.set()
         await self._invoke_event_handlers(_ResoniteLinkClientEvent.STARTING)
 
@@ -838,7 +848,7 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
         self._ws_uri : str = f"ws://localhost:{port}/"
         self._ws = await websocket_connect(self._ws_uri)
 
-        self._logger.info(f"Connection established! Connected to ResoniteLink on {self._ws_uri}")
+        self._log(logging.INFO, lambda: f"Connection established! Connected to ResoniteLink on {self._ws_uri}")
         self._on_started.set()
         await self._invoke_event_handlers(_ResoniteLinkClientEvent.STARTED)
 
@@ -850,13 +860,13 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
         Disconnects this ResoniteLinkClient and stops processing messages. This cannot be undone!
         
         """
-        self._logger.debug(f"Stopping client...")
+        self._log(logging.DEBUG, lambda: f"Stopping client...")
         self._on_stopping.set()
         await self._invoke_event_handlers(_ResoniteLinkClientEvent.STOPPING)
 
         await self._ws.close()
 
-        self._logger.debug(f"Client stopped!")
+        self._log(logging.DEBUG, lambda: f"Client stopped!")
         self._on_stopped.set()
         await self._invoke_event_handlers(_ResoniteLinkClientEvent.STOPPED)
     
@@ -868,7 +878,7 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
         """
         await self._on_started.wait() # Wait for client to fully start before fetching messages
 
-        self._logger.info(f"Listening to messages...")
+        self._log(logging.INFO, lambda: f"Listening to messages...")
         while True:
             if self._on_stopped.is_set():
                 # Client has been stopped since last run, end fetch loop.
@@ -883,7 +893,7 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
                 # TODO: Proper reconnection logic on ConnectionClosed
                 self._on_stopped.set()
         
-        self._logger.info(f"Stopped listening to messages.")
+        self._log(logging.INFO, lambda: f"Stopped listening to messages.")
 
     async def _send_raw_message(self, message : Union[bytes, str], text : bool = True):
         """
@@ -893,8 +903,8 @@ class ResoniteLinkWebsocketClient(ResoniteLinkClient):
         await self._on_started.wait() # Wait for client to fully start before sending messages
 
         if not text and (isinstance(message, bytes) or isinstance(message, bytearray)):
-            self._logger.debug(f"Sending non-text message with {len(message)} bytes.")
+            self._log(logging.DEBUG, lambda: f"Sending non-text message with {len(message)} bytes.")
         else:
-            self._logger.debug(f"Sending text message: {message}")
+            self._log(logging.DEBUG, lambda: f"Sending text message: {message}")
         
         await self._ws.send(message, text=text)
