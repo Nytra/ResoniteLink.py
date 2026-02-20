@@ -13,6 +13,9 @@ __all__ = (
     'optional_field'
 )
 
+def newline() -> str:
+    return "\n"
+
 
 def make_first_char_uppercase(value : str) -> str:
     """

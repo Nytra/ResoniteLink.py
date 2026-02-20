@@ -139,7 +139,7 @@ def _json_property(json_name : str, element_type : type, *, default : Any, init 
     return field(default=default, init=init, metadata={'JSONProperty': json_prop})
 
 
-def json_element[T](json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> T:
+def json_element(json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> T:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Element-Properties.
     Returns a field for use in dataclass.
@@ -154,7 +154,7 @@ def json_element[T](json_name : str, element_type : Type[T], *, default : Any, i
     return _json_property(json_name=json_name, element_type=element_type, default=default, init=init, property_type=_JSONPropertyType.ELEMENT, abstract=abstract)
 
 
-def json_list[T](json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> List[T]:
+def json_list(json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> List[T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-List-Properties.
     Returns a field for use in dataclass.
@@ -169,7 +169,7 @@ def json_list[T](json_name : str, element_type : Type[T], *, default : Any, init
     return _json_property(json_name=json_name, element_type=element_type, default=default, init=init, property_type=_JSONPropertyType.LIST, abstract=abstract)
 
 
-def json_dict[T](json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> Dict[str, T]:
+def json_dict(json_name : str, element_type : Type[T], *, default : Any, init = True, abstract = False) -> Dict[str, T]:
     """
     Utility function for easily definiing fields in dataclasses as JSON-Dict-Properties.
     Returns a field for use in dataclass.
@@ -432,7 +432,7 @@ class JSONModel(Generic[D]):
 # but we're also specifying our custon property functions as field specifiers. Otherwise, those would *not* get
 # recognized as dataclass field specifiers by type checkers, and those would produce incorrect type information.
 @dataclass_transform(field_specifiers=(field, _json_property, json_element, json_list, json_dict))
-def json_model[T](type_name : Optional[str] = None, derived_from : Optional[type] = None, internal_type_name : Optional[str] = None, slots=True):
+def json_model(type_name : Optional[str] = None, derived_from : Optional[type] = None, internal_type_name : Optional[str] = None, slots=True):
     """
     Class decorator to easily declare models from their data classes.
     The type will be wrapped into a dataclass.
@@ -486,7 +486,7 @@ def abstract_json_model(slots=True):
         Controls wether the dataclass should use `__slots__` for fields.
 
     """
-    def _wrapper[T](cls : Type[T]) -> Type[T]:
+    def _wrapper(cls : Type[T]) -> Type[T]:
         # Wrap the decorated class wrapped into a dataclass
         data_class = dataclass(cls, slots=slots)
 

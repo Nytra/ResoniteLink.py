@@ -1,6 +1,6 @@
 from .models import MISSING, JSONModel, _JSONPropertyType
 from typing import Any, List, Callable
-
+from resonitelink.utils.utils import newline
 
 __all__ = (
     'optional',
@@ -63,7 +63,7 @@ def format_object_structure(obj : Any, print_missing : bool = False, prefix : st
                         # Empty list
                         property_lines.append(f" - {key} (List): []")
                     else:
-                        property_lines.append(f" - {key} (List):\n{prefix}    - {f'\n{prefix}    - '.join([ format_object_structure(v, prefix=f'{prefix}      ') for v in val ])}")
+                        property_lines.append(f" - {key} (List):{newline()}{prefix}    - {f'{newline()}{prefix}    - '.join([ format_object_structure(v, prefix=f'{prefix}      ') for v in val ])}")
 
                 elif json_property.property_type == _JSONPropertyType.DICT and isinstance(val, dict):
                     # Resolve property as dict
@@ -71,16 +71,16 @@ def format_object_structure(obj : Any, print_missing : bool = False, prefix : st
                         # Empty dict
                         property_lines.append(f" - {key} (Dict): {{}}")
                     else:
-                        property_lines.append(f" - {key} (Dict):\n{prefix}    - {f'\n{prefix}    - '.join([ f'{k}: {format_object_structure(v, prefix=f'{prefix}      ')}' for k, v in val.items() ])}")
+                        property_lines.append(f""" - {key} (Dict):{newline()}{prefix}    - {f'{newline()}{prefix}    - '.join([ f'{k}: {format_object_structure(v, prefix=f"{prefix}      ")}' for k, v in val.items() ])}""")
                 
                 else:
                     # Resolve property as single element
-                    property_lines.append(f" - {key}: {format_object_structure(val, prefix=f"{prefix}   ")}")
+                    property_lines.append(f""" - {key}: {format_object_structure(val, prefix=f"{prefix}   ")}""")
             
             elif print_missing:
                 # Value for key missing & missing values should be printed
                 property_lines.append(f"{key}: MISSING")
         
-        structure_str = f"Type '{type(obj).__name__}':\n{prefix}{f'\n{prefix}'.join(property_lines)}"
+        structure_str = f"Type '{type(obj).__name__}':{newline()}{prefix}{f'{newline()}{prefix}'.join(property_lines)}"
 
     return structure_str

@@ -30,6 +30,7 @@ from resonitelink.exceptions import ResoniteLinkException
 from resonitelink.proxies import SlotProxy, ComponentProxy
 from resonitelink.utils import get_slot_id, get_component_id, optional_slot_reference, optional_field
 from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
+from resonitelink.utils.utils import newline
 
 
 __all__ = (
@@ -761,7 +762,7 @@ class ResoniteLinkClient(ABC):
         # Decode message into object
         response : Response = json.loads(message_bytes, cls=ResoniteLinkJSONDecoder, root_model_type=Response)
         
-        self._log(logging.DEBUG, lambda: f"Response data:\n   {'\n   '.join(format_object_structure(response, print_missing=True).split('\n'))}")
+        self._log(logging.DEBUG, lambda: f"""Response data:{newline()}   {f'{newline()}   '.join(format_object_structure(response, print_missing=True).split(f'{newline()}'))}""")
 
         # We're only expecting responses that we sent, so they should always have a `source_message_id`!
         if not response.source_message_id:
