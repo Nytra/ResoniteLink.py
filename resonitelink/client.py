@@ -30,7 +30,9 @@ from resonitelink.exceptions import ResoniteLinkException
 from resonitelink.proxies import SlotProxy, ComponentProxy
 from resonitelink.utils import get_slot_id, get_component_id, optional_slot_reference, optional_field
 from resonitelink.json import MISSING, ResoniteLinkJSONDecoder, ResoniteLinkJSONEncoder, format_object_structure
-from resonitelink.utils.utils import newline
+
+def newline() -> str:
+    return "\n"
 
 
 __all__ = (

@@ -1,12 +1,13 @@
 from .models import MISSING, JSONModel, _JSONPropertyType
 from typing import Any, List, Callable
-from resonitelink.utils.utils import newline
 
 __all__ = (
     'optional',
     'format_object_structure',
 )
 
+def newline() -> str:
+    return "\n"
 
 def optional(value : Any, func : Callable[[], Any]) -> Any:
     """

@@ -14,7 +14,7 @@ class Component(Worker):
     component_type : str = json_element("componentType", str, default=MISSING)
     members : Dict[str, Member] = json_dict("members", Member, default=MISSING)
 
-    def get_member[T : Member](self, member_type : Type[T], member_name : str) -> T:
+    def get_member(self, member_type, member_name : str):
         """
         Retrieves a member of the given type with the given name.
 

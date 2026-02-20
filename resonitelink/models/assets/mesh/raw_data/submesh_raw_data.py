@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from resonitelink.models.messages.assets.meshes import ImportMeshRawData
     from typing import Optional, List
@@ -18,10 +18,10 @@ __all__ = (
 @abstract_json_model()
 class SubmeshRawData(ABC):
     # NOTE: Initializers for indices are in the extending classes!
-    _indices : Optional[bytes] = field(default=None, init=False) # int[]
+    _indices : Any = field(default=None, init=False) # int[]
 
     @property
-    def indices(self) -> List[int]:
+    def indices(self) -> Any:
         if not self._indices:
             raise ValueError("Indices were never provided!")
 
@@ -30,10 +30,10 @@ class SubmeshRawData(ABC):
         return arr.tolist()
     
     @indices.setter
-    def indices(self, indices : List[int]):
+    def indices(self, indices : Any):
         self._indices = array("i", indices).tobytes()
     
-    def _get_binary_data(self, import_msg : ImportMeshRawData) -> bytes:
+    def _get_binary_data(self, import_msg : Any) -> bytes:
         if not self._indices:
             raise ValueError("Binary data was never provided!")
         
