@@ -15,6 +15,7 @@ __all__ = (
 
 
 TData = TypeVar("TData", bound=Union[Member, Worker])
+T = TypeVar('T', bound=Type)
 class Proxy(Generic[TData], ABC):
     """
     Proxy objects provide a utility wrapper around data model objects.
@@ -24,7 +25,7 @@ class Proxy(Generic[TData], ABC):
     Proxies are always in the context of a client.
     
     """
-    _client = None
+    _client : 'ResoniteLinkClient'
     _id : str
     _data : Optional[TData]
 
@@ -36,7 +37,7 @@ class Proxy(Generic[TData], ABC):
     def id(self) -> str:
         return self._id
 
-    def __init__(self, client, id : str, data : Optional[TData] = None):
+    def __init__(self, client : 'ResoniteLinkClient', id : str, data : Optional[TData] = None):
         self._client = client
         self._id = id
         self._data = data
@@ -79,7 +80,7 @@ class Proxy(Generic[TData], ABC):
         raise NotImplementedError()
     
     @classmethod
-    def from_reference(cls, client, reference : Reference):
+    def from_reference(cls : Type[T], client : 'ResoniteLinkClient', reference : Reference) -> T:
         """
         Creates a proxy-element for the **target** of a reference.
 

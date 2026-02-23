@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Self
 
 from resonitelink.models.datamodel import Member, Slot, Reference, Float3, FloatQ
 from resonitelink.proxies import Proxy, ComponentProxy
@@ -14,7 +14,7 @@ class SlotProxy(Proxy[Slot]):
     async def fetch_data(self) -> Slot:
         return await self.client.get_slot(self.id)
     
-    async def set_parent(self, parent):
+    async def set_parent(self, parent : Union[str, Slot, Self, Reference]):
         await self.client.update_slot(slot=self.id, parent=parent)
         self.invalidate_data()
 

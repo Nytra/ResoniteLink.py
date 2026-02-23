@@ -1,4 +1,4 @@
-from typing import Type, Dict
+from typing import Type, Dict, TypeVar
 
 from resonitelink.models.datamodel import Worker, Member
 from resonitelink.json import MISSING, json_model, json_element, json_dict
@@ -13,8 +13,9 @@ __all__ = (
 class Component(Worker):
     component_type : str = json_element("componentType", str, default=MISSING)
     members : Dict[str, Member] = json_dict("members", Member, default=MISSING)
+    T = TypeVar('T', bound=Member)
 
-    def get_member(self, member_type, member_name : str):
+    def get_member(self, member_type : Type[T], member_name : str) -> T:
         """
         Retrieves a member of the given type with the given name.
 
