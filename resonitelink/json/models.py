@@ -56,6 +56,7 @@ class _JSONPropertyType(Enum):
     LIST = 1,
     DICT = 2
 
+T = TypeVar('T', bound=Type)
 
 class JSONProperty():
     """

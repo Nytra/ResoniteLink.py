@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from resonitelink.models.assets.mesh.raw_data import BlendshapeRawData
-    from resonitelink.models.datamodel import Float3
     from resonitelink.models.messages import ImportMeshRawData
-    from typing import Optional, List
+
+from typing import Optional, List
+from resonitelink.models.datamodel import Float3
 
 from dataclasses import InitVar, field
 from array import array
@@ -19,9 +20,9 @@ __all__ = (
 
 @json_model()
 class BlendshapeFrameRawData():
-    _position_deltas : Any = field(default=None, init=False) # float3
-    _normal_deltas : Any = field(default=None, init=False) # float3
-    _tangent_deltas : Any = field(default=None, init=False) # float3
+    _position_deltas : Optional[bytes] = field(default=None, init=False) # float3
+    _normal_deltas : Optional[bytes] = field(default=None, init=False) # float3
+    _tangent_deltas : Optional[bytes] = field(default=None, init=False) # float3
 
     # Position of the frame within the blendshape animation
     # When blendshape has only a single frame, this should be set to 1.0
@@ -29,19 +30,19 @@ class BlendshapeFrameRawData():
     position : float = json_element("position", float, default=MISSING)
 
     # Initializes the position deltas.
-    init_position_deltas : InitVar[Any] = None
+    init_position_deltas : InitVar[Optional[List[Float3]]] = None
 
     # Initializes the normal deltas.
-    init_normal_deltas : InitVar[Any] = None
+    init_normal_deltas : InitVar[Optional[List[Float3]]] = None
 
     # Initializes the tangent deltas.
-    init_tangent_deltas : InitVar[Any] = None
+    init_tangent_deltas : InitVar[Optional[List[Float3]]] = None
 
     def __post_init__(
         self,
-        init_position_deltas : Any,
-        init_normal_deltas : Any,
-        init_tangent_deltas : Any
+        init_position_deltas : Optional[List[Float3]],
+        init_normal_deltas : Optional[List[Float3]],
+        init_tangent_deltas : Optional[List[Float3]]
     ):
         if init_position_deltas:
             self.position_deltas = init_position_deltas
@@ -51,7 +52,7 @@ class BlendshapeFrameRawData():
             self.tangent_deltas = init_tangent_deltas
 
     @property
-    def position_deltas(self) -> Any:
+    def position_deltas(self) -> List[Float3]:
         if not self._position_deltas:
             raise ValueError("Position deltas were never provided!")
         
@@ -60,11 +61,11 @@ class BlendshapeFrameRawData():
         return list(pack_vectors_float3(iter(arr)))
 
     @position_deltas.setter
-    def position_deltas(self, position_deltas : Any):
+    def position_deltas(self, position_deltas : List[Float3]):
         self._position_deltas = array("f", unpack_vectors_float3(iter(position_deltas))).tobytes()
     
     @property
-    def normal_deltas(self) -> Any:
+    def normal_deltas(self) -> List[Float3]:
         if not self._normal_deltas:
             raise ValueError("Position deltas were never provided!")
         
@@ -73,11 +74,11 @@ class BlendshapeFrameRawData():
         return list(pack_vectors_float3(iter(arr)))
 
     @normal_deltas.setter
-    def normal_deltas(self, normal_deltas : Any):
+    def normal_deltas(self, normal_deltas : List[Float3]):
         self._normal_deltas = array("f", unpack_vectors_float3(iter(normal_deltas))).tobytes()
 
     @property
-    def tangent_deltas(self) -> Any:
+    def tangent_deltas(self) -> List[Float3]:
         if not self._tangent_deltas:
             raise ValueError("Position deltas were never provided!")
         
@@ -86,7 +87,7 @@ class BlendshapeFrameRawData():
         return list(pack_vectors_float3(iter(arr)))
 
     @tangent_deltas.setter
-    def tangent_deltas(self, tangent_deltas : Any):
+    def tangent_deltas(self, tangent_deltas : List[Float3]):
         self._tangent_deltas = array("f", unpack_vectors_float3(iter(tangent_deltas))).tobytes()
 
     def _get_binary_data(self, import_msg : Any, blendshape_raw_data : Any) -> bytes:

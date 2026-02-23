@@ -31,7 +31,7 @@ async def on_client_started(client : ResoniteLinkClient):
         List of RGBA integer values between 0 and 255 (`byte`).
 
         """
-        def _generate() -> Generator[int]:
+        def _generate() -> Generator[int, None, None]:
             for x in range(width):
                 for y in range(height):
                     yield int(x / width * 255)
