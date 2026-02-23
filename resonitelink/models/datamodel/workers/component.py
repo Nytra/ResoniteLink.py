@@ -9,11 +9,11 @@ __all__ = (
 )
 
 
+T = TypeVar('T', bound=Member)
 @json_model() # NOT derived from Worker, it's the same in the reference C# implementation.
 class Component(Worker):
     component_type : str = json_element("componentType", str, default=MISSING)
     members : Dict[str, Member] = json_dict("members", Member, default=MISSING)
-    T = TypeVar('T', bound=Member)
 
     def get_member(self, member_type : Type[T], member_name : str) -> T:
         """

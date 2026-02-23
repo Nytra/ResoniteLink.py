@@ -15,7 +15,7 @@ __all__ = (
 
 
 TData = TypeVar("TData", bound=Union[Member, Worker])
-T = TypeVar('T', bound=Type)
+T = TypeVar('T', bound='Proxy')
 class Proxy(Generic[TData], ABC):
     """
     Proxy objects provide a utility wrapper around data model objects.
