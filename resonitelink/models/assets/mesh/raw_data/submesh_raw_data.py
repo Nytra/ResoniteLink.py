@@ -34,7 +34,7 @@ class SubmeshRawData(ABC):
     def indices(self, indices : List[int]):
         self._indices = array("i", indices).tobytes()
     
-    def _get_binary_data(self, import_msg : Any) -> bytes:
+    def _get_binary_data(self, import_msg : 'ImportMeshRawData') -> bytes:
         if not self._indices:
             raise ValueError("Binary data was never provided!")
         

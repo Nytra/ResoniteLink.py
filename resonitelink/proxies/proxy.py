@@ -30,7 +30,7 @@ class Proxy(Generic[TData], ABC):
     _data : Optional[TData]
 
     @property
-    def client(self):
+    def client(self) -> 'ResoniteLinkClient':
         return self._client
     
     @property

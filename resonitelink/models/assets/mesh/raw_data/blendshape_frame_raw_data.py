@@ -90,7 +90,7 @@ class BlendshapeFrameRawData():
     def tangent_deltas(self, tangent_deltas : List[Float3]):
         self._tangent_deltas = array("f", unpack_vectors_float3(iter(tangent_deltas))).tobytes()
 
-    def _get_binary_data(self, import_msg : Any, blendshape_raw_data : Any) -> bytes:
+    def _get_binary_data(self, import_msg : 'ImportMeshRawData', blendshape_raw_data : 'BlendshapeRawData') -> bytes:
         expected_data_size = import_msg.vertex_count * 4 * 3 # 3x float (4 bytes) per vertex
         data = bytearray()
 
