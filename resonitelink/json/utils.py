@@ -6,6 +6,7 @@ __all__ = (
     'format_object_structure',
 )
 
+
 def newline() -> str:
     return "\n"
 
