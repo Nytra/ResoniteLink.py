@@ -58,7 +58,7 @@ class ImportMeshRawData(BinaryPayloadMessage):
 
     # How many bone weights does each vertex have.
     # If some vertices have fewer bone weights, use weight of 0 for remainder bindings.
-    bone_weight_count : int = json_element("boneWeightCount", int, default=MISSING, init=False)
+    bone_weight_count : int = json_element("boneWeightCount", int, default=MISSING)
 
     # Initializes the bone weights.
     init_bone_weights : InitVar[Optional[List[BoneWeightRawData]]] = None
@@ -98,7 +98,6 @@ class ImportMeshRawData(BinaryPayloadMessage):
         if init_uvs:
             self.uvs = init_uvs
         if init_bone_weights:
-            self.bone_weight_count = len(init_bone_weights)
             self.bone_weights = init_bone_weights
     
     @property
@@ -204,8 +203,11 @@ class ImportMeshRawData(BinaryPayloadMessage):
     
     @bone_weights.setter
     def bone_weights(self, bone_weights : List[BoneWeightRawData]):
-        if len(bone_weights) != self.vertex_count:
-            raise ValueError(f"Expected {self.vertex_count} vertex colors, but got {len(bone_weights)} colors.")
+        if (not self.bone_weight_count):
+            raise ValueError("Bone weight count was not provided!")
+        expected_count = self.vertex_count*self.bone_weight_count
+        if len(bone_weights) != expected_count:
+            raise ValueError(f"Expected {expected_count} bone weights, but got {len(bone_weights)}.")
         
         arr = bytearray()
         for bone_weight in bone_weights:
