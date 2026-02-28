@@ -566,6 +566,7 @@ class ResoniteLinkClient(ABC):
         colors : Optional[List[Color]] = None,
         uv_channel_dimensions : List[int] = [],
         uvs : Optional[List[List[float]]] = None,
+        bone_weight_count : Optional[int] = 0,
         bone_weights : Optional[List[BoneWeightRawData]] = None,
         submeshes : List[SubmeshRawData] = MISSING,
         blendshapes : List[BlendshapeRawData] = MISSING,
@@ -590,8 +591,10 @@ class ResoniteLinkClient(ABC):
             Number indicates number of UV dimensions. This must be between 2 and 4 (inclusive).
         uvs : List[List[float]], optional
             UVs of the mesh.
+        bone_weight_count : int, optional
+            How many bone weights does each vertex have
         bone_weights : List[BoneWeightRawData], optional
-            How many bone weights does each vertex have.
+            A list of the weights of each bone on each vertex (vertex_count x bone_weight_count).
             If some vertices have fewer bone weights, use weight of 0 for remainder bindings.
         submeshes : List[SubmeshRawData] = MISSING
             Submeshes that form this mesh. Meshes will typically have at least one submesh.
@@ -614,6 +617,7 @@ class ResoniteLinkClient(ABC):
             init_colors=colors,
             uv_channel_dimensions=uv_channel_dimensions,
             init_uvs=uvs,
+            bone_weight_count=bone_weight_count,
             init_bone_weights=bone_weights,
             submeshes=submeshes,
             blendshapes=blendshapes,
