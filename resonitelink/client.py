@@ -566,7 +566,7 @@ class ResoniteLinkClient(ABC):
         colors : Optional[List[Color]] = None,
         uv_channel_dimensions : List[int] = [],
         uvs : Optional[List[List[float]]] = None,
-        bone_weight_count : Optional[int] = None,
+        bone_weight_count : Optional[int] = 0,
         bone_weights : Optional[List[BoneWeightRawData]] = None,
         submeshes : List[SubmeshRawData] = MISSING,
         blendshapes : List[BlendshapeRawData] = MISSING,

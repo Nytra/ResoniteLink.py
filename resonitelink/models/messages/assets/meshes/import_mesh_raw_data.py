@@ -58,7 +58,7 @@ class ImportMeshRawData(BinaryPayloadMessage):
 
     # How many bone weights does each vertex have.
     # If some vertices have fewer bone weights, use weight of 0 for remainder bindings.
-    bone_weight_count : int = json_element("boneWeightCount", int, default=MISSING)
+    bone_weight_count : int = json_element("boneWeightCount", int, default=0)
 
     # Initializes the bone weights.
     init_bone_weights : InitVar[Optional[List[BoneWeightRawData]]] = None
